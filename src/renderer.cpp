@@ -18,7 +18,7 @@ namespace ObjectRenderer {
 
     void Renderer::init(GLFWwindow* window) {
         m_window = window;
-        m_shader.init("E:/VS Code/3D Object Renderer/shaders/default.vert", "E:/VS Code/3D Object Renderer/shaders/default.frag");
+        m_shader.init("../../shaders/default.vert", "../../shaders/default.frag");
         createVertexArrayObject();
         createVertexBufferObject();
         glEnable(GL_DEPTH_TEST);

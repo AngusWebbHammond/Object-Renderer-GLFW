@@ -35,7 +35,7 @@ namespace ObjectRenderer {
     }
 
     void ObjectLoader::loadObjectFromFile() {
-        char* filePath = "E:/VS Code/3D Object Renderer/objects/monkey.obj";
+        char* filePath = "../../objects/monkey.obj";
 
         std::ifstream objectFile;
         std::string line;
