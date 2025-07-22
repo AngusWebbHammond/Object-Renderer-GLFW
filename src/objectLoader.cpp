@@ -35,7 +35,7 @@ namespace ObjectRenderer {
     }
 
     void ObjectLoader::loadObjectFromFile() {
-        char* filePath = "../../objects/monkey.obj";
+        char* filePath = "../../objects/torus.obj";
 
         std::ifstream objectFile;
         std::string line;
@@ -116,6 +116,7 @@ namespace ObjectRenderer {
                 m_edges[m_edgeLength] = std::stoi(current) - 1;
                 m_edgeLength++;
             }
+            //TODO Add more cases to this
         }
         objectFile.close();
     }
