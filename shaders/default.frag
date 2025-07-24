@@ -1,12 +1,25 @@
 #version 450 core
 
 out vec4 FragColour;
+
 in vec3 vertexColour;
 in vec3 glFragCoord;
+in vec3 normal;
 
 void main()
 {
-    FragColour = vec4(vertexColour, 1.0f);
+    float ambientStrength = 0.2;
+    vec3 lightingPosition = {2.0f, 2.0f, 2.0f};
+    vec3 modelPosition = {0.0f, 0.0f, 0.0f};
+    vec3 lightColour = {1.0f, 1.0f, 1.0f};
+    vec3 normalizedNormal = normalize(normal);
+    vec3 lightingDirection = normalize(lightingPosition - modelPosition);
+    float diff = max(dot(normalizedNormal, lightingDirection), 0.0);
+    vec3 diffuse = diff * lightColour;
+    vec3 ambient = ambientStrength * lightColour;
+    vec3 result = (diffuse + ambient) * vertexColour;
+
+    FragColour = vec4(result, 1.0f);
 }   
 
 //TODO Add lighting to this shader, using the normals loaded in from the .obj file

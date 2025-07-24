@@ -52,20 +52,12 @@ namespace ObjectRenderer {
 
         m_edgesLength = m_loader.getEdgesLength();
 
-        float colour[] = { 0.5f, 0.5f, 0.5f };
+        float colour[] = { 1.0f, 0.0f, 1.0f };
 
         m_meshHandler.addObject(vertices, m_verticiesLength, textures, m_texturesLength, edges, colour, normals, normalEdges, textureEdges, m_edgesLength, "Cube");
 
-        float* coords = m_meshHandler.getVerticies();
-        int coordsLength = m_meshHandler.getVerticiesLength();
-
-        float coordNew[g_maxBufferSize];
-
-        for (int i = 0; i < coordsLength; i++) {
-            coordNew[i] = coords[i];
-        }
-
-        m_trianglesNumber += coordsLength / 11;
+        std::vector<float> coords = m_meshHandler.getVerticies();
+        m_trianglesNumber = static_cast<int>(coords.size());
 
         // ---------------------------------------------------------------------------
 
@@ -74,7 +66,7 @@ namespace ObjectRenderer {
         glGenBuffers(1, &m_VBO);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-        glBufferData(GL_ARRAY_BUFFER, coordsLength * sizeof(float), coordNew, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, coords.size() * sizeof(float), coords.data(), GL_STATIC_DRAW);
 
         // Position Data
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)0);

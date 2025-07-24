@@ -18,32 +18,33 @@ namespace ObjectRenderer {
 
     MeshHandler::MeshHandler()
     {
-        m_vertexLength = 0;
-        m_triangleLength = 0;
-        m_meshObjectLength = 0;
-        m_completeVerticiesLength = 0;
     }
 
     MeshHandler::~MeshHandler()
     {
     }
 
-    void MeshHandler::addObject(float* positions, int verticiesNumber, float* textures, int texturesNumber, int* triangleVerticies, float* colour, float* surfaceNormals, int* normalVerticies, int* textureVerticies, int triangleNumber, std::string meshName)
+    void MeshHandler::addObject(float* positions, int verticiesNumber,
+        float* textures, int texturesNumber,
+        int* triangleVerticies, float* colour,
+        float* surfaceNormals, int* normalVerticies,
+        int* textureVerticies, int triangleNumber,
+        std::string meshName)
     {
         addVertices(positions, verticiesNumber);
         addTextures(textures, texturesNumber);
-        addTriangles(triangleVerticies, colour, surfaceNormals, normalVerticies, textureVerticies, triangleNumber, meshName);
+        addTriangles(triangleVerticies, colour,
+            surfaceNormals, normalVerticies,
+            textureVerticies, triangleNumber,
+            meshName);
         addMesh(meshName);
 
         generateVerticies();
     }
 
-    float* MeshHandler::getVerticies() {
+    std::vector<float> MeshHandler::getVerticies()
+    {
         return m_completeVerticies;
-    }
-
-    int MeshHandler::getVerticiesLength() {
-        return m_completeVerticiesLength;
     }
 
     void MeshHandler::addVertices(float* positions, int verticiesNumber)
@@ -51,10 +52,8 @@ namespace ObjectRenderer {
         float* currentPosition;
         for (int i = 0; i < verticiesNumber / 3; i++) {
             currentPosition = &positions[i * 3];
-            m_verticies[i] = std::make_shared<Vertex>(currentPosition);
+            m_verticies.push_back(std::make_shared<Vertex>(currentPosition));
         }
-
-        m_vertexLength += verticiesNumber;
     }
 
     void MeshHandler::addTextures(float* textures, int texturesNumber)
@@ -62,13 +61,15 @@ namespace ObjectRenderer {
         float* currentTexture;
         for (int i = 0; i < texturesNumber / 2; i++) {
             currentTexture = &textures[i * 2];
-            m_textures[i] = std::make_shared<Texture>(currentTexture);
+            m_textures.push_back(std::make_shared<Texture>(currentTexture));
         }
 
-        m_texturesLength += texturesNumber;
     }
 
-    void MeshHandler::addTriangles(int* triangleVerticies, float* colour, float* surfaceNormals, int* normalVerticies, int* textureVerticies, int trianglesNumber, std::string meshName)
+    void MeshHandler::addTriangles(int* triangleVerticies, float* colour,
+        float* surfaceNormals, int* normalVerticies,
+        int* textureVerticies, int trianglesNumber,
+        std::string meshName)
     {
         std::shared_ptr<Vertex> currentTriangleVerticies[3];
         std::shared_ptr<Texture> currentTextureVerticies[3];
@@ -84,12 +85,14 @@ namespace ObjectRenderer {
 
             currentSurfaceNormal = &surfaceNormals[3 * normalVerticies[3 * i]];
 
-            m_triangles[i] = std::make_shared<Triangle>(currentTriangleVerticies, currentTextureVerticies, currentSurfaceNormal, colour);
+            m_triangles.push_back(std::make_shared<Triangle>(currentTriangleVerticies, currentTextureVerticies, currentSurfaceNormal, colour));
             count++;
         }
 
-        m_triangleObjectPoints[meshName] = TriangleObjectPoints(m_triangleLength, m_triangleLength + count);
-        m_triangleLength += count;
+        int endIndex = static_cast<int>(m_triangles.size());
+        int startIndex = endIndex - count;
+
+        m_triangleObjectPoints[meshName] = TriangleObjectPoints(startIndex, endIndex);
     }
 
     void MeshHandler::addMesh(std::string meshName)
@@ -99,33 +102,28 @@ namespace ObjectRenderer {
 
         int length = end - start;
 
-        std::shared_ptr<Triangle> triangles[g_maxBufferSize];
+        std::vector<std::shared_ptr<Triangle>> triangles;
+        triangles.reserve(length);
 
         for (int i = start; i < end; i++) {
-            triangles[i - start] = m_triangles[i];
+            triangles.push_back(m_triangles[i]);
         }
 
-        m_meshObjects[m_meshObjectLength] = std::make_shared<Mesh>(triangles, length);
-
-        m_meshObjectLength++;
+        m_meshObjects.push_back(std::make_shared<Mesh>(triangles));
     }
 
     void MeshHandler::generateVerticies()
     {
-        std::shared_ptr<Mesh> currentMesh;
-        int currentMeshVerticiesLength;
-        float* currentMeshVerticies;
+        std::vector<float>* currentMeshVerticies;
 
-        for (int i = 0; i < m_meshObjectLength; i++) {
-            currentMesh = m_meshObjects[i];
-            currentMeshVerticiesLength = currentMesh->getVerticiesLength();
+        for (const auto& currentMesh : m_meshObjects) {
             currentMeshVerticies = currentMesh->getVerticies();
 
-            for (int j = 0; j < currentMeshVerticiesLength; j++) {
-                m_completeVerticies[m_completeVerticiesLength + j] = currentMeshVerticies[j];
-            }
-
-            m_completeVerticiesLength += currentMeshVerticiesLength;
+            m_completeVerticies.insert(
+                m_completeVerticies.end(),
+                currentMeshVerticies->begin(),
+                currentMeshVerticies->end()
+            );
         }
     };
 }

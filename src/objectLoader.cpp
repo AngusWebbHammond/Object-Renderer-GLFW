@@ -79,7 +79,7 @@ namespace ObjectRenderer {
     }
 
     void ObjectLoader::loadObjectFromFile() {
-        char* filePath = "../../objects/sphere.obj";
+        char* filePath = "../../objects/monkey.obj";
 
         std::ifstream objectFile;
         std::string line;
@@ -199,7 +199,6 @@ namespace ObjectRenderer {
                 m_textures[m_texturesLength] = std::stof(current);
                 m_texturesLength++;
             }
-            //TODO Add more cases to this
         }
         objectFile.close();
     }

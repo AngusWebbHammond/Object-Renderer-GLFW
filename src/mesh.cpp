@@ -1,5 +1,8 @@
 #pragma once
 #include "mesh.hpp"
+#include <vector>
+#include <memory>
+#include <array>
 
 // Vertex Class
 namespace ObjectRenderer {
@@ -84,14 +87,15 @@ namespace ObjectRenderer {
                 m_triangleVerticies[11 * i + j] = position[j];
                 m_triangleVerticies[11 * i + j + 3] = m_colour[j];
                 m_triangleVerticies[11 * i + j + 6] = m_surfaceNormal[j];
-                if (j != 2) {
-                    m_triangleVerticies[11 * i + j + 9] = texture[j];
-                }
+            }
+
+            for (int j = 0; j < 2; j++) {
+                m_triangleVerticies[11 * i + j + 9] = texture[j];
             }
         }
     }
 
-    float* Triangle::getTriangleVerticies()
+    std::array<float, 33> Triangle::getTriangleVerticies() const
     {
         return m_triangleVerticies;
     }
@@ -102,41 +106,23 @@ namespace ObjectRenderer {
 
     Mesh::Mesh() {}
 
-    Mesh::Mesh(std::shared_ptr<Triangle>* triangles, int numberOfTriangles)
+    Mesh::Mesh(const std::vector<std::shared_ptr<Triangle>>& triangles)
     {
-        m_verticiesLength = 0;
-        m_trianglesLength = 0;
-
-        for (int i = 0; i < numberOfTriangles; i++) {
-            m_triangles[i] = triangles[i];
-        }
-
-        m_trianglesLength = numberOfTriangles;
-
+        m_triangles = triangles;
+        m_verticies.reserve(static_cast<int>(m_triangles.size()) * 33);
         generateVertices();
     }
 
-    float* Mesh::getVerticies()
+    std::vector<float>* Mesh::getVerticies()
     {
-        return m_verticies;
-    }
-
-    int Mesh::getVerticiesLength()
-    {
-        return m_verticiesLength;
+        return &m_verticies;
     }
 
     void Mesh::generateVertices()
     {
-        float* vertex;
-
-        for (int i = 0; i < m_trianglesLength; i++) {
-            vertex = m_triangles[i]->getTriangleVerticies();
-
-            for (int j = 0; j < 33; j++) {
-                m_verticies[33 * i + j] = vertex[j];
-                m_verticiesLength++;
-            }
+        for (const auto& triangle : m_triangles) {
+            const std::array<float, 33>& vertexData = triangle->getTriangleVerticies();
+            m_verticies.insert(m_verticies.end(), vertexData.begin(), vertexData.end());
         }
     }
 }

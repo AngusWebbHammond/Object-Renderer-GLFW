@@ -6,6 +6,7 @@ layout (location = 2) in vec3 aNormal;
 layout (location = 3) in vec2 aTexture;
 
 out vec3 vertexColour;
+out vec3 normal;
 
 uniform mat4 transform;
 
@@ -13,4 +14,5 @@ void main()
 {
     gl_Position = transform * vec4(aPos, 1.0f);
     vertexColour = aColour;
+    normal = aNormal;
 }

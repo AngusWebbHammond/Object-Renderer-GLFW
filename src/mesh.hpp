@@ -2,6 +2,8 @@
 #pragma once
 #include "globals.hpp"
 #include <memory>
+#include <vector>
+#include <array>
 
 namespace ObjectRenderer {
     struct Vertex {
@@ -30,14 +32,14 @@ namespace ObjectRenderer {
         Triangle(std::shared_ptr<Vertex>* verticies, std::shared_ptr<Texture>* textures, float* surfaceNormal, float* colour);
         ~Triangle() = default;
 
-        float* getTriangleVerticies();
+        std::array<float, 33> getTriangleVerticies() const;
 
     private:
         std::shared_ptr<Vertex> m_verticies[3];
         std::shared_ptr<Texture> m_textures[3];
         float m_surfaceNormal[3];
         float m_colour[3];
-        float m_triangleVerticies[33];
+        std::array<float, 33> m_triangleVerticies;
 
         void generateVerticies();
     };
@@ -45,17 +47,13 @@ namespace ObjectRenderer {
     class Mesh {
     public:
         Mesh();
-        Mesh(std::shared_ptr<Triangle>* triangles, int numberOfTriangles);
+        Mesh(const std::vector<std::shared_ptr<Triangle>>& triangles);
 
-        float* getVerticies();
-        int getVerticiesLength();
+        std::vector<float>* getVerticies();
 
     private:
-        std::shared_ptr<Triangle> m_triangles[g_maxBufferSize];
-        int m_trianglesLength;
-
-        float m_verticies[g_maxBufferSize];
-        int m_verticiesLength;
+        std::vector<std::shared_ptr<Triangle>> m_triangles;
+        std::vector<float> m_verticies;
 
         void generateVertices();
     };
