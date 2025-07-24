@@ -1,4 +1,4 @@
-#version 330 core
+#version 450 core
 
 out vec4 FragColour;
 in vec3 vertexColour;
@@ -6,8 +6,7 @@ in vec3 glFragCoord;
 
 void main()
 {
-    FragColour = vec4(1.0f, 0.5f, 0.5f, 1.0f);
-    // FragColour = vec4(vertexColour, 1.0f);
+    FragColour = vec4(result, 1.0f);
 }   
 
 //TODO Add lighting to this shader, using the normals loaded in from the .obj file

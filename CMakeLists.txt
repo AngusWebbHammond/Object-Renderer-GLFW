@@ -16,7 +16,21 @@ endif()
 
 include_directories(shaders)
 
-add_executable(main src/main.cpp ${GLAD_GL} src/renderer.hpp src/renderer.cpp src/globals.hpp src/globals.cpp src/application.hpp src/application.cpp src/shader.hpp src/shader.cpp src/objectLoader.hpp src/objectLoader.cpp)
+add_executable(main src/main.cpp ${GLAD_GL} 
+    src/renderer.hpp 
+    src/renderer.cpp 
+    src/globals.hpp 
+    src/globals.cpp 
+    src/application.hpp 
+    src/application.cpp 
+    src/shader.hpp 
+    src/shader.cpp 
+    src/objectLoader.hpp 
+    src/objectLoader.cpp
+    src/mesh.hpp
+    src/mesh.cpp
+    src/meshHandler.hpp
+    src/meshHandler.cpp)
 
 target_link_libraries(main PRIVATE glfw glm)
 

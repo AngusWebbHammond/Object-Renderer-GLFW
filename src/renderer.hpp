@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include "shader.hpp"
 #include "objectLoader.hpp"
+#include "meshHandler.hpp"
 
 namespace ObjectRenderer {
     class Renderer {
@@ -28,11 +29,20 @@ namespace ObjectRenderer {
         GLFWwindow* m_window;
         GLuint m_VBO, m_VAO;
         Shader m_shader;
+
         int m_verticiesLength;
-        int m_indicesLength;
-        // GLfloat m_verticies[10000];
+        int m_texturesLength;
+        int m_normalsLength;
+
+        int m_edgesLength;
+        int m_textureEdgesLength;
+        int m_normalEdgesLength;
+
+        int m_trianglesNumber;
+
         unsigned int m_EBO;
         ObjectLoader m_loader;
+        MeshHandler m_meshHandler;
     };
 }
 

@@ -1,38 +1,62 @@
 //TODO create the mesh class, that can be associated with an object
+#pragma once
 #include "globals.hpp"
+#include <memory>
 
 namespace ObjectRenderer {
     struct Vertex {
-        float position[3];
-        float texture[3];
+    private:
+        float m_position[3];
+
+    public:
+        Vertex();
+        Vertex(float* position);
+        float* getPosition();
+    };
+
+    struct Texture {
+    private:
+        float m_texture[2];
+
+    public:
+        Texture();
+        Texture(float* texture);
+        float* getTexture();
     };
 
     struct Triangle {
-        Vertex verticies[3];
-        float surfaceNormal[3];
-        float triangleVerticies[27];
-        bool isEmmisible;
-
-        Triangle(float* positions, float* textures, float* surfaceNormals);
-        Triangle(float* positions, float* textures, float* surfaceNormals, bool _isEmmisible);
+    public:
+        Triangle();
+        Triangle(std::shared_ptr<Vertex>* verticies, std::shared_ptr<Texture>* textures, float* surfaceNormal, float* colour);
         ~Triangle() = default;
 
+        float* getTriangleVerticies();
+
+    private:
+        std::shared_ptr<Vertex> m_verticies[3];
+        std::shared_ptr<Texture> m_textures[3];
+        float m_surfaceNormal[3];
+        float m_colour[3];
+        float m_triangleVerticies[33];
+
         void generateVerticies();
-        void init(float* positions, float* textures, float* surfaceNormals);
     };
 
     class Mesh {
     public:
-        Mesh() = default;
+        Mesh();
+        Mesh(std::shared_ptr<Triangle>* triangles, int numberOfTriangles);
 
-        void addTriangle(Triangle* triangle);
-        void generateVertices();
         float* getVerticies();
+        int getVerticiesLength();
 
     private:
-        Triangle* m_triangles[g_maxBufferSize];
-        int m_triangleNumber;
+        std::shared_ptr<Triangle> m_triangles[g_maxBufferSize];
+        int m_trianglesLength;
+
         float m_verticies[g_maxBufferSize];
-        int m_verticiesNumber;
+        int m_verticiesLength;
+
+        void generateVertices();
     };
 }
