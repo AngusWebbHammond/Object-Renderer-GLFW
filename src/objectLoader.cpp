@@ -3,203 +3,102 @@
 
 namespace ObjectRenderer {
 
-    ObjectLoader::ObjectLoader() {
-        m_verticeLength = 0;
-        m_vertexNormalsLength = 0;
-        m_texturesLength = 0;
-
-        m_edgeLength = 0;
-        m_vertexNormalEdgeLength = 0;
-        m_textureEdgeLength = 0;
-
+    ObjectLoader::ObjectLoader()
+    {
         loadObjectFromFile();
     }
     ObjectLoader::~ObjectLoader()
     {
     }
 
-    float* ObjectLoader::getVertices()
+    std::vector<float> ObjectLoader::getVertices()
     {
         return m_vertices;
     }
 
-    float* ObjectLoader::getTextures()
+    std::vector<float> ObjectLoader::getTextures()
     {
         return m_textures;
     }
 
-    float* ObjectLoader::getNormals()
+    std::vector<float> ObjectLoader::getNormals()
     {
         return m_vertexNormals;
     }
 
-    int* ObjectLoader::getEdges()
+    std::vector<int> ObjectLoader::getEdges()
     {
         return m_edges;
     }
 
-    int* ObjectLoader::getTextureEdges()
+    std::vector<int> ObjectLoader::getTextureEdges()
     {
         return m_textureEdges;
     }
 
-    int* ObjectLoader::getNormalEdges()
+    std::vector<int> ObjectLoader::getNormalEdges()
     {
         return m_vertexNormalEdges;
-    }
-
-    int ObjectLoader::getVerticesLength()
-    {
-        return m_verticeLength;
-    }
-
-    int ObjectLoader::getTexturesLength()
-    {
-        return m_texturesLength;
-    }
-
-    int ObjectLoader::getNormalsLength()
-    {
-        return m_vertexNormalsLength;
-    }
-
-    int ObjectLoader::getEdgesLength()
-    {
-        return m_edgeLength;
-    }
-
-    int ObjectLoader::getTextureEdgesLength()
-    {
-        return m_textureEdgeLength;
-    }
-
-    int ObjectLoader::getNormalEdgesLength()
-    {
-        return m_vertexNormalEdgeLength;
     }
 
     void ObjectLoader::loadObjectFromFile() {
         char* filePath = "../../objects/monkey.obj";
 
-        std::ifstream objectFile;
+        std::ifstream objectFile(filePath);
         std::string line;
 
-        objectFile.open(filePath);
+        if (!objectFile.is_open()) {
+            std::cerr << "Failed to open file: " << filePath << std::endl;
+            return;
+        }
 
-        while (!objectFile.eof())
+        while (std::getline(objectFile, line))
         {
-            std::getline(objectFile, line);
-            if (line.length() == 0) {
+            if (line.empty() || line[0] == '#') {
                 continue;
             }
-            char start = line[0];
-            char second = line[1];
-            if (start == '#')
-            {
-                continue;
+
+            std::istringstream iss(line);
+            std::string prefix;
+            iss >> prefix;
+
+            if (prefix == "v") {
+                float x, y, z;
+                iss >> x >> y >> z;
+                m_vertices.insert(m_vertices.end(), { x, y, z });
             }
-            else if (start == 'v' && second != 't' && second != 'n') {
-                std::string values = line.substr(2, line.length() - 2);
-                std::string current = "";
-                for (auto val : values) {
-                    if (std::isblank(val)) {
-                        m_vertices[m_verticeLength] = std::stof(current);
-                        m_verticeLength++;
-                        current = "";
-                    }
-                    else {
-                        current.push_back(val);
-                    }
-                }
-                m_vertices[m_verticeLength] = std::stof(current);
-                m_verticeLength++;
+
+            else if (prefix == "vn") {
+                float nx, ny, nz;
+                iss >> nx >> ny >> nz;
+                m_vertexNormals.insert(m_vertexNormals.end(), { nx, ny, nz });
             }
-            else if (start == 'v' && second == 'n') {
-                std::string values = line.substr(3, line.length() - 3);
-                std::string current = "";
-                for (auto val : values) {
-                    if (std::isblank(val)) {
-                        m_vertexNormals[m_vertexNormalsLength] = std::stof(current);
-                        m_vertexNormalsLength++;
-                        current = "";
-                    }
-                    else {
-                        current.push_back(val);
-                    }
-                }
-                m_vertexNormals[m_vertexNormalsLength] = std::stof(current);
-                m_vertexNormalsLength++;
+            else if (prefix == "vt") {
+                float u, v;
+                iss >> u >> v;
+                m_textures.insert(m_textures.end(), { u, v });
             }
-            else if (start == 'f')
-            {
-                std::string values = line.substr(2, line.length() - 2);
-                std::string currentEdge = "";
-                std::string currentTexture = "";
-                std::string currentNormal = "";
-                int count = 0;
+            else if (prefix == "f") {
+                std::string vertexStr;
+                while (iss >> vertexStr) {
+                    std::istringstream vertexStream(vertexStr);
+                    std::string vIdx, tIdx, nIdx;
 
-                for (auto val : values)
-                {
-                    if (std::isblank(val))
-                    {
-                        m_edges[m_edgeLength] = std::stoi(currentEdge) - 1;
-                        m_edgeLength++;
-                        currentEdge = "";
+                    std::getline(vertexStream, vIdx, '/');
+                    std::getline(vertexStream, tIdx, '/');
+                    std::getline(vertexStream, nIdx, '/');
 
-                        m_vertexNormalEdges[m_vertexNormalEdgeLength] = std::stoi(currentNormal) - 1;
-                        m_vertexNormalEdgeLength++;
-                        currentNormal = "";
-
-                        m_textureEdges[m_textureEdgeLength] = std::stoi(currentTexture) - 1;
-                        m_textureEdgeLength++;
-                        currentTexture = "";
-
-                        count = 0;
-                    }
-                    else if (val == '/')
-                    {
-                        count++;
-                    }
-                    else if (count == 0) {
-                        currentEdge.push_back(val);
-                    }
-                    else if (count == 1) {
-                        currentTexture.push_back(val);
-                    }
-                    else if (count == 2) {
-                        currentNormal.push_back(val);
-                    }
-                    else {
-                        continue;
-                    }
+                    if (!vIdx.empty())
+                        m_edges.push_back(std::stoi(vIdx) - 1);
+                    if (!tIdx.empty())
+                        m_textureEdges.push_back(std::stoi(tIdx) - 1);
+                    if (!nIdx.empty())
+                        m_vertexNormalEdges.push_back(std::stoi(nIdx) - 1);
                 }
-
-                m_edges[m_edgeLength] = std::stoi(currentEdge) - 1;
-                m_edgeLength++;
-
-                m_vertexNormalEdges[m_vertexNormalEdgeLength] = std::stoi(currentNormal) - 1;
-                m_vertexNormalEdgeLength++;
-
-                m_textureEdges[m_textureEdgeLength] = std::stoi(currentTexture) - 1;
-                m_textureEdgeLength++;
-            }
-            else if (start == 'v' && second == 't') {
-                std::string values = line.substr(3, line.length() - 3);
-                std::string current = "";
-                for (auto val : values) {
-                    if (std::isblank(val)) {
-                        m_textures[m_texturesLength] = std::stof(current);
-                        m_texturesLength++;
-                        current = "";
-                    }
-                    else {
-                        current.push_back(val);
-                    }
-                }
-                m_textures[m_texturesLength] = std::stof(current);
-                m_texturesLength++;
             }
         }
+
         objectFile.close();
+
     }
 }

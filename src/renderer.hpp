@@ -30,14 +30,6 @@ namespace ObjectRenderer {
         GLuint m_VBO, m_VAO;
         Shader m_shader;
 
-        int m_verticiesLength;
-        int m_texturesLength;
-        int m_normalsLength;
-
-        int m_edgesLength;
-        int m_textureEdgesLength;
-        int m_normalEdgesLength;
-
         int m_trianglesNumber;
 
         unsigned int m_EBO;

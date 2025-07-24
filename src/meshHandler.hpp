@@ -17,12 +17,10 @@ namespace ObjectRenderer {
         MeshHandler();
         ~MeshHandler();
 
-        void addObject(float* positions, int verticiesNumber,
-            float* textures, int texturesNumber,
-            int* triangleVerticies, float* colour,
-            float* surfaceNormals, int* normalVerticies,
-            int* textureVerticies, int triangleNumber,
-            std::string meshName);
+        void addObject(std::vector<float> positions, std::vector<float> textures,
+            std::vector<int> triangleVerticies, float* colour,
+            std::vector<float> surfaceNormals, std::vector<int> normalVerticies,
+            std::vector<int> textureVerticies, std::string meshName);
 
         std::vector<float> getVerticies();
 
@@ -36,12 +34,11 @@ namespace ObjectRenderer {
 
         std::vector<float> m_completeVerticies;
 
-        void addVertices(float* positions, int verticiesNumber);
-        void addTextures(float* textures, int texturesNumber);
-        void addTriangles(int* triangleVerticies, float* colour,
-            float* surfaceNormals, int* normalVerticies,
-            int* textureVerticies, int triangleNumber,
-            std::string meshName);
+        void addVertices(std::vector<float> positions);
+        void addTextures(std::vector<float> textures);
+        void addTriangles(std::vector<int> triangleVerticies, float* colour,
+            std::vector<float> surfaceNormals, std::vector<int> normalVerticies,
+            std::vector<int> textureVerticies, std::string meshName);
         void addMesh(std::string meshName);
         void generateVerticies();
     };

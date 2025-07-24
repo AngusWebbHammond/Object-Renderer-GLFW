@@ -11,7 +11,6 @@
 namespace ObjectRenderer {
 
     Renderer::Renderer() {
-        m_verticiesLength = 0;
         m_trianglesNumber = 0;
     }
 
@@ -37,32 +36,23 @@ namespace ObjectRenderer {
     }
 
     void Renderer::createVertexBufferObject() {
+        // Loading the objects and getting the verticies for the input to the gl buffer
+        std::vector<float> vertices = m_loader.getVertices();
+        std::vector<float> normals = m_loader.getNormals();
+        std::vector<float> textures = m_loader.getTextures();
 
-        float* vertices = m_loader.getVertices();
-        float* normals = m_loader.getNormals();
-        float* textures = m_loader.getTextures();
-
-        m_verticiesLength = m_loader.getVerticesLength();
-        m_texturesLength = m_loader.getTexturesLength();
-        m_normalsLength = m_loader.getNormalsLength();
-
-        int* edges = m_loader.getEdges();
-        int* textureEdges = m_loader.getTextureEdges();
-        int* normalEdges = m_loader.getNormalEdges();
-
-        m_edgesLength = m_loader.getEdgesLength();
+        std::vector<int> edges = m_loader.getEdges();
+        std::vector<int> textureEdges = m_loader.getTextureEdges();
+        std::vector<int> normalEdges = m_loader.getNormalEdges();
 
         float colour[] = { 1.0f, 0.0f, 1.0f };
 
-        m_meshHandler.addObject(vertices, m_verticiesLength, textures, m_texturesLength, edges, colour, normals, normalEdges, textureEdges, m_edgesLength, "Cube");
+        m_meshHandler.addObject(vertices, textures, edges, colour, normals, normalEdges, textureEdges, "Cube");
 
         std::vector<float> coords = m_meshHandler.getVerticies();
         m_trianglesNumber = static_cast<int>(coords.size());
 
-        // ---------------------------------------------------------------------------
-
-        // m_meshHandler.addObject(vertices, textures, normals, indices, m_verticiesLength, m_indicesLength);
-
+        // OpenGL Code
         glGenBuffers(1, &m_VBO);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);

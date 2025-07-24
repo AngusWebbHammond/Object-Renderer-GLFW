@@ -11,7 +11,6 @@
 namespace ObjectRenderer {
     const GLuint g_width = 800;
     const GLuint g_height = 800;
-    const int g_maxBufferSize = 10000;
 
     void g_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 }
