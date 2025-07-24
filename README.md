@@ -11,11 +11,12 @@ Currently this only works with the Windows WSVC compiler, to run this project cl
 - Rendering of 3D objects from file.
 - Utilistion of GLSL Shaders.
 - Basic motion from the GLM library.
+- Movement of the light sources to show the mesh best off.
+- Supports thousands of triangles.
 
 ## Planned Features
 
 - Camera control.
-- Light Sources.
 - Other Shaders.
 
 I would like to eventually integrate vulkan into this renderer.
