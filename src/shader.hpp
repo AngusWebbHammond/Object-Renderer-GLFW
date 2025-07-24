@@ -32,5 +32,7 @@ namespace ObjectRenderer {
         GLsizei m_logLengthVert, m_logLengthFrag;
         GLchar m_messageVert[1024], m_messageFrag[1024];
         glm::mat4 m_trans;
+
+        glm::vec3 m_lightingPosition;
     };
 }

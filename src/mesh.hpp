@@ -18,12 +18,14 @@ namespace ObjectRenderer {
 
     struct Texture {
     private:
-        float m_texture[2];
+        std::vector<float> m_texture;
+
+        void setTexture(const std::vector<float>& texture);
 
     public:
         Texture();
-        Texture(float* texture);
-        float* getTexture();
+        Texture(const std::vector<float>& texture);
+        std::vector<float> getTexture();
     };
 
     struct Triangle {

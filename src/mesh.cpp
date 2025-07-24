@@ -28,20 +28,24 @@ namespace ObjectRenderer {
 
 // Texture Class
 namespace ObjectRenderer {
-
-    Texture::Texture() {
-        for (int i = 0; i < 2; i++) {
-            m_texture[i] = 0.0f;
+    void Texture::setTexture(const std::vector<float>& texture) {
+        if (texture.size() >= 2) {
+            m_texture[0] = texture[0];
+            m_texture[1] = texture[1];
+        }
+        else {
+            m_texture.assign(2, 0.0f);
         }
     }
 
-    Texture::Texture(float* texture) {
-        for (int i = 0; i < 2; i++) {
-            m_texture[i] = texture[i];
-        }
+    Texture::Texture() : m_texture(2, 0.0f) {}
+
+    Texture::Texture(const std::vector<float>& texture) : m_texture(2, 0.0f) {
+        setTexture(texture);
     }
 
-    float* Texture::getTexture() {
+    std::vector<float> Texture::getTexture()
+    {
         return m_texture;
     }
 }
@@ -77,7 +81,7 @@ namespace ObjectRenderer {
     void Triangle::generateVerticies()
     {
         float* position;
-        float* texture;
+        std::vector<float> texture;
 
         for (int i = 0; i < 3; i++) {
             position = m_verticies[i]->getPosition();

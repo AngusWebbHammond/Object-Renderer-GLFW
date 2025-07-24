@@ -37,17 +37,19 @@ namespace ObjectRenderer {
 
     void Renderer::createVertexBufferObject() {
         // Loading the objects and getting the verticies for the input to the gl buffer
-        std::vector<float> vertices = m_loader.getVertices();
-        std::vector<float> normals = m_loader.getNormals();
-        std::vector<float> textures = m_loader.getTextures();
+        m_objectLoader.loadObjectFromFile("../../objects/armadillo.obj");
 
-        std::vector<int> edges = m_loader.getEdges();
-        std::vector<int> textureEdges = m_loader.getTextureEdges();
-        std::vector<int> normalEdges = m_loader.getNormalEdges();
+        std::vector<float> vertices = m_objectLoader.getVertices();
+        std::vector<float> normals = m_objectLoader.getNormals();
+        std::vector<float> textures = m_objectLoader.getTextures();
+
+        std::vector<int> edges = m_objectLoader.getEdges();
+        std::vector<int> textureEdges = m_objectLoader.getTextureEdges();
+        std::vector<int> normalEdges = m_objectLoader.getNormalEdges();
 
         float colour[] = { 1.0f, 0.0f, 1.0f };
 
-        m_meshHandler.addObject(vertices, textures, edges, colour, normals, normalEdges, textureEdges, "Cube");
+        m_meshHandler.addObject(vertices, textures, edges, colour, normals, normalEdges, textureEdges, "Monkey");
 
         std::vector<float> coords = m_meshHandler.getVerticies();
         m_trianglesNumber = static_cast<int>(coords.size());

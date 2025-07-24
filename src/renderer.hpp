@@ -29,12 +29,10 @@ namespace ObjectRenderer {
         GLFWwindow* m_window;
         GLuint m_VBO, m_VAO;
         Shader m_shader;
+        MeshHandler m_meshHandler;
+        ObjectLoader m_objectLoader;
 
         int m_trianglesNumber;
-
-        unsigned int m_EBO;
-        ObjectLoader m_loader;
-        MeshHandler m_meshHandler;
     };
 }
 

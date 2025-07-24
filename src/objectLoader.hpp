@@ -13,6 +13,8 @@ namespace ObjectRenderer
         ObjectLoader();
         ~ObjectLoader();
 
+        void loadObjectFromFile(char* filePath);
+
         std::vector<float> getVertices();
         std::vector<float> getTextures();
         std::vector<float> getNormals();
@@ -22,7 +24,7 @@ namespace ObjectRenderer
         std::vector<int> getNormalEdges();
 
     private:
-        void loadObjectFromFile();
+
 
         std::vector<float> m_vertices;
         std::vector<float> m_vertexNormals;

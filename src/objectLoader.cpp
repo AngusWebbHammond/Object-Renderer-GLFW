@@ -2,11 +2,10 @@
 #include "objectLoader.hpp"
 
 namespace ObjectRenderer {
-
     ObjectLoader::ObjectLoader()
     {
-        loadObjectFromFile();
     }
+
     ObjectLoader::~ObjectLoader()
     {
     }
@@ -41,8 +40,14 @@ namespace ObjectRenderer {
         return m_vertexNormalEdges;
     }
 
-    void ObjectLoader::loadObjectFromFile() {
-        char* filePath = "../../objects/monkey.obj";
+    void ObjectLoader::loadObjectFromFile(char* filePath) {
+        m_vertices.clear();
+        m_textures.clear();
+        m_vertexNormals.clear();
+
+        m_edges.clear();
+        m_textureEdges.clear();
+        m_vertexNormalEdges.clear();
 
         std::ifstream objectFile(filePath);
         std::string line;

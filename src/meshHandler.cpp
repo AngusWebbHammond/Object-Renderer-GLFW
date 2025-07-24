@@ -54,9 +54,11 @@ namespace ObjectRenderer {
 
     void MeshHandler::addTextures(std::vector<float> textures)
     {
-        float* currentTexture;
+        std::vector<float> currentTexture;
         for (int i = 0; i < static_cast<int>(textures.size()) / 2; i++) {
-            currentTexture = &textures[i * 2];
+            currentTexture.clear();
+            currentTexture.push_back(textures[i * 2]);
+            currentTexture.push_back(textures[i * 2 + 1]);
             m_textures.push_back(std::make_shared<Texture>(currentTexture));
         }
 
@@ -75,7 +77,12 @@ namespace ObjectRenderer {
         for (int i = 0; i < static_cast<int>(triangleVerticies.size()) / 3; i++) {
             for (int j = 0; j < 3; j++) {
                 currentTriangleVerticies[j] = m_verticies[triangleVerticies[3 * i + j]];
-                currentTextureVerticies[j] = m_textures[textureVerticies[3 * i + j]];
+                if (textureVerticies.size() < 2) {
+                    currentTextureVerticies[j] = std::make_shared<Texture>();
+                }
+                else {
+                    currentTextureVerticies[j] = m_textures[textureVerticies[3 * i + j]];
+                }
             }
 
             currentSurfaceNormal = &surfaceNormals[3 * normalVerticies[3 * i]];

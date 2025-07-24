@@ -16,6 +16,7 @@ namespace ObjectRenderer {
     Shader::Shader()
     {
         m_trans = glm::mat4(1.0f);
+        m_lightingPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     }
 
     Shader::~Shader()
@@ -32,11 +33,18 @@ namespace ObjectRenderer {
     void Shader::use()
     {
         glUseProgram(m_shaderProgram);
-        m_trans = glm::rotate(m_trans, glm::radians(0.1f), glm::vec3(0.0, 1.0, 0.0));
-        m_trans = glm::rotate(m_trans, glm::radians(0.03f), glm::vec3(1.0, 0.0, 0.0));
-        // m_trans = glm::rotate(m_trans, glm::radians(0.1f), glm::vec3(0.0, 0.0, 0.0));
-        unsigned int transformLoc = glGetUniformLocation(m_shaderProgram, "transform");
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(m_trans));
+        m_trans = glm::rotate(m_trans, glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0));
+        glm::vec4 tempPos = glm::vec4(m_lightingPosition, 1.0f);
+        tempPos = m_trans * tempPos;
+        m_lightingPosition = glm::vec3(tempPos);
+
+        unsigned int lightingLoc = glGetUniformLocation(m_shaderProgram, "lightingPosition");
+        glUniform3fv(lightingLoc, 1, glm::value_ptr(m_lightingPosition));
+
+        m_trans = glm::mat4(1.0f);
+        unsigned int transLoc = glGetUniformLocation(m_shaderProgram, "transform");
+        glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(m_trans));
+
     }
 }
 

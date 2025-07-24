@@ -7,12 +7,15 @@ layout (location = 3) in vec2 aTexture;
 
 out vec3 vertexColour;
 out vec3 normal;
+out vec3 lightingPos;
 
 uniform mat4 transform;
+uniform vec3 lightingPosition;
 
 void main()
 {
     gl_Position = transform * vec4(aPos, 1.0f);
     vertexColour = aColour;
     normal = aNormal;
+    lightingPos = lightingPosition;
 }
