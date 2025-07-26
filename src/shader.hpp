@@ -10,6 +10,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <string>
 
 namespace ObjectRenderer {
 
@@ -19,11 +20,14 @@ namespace ObjectRenderer {
         ~Shader();
         void init(const char* vertexPath, const char* fragmentPath);
         void use();
+        GLuint getShaderProgram();
+        void setMat4(const std::string& name, glm::mat4 value) const;
 
     private:
         void generateShaderLogs();
         void deleteShaders();
         void createShaderFromFile(const char* vertexPath, const char* fragmentPath);
+
 
     private:
         GLuint m_vertexShader;

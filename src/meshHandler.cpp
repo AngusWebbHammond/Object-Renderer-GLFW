@@ -43,6 +43,11 @@ namespace ObjectRenderer {
         return m_completeVerticies;
     }
 
+    TriangleObjectPoints MeshHandler::getMeshIndexStartEnd(std::string name)
+    {
+        return m_triangleObjectPoints[name];
+    }
+
     void MeshHandler::addVertices(std::vector<float> positions)
     {
         float* currentPosition;

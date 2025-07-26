@@ -23,6 +23,7 @@ namespace ObjectRenderer {
             std::vector<int> textureVerticies, std::string meshName);
 
         std::vector<float> getVerticies();
+        TriangleObjectPoints getMeshIndexStartEnd(std::string name);
 
     private:
         std::vector<std::shared_ptr<Vertex>> m_verticies;

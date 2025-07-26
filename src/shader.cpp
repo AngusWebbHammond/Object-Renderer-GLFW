@@ -44,7 +44,16 @@ namespace ObjectRenderer {
         m_trans = glm::mat4(1.0f);
         unsigned int transLoc = glGetUniformLocation(m_shaderProgram, "transform");
         glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(m_trans));
+    }
 
+    GLuint Shader::getShaderProgram()
+    {
+        return m_shaderProgram;
+    }
+
+    void Shader::setMat4(const std::string& name, glm::mat4 value) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
     }
 }
 

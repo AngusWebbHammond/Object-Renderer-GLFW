@@ -9,6 +9,7 @@
 #include "shader.hpp"
 #include "objectLoader.hpp"
 #include "meshHandler.hpp"
+#include "entityManagementSystem.hpp"
 
 namespace ObjectRenderer {
     class Renderer {
@@ -31,6 +32,7 @@ namespace ObjectRenderer {
         Shader m_shader;
         MeshHandler m_meshHandler;
         ObjectLoader m_objectLoader;
+        EntityManager m_entityManager;
 
         int m_trianglesNumber;
     };
