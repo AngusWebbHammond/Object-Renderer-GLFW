@@ -21,7 +21,9 @@ namespace ObjectRenderer {
         void init(const char* vertexPath, const char* fragmentPath);
         void use();
         GLuint getShaderProgram();
+
         void setMat4(const std::string& name, glm::mat4 value) const;
+        void setVec3(const std::string& name, glm::vec3 value) const;
 
     private:
         void generateShaderLogs();
@@ -35,8 +37,5 @@ namespace ObjectRenderer {
         GLuint m_shaderProgram;
         GLsizei m_logLengthVert, m_logLengthFrag;
         GLchar m_messageVert[1024], m_messageFrag[1024];
-        glm::mat4 m_trans;
-
-        glm::vec3 m_lightingPosition;
     };
 }

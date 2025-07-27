@@ -9,7 +9,6 @@ out vec3 vertexColour;
 out vec3 normal;
 out vec3 lightingPos;
 
-uniform mat4 transform;
 uniform vec3 lightingPosition;
 uniform mat4 model;
 uniform mat4 view;

@@ -18,14 +18,14 @@ namespace ObjectRenderer {
         }
     }
 
-    void EntityManager::addModel(std::string name, glm::vec3 location, float angle, glm::vec3 rotationDirection)
+    void EntityManager::addModel(std::string name, glm::vec3 location, float angle, glm::vec3 rotationDirection, glm::vec3 scale)
     {
         if (m_models.find(name) == m_models.end()) {
-            std::vector<EntityTransformation> newVector(1, EntityTransformation(location, angle, rotationDirection));
+            std::vector<EntityTransformation> newVector(1, EntityTransformation(location, angle, rotationDirection, scale));
             m_models[name] = newVector;
         }
         else {
-            m_models[name].push_back(EntityTransformation(location, angle, rotationDirection));
+            m_models[name].push_back(EntityTransformation(location, angle, rotationDirection, scale));
         }
     }
 
@@ -49,20 +49,23 @@ namespace ObjectRenderer {
     {
         translation = glm::vec3(0.0f);
         radianAngle = 0;
-        rotationDirection = glm::vec3(0.0f);
+        rotationDirection = glm::vec3(1.0f);
+        scale = glm::vec3(1.0f);
     }
 
     EntityTransformation::EntityTransformation(glm::vec3 location)
     {
         translation = location;
         radianAngle = 0;
-        rotationDirection = glm::vec3(0.0f);
+        rotationDirection = glm::vec3(1.0f);
+        scale = glm::vec3(1.0f);
     }
 
-    EntityTransformation::EntityTransformation(glm::vec3 location, float angle, glm::vec3 rotate)
+    EntityTransformation::EntityTransformation(glm::vec3 location, float angle, glm::vec3 rotate, glm::vec3 scaleVec3)
     {
         translation = location;
         radianAngle = angle;
         rotationDirection = rotate;
+        scale = scaleVec3;
     }
 }

@@ -12,10 +12,11 @@ namespace ObjectRenderer
         glm::vec3 translation;
         float radianAngle;
         glm::vec3 rotationDirection;
+        glm::vec3 scale;
 
         EntityTransformation();
         EntityTransformation(glm::vec3 location);
-        EntityTransformation(glm::vec3 location, float angle, glm::vec3 rotate);
+        EntityTransformation(glm::vec3 location, float angle, glm::vec3 rotate, glm::vec3 scale);
     };
 
     class EntityManager
@@ -24,7 +25,7 @@ namespace ObjectRenderer
         EntityManager();
         void addModel(std::string name);
         void addModel(std::string name, glm::vec3 location);
-        void addModel(std::string name, glm::vec3 location, float angle, glm::vec3 rotationDirection);
+        void addModel(std::string name, glm::vec3 location, float angle, glm::vec3 rotationDirection, glm::vec3 scale);
 
         std::map<std::string, std::vector<EntityTransformation>> getModels();
 

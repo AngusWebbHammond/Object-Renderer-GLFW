@@ -35,6 +35,8 @@ namespace ObjectRenderer {
         EntityManager m_entityManager;
 
         int m_trianglesNumber;
+
+        glm::vec3 m_lightingPosition;
     };
 }
 

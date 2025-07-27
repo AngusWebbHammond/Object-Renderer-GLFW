@@ -55,8 +55,8 @@ namespace ObjectRenderer {
         std::vector<float> coords = m_meshHandler.getVerticies();
         m_trianglesNumber = static_cast<int>(coords.size());
 
-        m_entityManager.addModel("Cube", glm::vec3(0.0f, 0.0f, 0.0f));
-        m_entityManager.addModel("Cube", glm::vec3(0.0f, 0.0f, 2.0f), 60.0f, glm::vec3(1.0f, 0.3f, 0.2f));
+        m_entityManager.addModel("Cube");
+        m_entityManager.addModel("Cube", glm::vec3(0.0f, 4.0f, 2.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
 
         // OpenGL Code
         glGenBuffers(1, &m_VBO);
@@ -93,20 +93,22 @@ namespace ObjectRenderer {
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         m_shader.use();
-        GLuint shaderProgram = m_shader.getShaderProgram();
+
+
 
         std::map<std::string, std::vector<EntityTransformation>> models = m_entityManager.getModels();
 
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
 
+        m_lightingPosition = glm::vec3(glm::rotate(glm::mat4(1.0f), glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0)) * glm::vec4(m_lightingPosition, 1.0f));
 
         projection = glm::perspective(glm::radians(45.0f), (float)g_width / (float)g_height, 0.1f, 100.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
-        view = glm::rotate(view, glm::radians(45.0f), glm::vec3(1.0, 1.0, 0.0));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -20.0f));
 
         m_shader.setMat4("view", view);
         m_shader.setMat4("projection", projection);
+        m_shader.setVec3("lightingPosition", m_lightingPosition);
 
         glBindVertexArray(m_VAO);
 
@@ -116,14 +118,20 @@ namespace ObjectRenderer {
             TriangleObjectPoints meshPoints = m_meshHandler.getMeshIndexStartEnd(i->first);
             int startIndex = meshPoints.startIndex * 33;
             int endIndex = meshPoints.endIndex * 33;
+            int length = endIndex - startIndex;
 
             for (int j = 0; j < currentVector.size(); j++) {
                 glm::mat4 model = glm::mat4(1.0f);
-                // model = glm::rotate(model, glm::radians(currentVector[j].radianAngle), currentVector[j].rotationDirection);
                 model = glm::translate(model, currentVector[j].translation);
+                model = glm::rotate(model, glm::radians(currentVector[j].radianAngle), currentVector[j].rotationDirection);
+                model = glm::scale(model, currentVector[j].scale);
                 m_shader.setMat4("model", model);
 
                 glDrawArrays(GL_TRIANGLES, startIndex, endIndex - startIndex);
+
+                std::cout << "Drawing Model " << j << std::endl;
+                std::cout << "Location {" << currentVector[j].translation.x << ", " << currentVector[j].translation.y << ", " << currentVector[j].translation.z << "}" << std::endl;
+                std::cout << "Rotation direction {" << currentVector[j].rotationDirection.x << ", " << currentVector[j].rotationDirection.y << ", " << currentVector[j].rotationDirection.z << "}" << std::endl;
             }
         }
         glfwSwapBuffers(m_window);

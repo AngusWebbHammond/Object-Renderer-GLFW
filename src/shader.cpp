@@ -15,8 +15,6 @@ namespace ObjectRenderer {
 
     Shader::Shader()
     {
-        m_trans = glm::mat4(1.0f);
-        m_lightingPosition = glm::vec3(1.0f, 0.0f, 0.0f);
     }
 
     Shader::~Shader()
@@ -33,17 +31,6 @@ namespace ObjectRenderer {
     void Shader::use()
     {
         glUseProgram(m_shaderProgram);
-        m_trans = glm::rotate(m_trans, glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0));
-        glm::vec4 tempPos = glm::vec4(m_lightingPosition, 1.0f);
-        tempPos = m_trans * tempPos;
-        m_lightingPosition = glm::vec3(tempPos);
-
-        unsigned int lightingLoc = glGetUniformLocation(m_shaderProgram, "lightingPosition");
-        glUniform3fv(lightingLoc, 1, glm::value_ptr(m_lightingPosition));
-
-        m_trans = glm::mat4(1.0f);
-        unsigned int transLoc = glGetUniformLocation(m_shaderProgram, "transform");
-        glUniformMatrix4fv(transLoc, 1, GL_FALSE, glm::value_ptr(m_trans));
     }
 
     GLuint Shader::getShaderProgram()
@@ -54,6 +41,11 @@ namespace ObjectRenderer {
     void Shader::setMat4(const std::string& name, glm::mat4 value) const
     {
         glUniformMatrix4fv(glGetUniformLocation(m_shaderProgram, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
+    }
+
+    void Shader::setVec3(const std::string& name, glm::vec3 value) const
+    {
+        glUniform3fv(glGetUniformLocation(m_shaderProgram, name.c_str()), 1, glm::value_ptr(value));
     }
 }
 
