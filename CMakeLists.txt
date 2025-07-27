@@ -32,7 +32,9 @@ add_executable(main src/main.cpp ${GLAD_GL}
     src/meshHandler.hpp
     src/meshHandler.cpp
     src/entityManagementSystem.hpp
-    src/entityManagementSystem.cpp)
+    src/entityManagementSystem.cpp
+    src/camera.hpp
+    src/camera.cpp)
 
 target_link_libraries(main PRIVATE glfw glm)
 

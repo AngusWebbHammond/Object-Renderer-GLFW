@@ -38,6 +38,23 @@ namespace ObjectRenderer {
         generateVerticies();
     }
 
+    void MeshHandler::addObjectFromFile(char* filePath)
+    {
+        m_objectLoader.loadObjectFromFile(filePath);
+
+        std::vector<float> vertices = m_objectLoader.getVertices();
+        std::vector<float> normals = m_objectLoader.getNormals();
+        std::vector<float> textures = m_objectLoader.getTextures();
+
+        std::vector<int> edges = m_objectLoader.getEdges();
+        std::vector<int> textureEdges = m_objectLoader.getTextureEdges();
+        std::vector<int> normalEdges = m_objectLoader.getNormalEdges();
+
+        float colour[] = { 1.0f, 0.0f, 1.0f };
+
+        addObject(vertices, textures, edges, colour, normals, normalEdges, textureEdges, "Cube");
+    }
+
     std::vector<float> MeshHandler::getVerticies()
     {
         return m_completeVerticies;

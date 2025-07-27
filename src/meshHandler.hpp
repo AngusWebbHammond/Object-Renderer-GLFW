@@ -1,5 +1,6 @@
 #pragma once
 #include "mesh.hpp"
+#include "objectLoader.hpp"
 #include <map>
 #include <string>
 
@@ -21,6 +22,7 @@ namespace ObjectRenderer {
             std::vector<int> triangleVerticies, float* colour,
             std::vector<float> surfaceNormals, std::vector<int> normalVerticies,
             std::vector<int> textureVerticies, std::string meshName);
+        void addObjectFromFile(char* filePath);
 
         std::vector<float> getVerticies();
         TriangleObjectPoints getMeshIndexStartEnd(std::string name);
@@ -34,6 +36,8 @@ namespace ObjectRenderer {
         std::map<std::string, TriangleObjectPoints> m_triangleObjectPoints;
 
         std::vector<float> m_completeVerticies;
+
+        ObjectLoader m_objectLoader;
 
         void addVertices(std::vector<float> positions);
         void addTextures(std::vector<float> textures);

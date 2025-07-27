@@ -38,19 +38,7 @@ namespace ObjectRenderer {
 
     void Renderer::createVertexBufferObject() {
         // Loading the objects and getting the verticies for the input to the gl buffer
-        m_objectLoader.loadObjectFromFile("../../objects/cube.obj");
-
-        std::vector<float> vertices = m_objectLoader.getVertices();
-        std::vector<float> normals = m_objectLoader.getNormals();
-        std::vector<float> textures = m_objectLoader.getTextures();
-
-        std::vector<int> edges = m_objectLoader.getEdges();
-        std::vector<int> textureEdges = m_objectLoader.getTextureEdges();
-        std::vector<int> normalEdges = m_objectLoader.getNormalEdges();
-
-        float colour[] = { 1.0f, 0.0f, 1.0f };
-
-        m_meshHandler.addObject(vertices, textures, edges, colour, normals, normalEdges, textureEdges, "Cube");
+        m_meshHandler.addObjectFromFile("../../objects/cube.obj");
 
         std::vector<float> coords = m_meshHandler.getVerticies();
         m_trianglesNumber = static_cast<int>(coords.size());
@@ -84,33 +72,9 @@ namespace ObjectRenderer {
         glBindVertexArray(0);
     }
 
-    void Renderer::renderCycle() {
-
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-        // glClear(GL_COLOR_BUFFER_BIT);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-        m_shader.use();
-
-
-
+    void Renderer::drawMeshObjects()
+    {
         std::map<std::string, std::vector<EntityTransformation>> models = m_entityManager.getModels();
-
-        glm::mat4 view = glm::mat4(1.0f);
-        glm::mat4 projection = glm::mat4(1.0f);
-
-        m_lightingPosition = glm::vec3(glm::rotate(glm::mat4(1.0f), glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0)) * glm::vec4(m_lightingPosition, 1.0f));
-
-        projection = glm::perspective(glm::radians(45.0f), (float)g_width / (float)g_height, 0.1f, 100.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -20.0f));
-
-        m_shader.setMat4("view", view);
-        m_shader.setMat4("projection", projection);
-        m_shader.setVec3("lightingPosition", m_lightingPosition);
-
-        glBindVertexArray(m_VAO);
 
         for (auto i = models.begin(); i != models.end(); ++i) {
 
@@ -128,15 +92,87 @@ namespace ObjectRenderer {
                 m_shader.setMat4("model", model);
 
                 glDrawArrays(GL_TRIANGLES, startIndex, endIndex - startIndex);
-
-                std::cout << "Drawing Model " << j << std::endl;
-                std::cout << "Location {" << currentVector[j].translation.x << ", " << currentVector[j].translation.y << ", " << currentVector[j].translation.z << "}" << std::endl;
-                std::cout << "Rotation direction {" << currentVector[j].rotationDirection.x << ", " << currentVector[j].rotationDirection.y << ", " << currentVector[j].rotationDirection.z << "}" << std::endl;
             }
         }
+    }
+
+    void Renderer::processInput(GLFWwindow* window, float deltaTime)
+    {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            m_camera.onKeyboardPress(FORWARD, deltaTime);
+
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            m_camera.onKeyboardPress(BACKWARD, deltaTime);
+
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            m_camera.onKeyboardPress(LEFT, deltaTime);
+
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            m_camera.onKeyboardPress(RIGHT, deltaTime);
+
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            m_canHandleMouse = true;
+        }
+
+        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            m_canHandleMouse = false;
+        }
+
+        if (m_canHandleMouse)
+            handleMouse();
+    }
+
+    void Renderer::handleMouse()
+    {
+        double xPos, yPos;
+        glfwGetCursorPos(m_window, &xPos, &yPos);
+
+        if (m_firstMouse) {
+            m_lastX = xPos;
+            m_lastY = yPos;
+            m_firstMouse = false;
+        }
+
+        float xoffset = xPos - m_lastX;
+        float yoffset = m_lastY - yPos;
+
+        m_camera.onMouseMove(xPos - m_lastX, m_lastY - yPos);
+
+        m_lastX = xPos;
+        m_lastY = yPos;
+    }
+
+    void Renderer::renderCycle() {
+
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        // glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+        m_shader.use();
+
+        processInput(m_window, 0.05f);
+
+        glm::mat4 view = m_camera.getViewMatrix();
+        glm::mat4 projection = glm::mat4(1.0f);
+
+        m_lightingPosition = glm::vec3(glm::rotate(glm::mat4(1.0f), glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0)) * glm::vec4(m_lightingPosition, 1.0f));
+
+        projection = glm::perspective(glm::radians(45.0f), (float)g_width / (float)g_height, 0.1f, 100.0f);
+
+        m_shader.setMat4("view", view);
+        m_shader.setMat4("projection", projection);
+        m_shader.setVec3("lightingPosition", m_lightingPosition);
+
+        glBindVertexArray(m_VAO);
+
+        drawMeshObjects();
+
         glfwSwapBuffers(m_window);
         glfwPollEvents();
-
     }
 }
 

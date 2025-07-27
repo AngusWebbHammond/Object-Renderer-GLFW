@@ -9,6 +9,7 @@
 #include "shader.hpp"
 #include "objectLoader.hpp"
 #include "meshHandler.hpp"
+#include "camera.hpp"
 #include "entityManagementSystem.hpp"
 
 namespace ObjectRenderer {
@@ -25,6 +26,9 @@ namespace ObjectRenderer {
     private:
         void createVertexArrayObject();
         void createVertexBufferObject();
+        void drawMeshObjects();
+        void processInput(GLFWwindow* window, float deltaTime);
+        void handleMouse();
 
     private:
         GLFWwindow* m_window;
@@ -33,10 +37,16 @@ namespace ObjectRenderer {
         MeshHandler m_meshHandler;
         ObjectLoader m_objectLoader;
         EntityManager m_entityManager;
+        Camera m_camera;
 
         int m_trianglesNumber;
+
+        float m_lastX = 400.0f;
+        float m_lastY = 300.0f;
+        bool m_firstMouse = true;
+
+        bool m_canHandleMouse = false;
 
         glm::vec3 m_lightingPosition;
     };
 }
-
