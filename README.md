@@ -13,10 +13,10 @@ Currently this only works with the Windows WSVC compiler, to run this project cl
 - Basic motion from the GLM library.
 - Movement of the light sources to show the mesh best off.
 - Supports thousands of triangles.
+- Camera control.
 
 ## Planned Features
 
-- Camera control.
 - Other Shaders.
 
 I would like to eventually integrate vulkan into this renderer.

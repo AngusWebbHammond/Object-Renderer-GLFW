@@ -1,4 +1,3 @@
-//TODO create the mesh class, that can be associated with an object
 #pragma once
 #include "globals.hpp"
 #include <memory>

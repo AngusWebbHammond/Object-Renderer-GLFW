@@ -20,7 +20,6 @@ void main()
     vec3 result = (diffuse + ambient) * vertexColour;
 
     FragColour = vec4(result, 1.0f);
-}   
+}
 
-//TODO Add lighting to this shader, using the normals loaded in from the .obj file
 //TODO Add textures to this shader, including specific colours for each face
