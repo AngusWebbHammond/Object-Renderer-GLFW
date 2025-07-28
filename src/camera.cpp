@@ -64,8 +64,6 @@ namespace ObjectRenderer {
                 m_pitch = -89.0f;
         }
 
-        std::cout << m_yaw << ", " << m_pitch << std::endl;
-
         updateCamera();
     }
 
