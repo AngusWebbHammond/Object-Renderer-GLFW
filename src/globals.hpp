@@ -15,7 +15,7 @@ namespace ObjectRenderer {
     const float g_yaw = -90.0f;
     const float g_pitch = 0.0f;
     const float g_speed = 2.5f;
-    const float g_sensitivity = 0.1f;
+    const float g_sensitivity = 0.2f;
 
     void g_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 }

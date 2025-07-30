@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
+#include <string>
 #include "globals.hpp"
 
 namespace ObjectRenderer
@@ -23,9 +24,9 @@ namespace ObjectRenderer
         std::vector<int> getTextureEdges();
         std::vector<int> getNormalEdges();
 
+        std::string getName();
+
     private:
-
-
         std::vector<float> m_vertices;
         std::vector<float> m_vertexNormals;
         std::vector<float> m_textures;
@@ -33,5 +34,7 @@ namespace ObjectRenderer
         std::vector<int> m_edges;
         std::vector<int> m_textureEdges;
         std::vector<int> m_vertexNormalEdges;
+
+        std::string m_name;
     };
 } // namespace ObjectRenderer

@@ -48,13 +48,17 @@ namespace ObjectRenderer {
     class Mesh {
     public:
         Mesh();
-        Mesh(const std::vector<std::shared_ptr<Triangle>>& triangles);
+        Mesh(const std::vector<std::shared_ptr<Triangle>>& triangles, std::string& meshName);
 
         std::vector<float>* getVerticies();
+        std::string getMeshName();
+        int getMeshTrianglesLength();
 
     private:
         std::vector<std::shared_ptr<Triangle>> m_triangles;
         std::vector<float> m_verticies;
+
+        std::string m_meshName;
 
         void generateVertices();
     };

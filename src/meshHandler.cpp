@@ -18,6 +18,7 @@ namespace ObjectRenderer {
 
     MeshHandler::MeshHandler()
     {
+        m_previousVerticiesSize = 0;
     }
 
     MeshHandler::~MeshHandler()
@@ -50,9 +51,13 @@ namespace ObjectRenderer {
         std::vector<int> textureEdges = m_objectLoader.getTextureEdges();
         std::vector<int> normalEdges = m_objectLoader.getNormalEdges();
 
+        std::string name = m_objectLoader.getName();
+
         float colour[] = { 1.0f, 0.0f, 1.0f };
 
-        addObject(vertices, textures, edges, colour, normals, normalEdges, textureEdges, "Cube");
+        addObject(vertices, textures, edges, colour, normals, normalEdges, textureEdges, name);
+
+        createAndRegisterMeshVAO(name);
     }
 
     std::vector<float> MeshHandler::getVerticies()
@@ -63,6 +68,39 @@ namespace ObjectRenderer {
     TriangleObjectPoints MeshHandler::getMeshIndexStartEnd(std::string name)
     {
         return m_triangleObjectPoints[name];
+    }
+
+    void MeshHandler::createAndRegisterMeshVAO(const std::string& meshName)
+    {
+        GLuint vao;
+        glGenVertexArrays(1, &vao);
+        m_vaos[meshName] = vao;
+    }
+
+    void MeshHandler::bindMeshVAO(const std::string& meshName)
+    {
+        auto it = m_vaos.find(meshName);
+        if (it != m_vaos.end()) {
+            glBindVertexArray(it->second);
+        }
+        else {
+            std::cerr << "Warning: VAO for mesh '" << meshName << "' not found." << std::endl;
+            glBindVertexArray(0); // Unbind VAO to prevent bad draw calls
+        }
+    }
+
+    std::vector<std::string> MeshHandler::getVAONames()
+    {
+        std::vector<std::string> tempVectorStrings;
+        for (auto it : m_vaos) {
+            tempVectorStrings.push_back(it.first);
+        }
+        return tempVectorStrings;
+    }
+
+    TriangleObjectPoints MeshHandler::getDrawArrayStartEndPoints(std::string meshName)
+    {
+        return m_drawArraysStartEndPoints[meshName];
     }
 
     void MeshHandler::addVertices(std::vector<float> positions)
@@ -98,7 +136,7 @@ namespace ObjectRenderer {
 
         for (int i = 0; i < static_cast<int>(triangleVerticies.size()) / 3; i++) {
             for (int j = 0; j < 3; j++) {
-                currentTriangleVerticies[j] = m_verticies[triangleVerticies[3 * i + j]];
+                currentTriangleVerticies[j] = m_verticies[triangleVerticies[3 * i + j] + m_previousVerticiesSize];
                 if (textureVerticies.size() < 2) {
                     currentTextureVerticies[j] = std::make_shared<Texture>();
                 }
@@ -111,12 +149,15 @@ namespace ObjectRenderer {
 
             m_triangles.push_back(std::make_shared<Triangle>(currentTriangleVerticies, currentTextureVerticies, currentSurfaceNormal, colour));
             count++;
+
+
         }
 
         int endIndex = static_cast<int>(m_triangles.size());
         int startIndex = endIndex - count;
 
         m_triangleObjectPoints[meshName] = TriangleObjectPoints(startIndex, endIndex);
+        m_previousVerticiesSize = static_cast<int>(m_verticies.size());
     }
 
     void MeshHandler::addMesh(std::string meshName)
@@ -129,25 +170,32 @@ namespace ObjectRenderer {
         std::vector<std::shared_ptr<Triangle>> triangles;
         triangles.reserve(length);
 
-        for (int i = start; i < end; i++) {
-            triangles.push_back(m_triangles[i]);
+        for (int i = 0; i < length; i++) {
+            triangles.push_back(m_triangles[i + start]);
         }
 
-        m_meshObjects.push_back(std::make_shared<Mesh>(triangles));
+        m_meshObjects.push_back(std::make_shared<Mesh>(triangles, meshName));
     }
 
     void MeshHandler::generateVerticies()
     {
+        m_completeVerticies.clear();
         std::vector<float>* currentMeshVerticies;
+        int count = 0;
 
         for (const auto& currentMesh : m_meshObjects) {
             currentMeshVerticies = currentMesh->getVerticies();
+            std::string currentMeshName = currentMesh->getMeshName();
 
             m_completeVerticies.insert(
                 m_completeVerticies.end(),
                 currentMeshVerticies->begin(),
                 currentMeshVerticies->end()
             );
+
+            m_drawArraysStartEndPoints[currentMeshName].startIndex = count;
+            m_drawArraysStartEndPoints[currentMeshName].endIndex = count + currentMesh->getMeshTrianglesLength();
+            count += currentMesh->getMeshTrianglesLength();
         }
     };
 }

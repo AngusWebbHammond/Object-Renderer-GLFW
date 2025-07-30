@@ -40,6 +40,11 @@ namespace ObjectRenderer {
         return m_vertexNormalEdges;
     }
 
+    std::string ObjectLoader::getName()
+    {
+        return m_name;
+    }
+
     void ObjectLoader::loadObjectFromFile(char* filePath) {
         m_vertices.clear();
         m_textures.clear();
@@ -100,6 +105,12 @@ namespace ObjectRenderer {
                     if (!nIdx.empty())
                         m_vertexNormalEdges.push_back(std::stoi(nIdx) - 1);
                 }
+            }
+
+            else if (prefix == "o") {
+                std::string tempName;
+                iss >> tempName;
+                m_name = tempName;
             }
         }
 

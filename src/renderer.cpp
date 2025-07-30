@@ -12,17 +12,14 @@
 namespace ObjectRenderer {
 
     Renderer::Renderer() {
-        m_trianglesNumber = 0;
     }
 
     Renderer::~Renderer() {
-
     }
 
     void Renderer::init(GLFWwindow* window) {
         m_window = window;
         m_shader.init("../../shaders/default.vert", "../../shaders/default.frag");
-        createVertexArrayObject();
         createVertexBufferObject();
         glEnable(GL_DEPTH_TEST);
     };
@@ -31,58 +28,68 @@ namespace ObjectRenderer {
 // Private
 namespace ObjectRenderer {
 
-    void Renderer::createVertexArrayObject() {
-        glGenVertexArrays(1, &m_VAO);
-        glBindVertexArray(m_VAO);
-    }
-
     void Renderer::createVertexBufferObject() {
         // Loading the objects and getting the verticies for the input to the gl buffer
+        m_meshHandler.addObjectFromFile("../../objects/torus.obj");
         m_meshHandler.addObjectFromFile("../../objects/cube.obj");
+        m_meshHandler.addObjectFromFile("../../objects/monkey.obj");
 
         std::vector<float> coords = m_meshHandler.getVerticies();
-        m_trianglesNumber = static_cast<int>(coords.size());
 
         m_entityManager.addModel("Cube");
-        m_entityManager.addModel("Cube", glm::vec3(0.0f, 4.0f, 2.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+        m_entityManager.addModel("Cube", glm::vec3(0.0f, 4.0f, 2.0f), 45.0f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+        m_entityManager.addModel("Torus", glm::vec3(0.0f, -8.0f, 3.0f), 30.0f, glm::vec3(1.0f, 0.0f, 1.0f), glm::vec3(2.0f, 1.0f, 1.5f));
+        m_entityManager.addModel("Torus", glm::vec3(0.0f, -2.0f, -4.0f), -60.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 0.0f, -3.0f), 50.0f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 5.0f, 0.0f), -75.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
         // OpenGL Code
+
         glGenBuffers(1, &m_VBO);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
         glBufferData(GL_ARRAY_BUFFER, coords.size() * sizeof(float), coords.data(), GL_STATIC_DRAW);
 
+        for (auto name : m_meshHandler.getVAONames()) {
+            m_meshHandler.bindMeshVAO(name);
+
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)0);
+            glEnableVertexAttribArray(0);
+
+            // Colour Data
+            glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(3 * sizeof(float)));
+            glEnableVertexAttribArray(1);
+
+            // Surface Normal Data
+            glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(6 * sizeof(float)));
+            glEnableVertexAttribArray(2);
+
+            // Texture Data
+            glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(9 * sizeof(float)));
+            glEnableVertexAttribArray(3);
+
+            glBindVertexArray(0);
+        }
+
         // Position Data
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)0);
-        glEnableVertexAttribArray(0);
-
-        // Colour Data
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-
-        // Surface Normal Data
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(6 * sizeof(float)));
-        glEnableVertexAttribArray(2);
-
-        // Texture Data
-        glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)(9 * sizeof(float)));
-        glEnableVertexAttribArray(3);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glBindVertexArray(0);
     }
 
     void Renderer::drawMeshObjects()
     {
         std::map<std::string, std::vector<EntityTransformation>> models = m_entityManager.getModels();
 
+
         for (auto i = models.begin(); i != models.end(); ++i) {
 
-            std::vector<EntityTransformation> currentVector = models[i->first];
+            std::vector<EntityTransformation> currentVector = i->second;
             TriangleObjectPoints meshPoints = m_meshHandler.getMeshIndexStartEnd(i->first);
-            int startIndex = meshPoints.startIndex * 33;
-            int endIndex = meshPoints.endIndex * 33;
+            int startIndex = meshPoints.startIndex;
+            int endIndex = meshPoints.endIndex;
             int length = endIndex - startIndex;
+
+            m_meshHandler.bindMeshVAO(i->first);
 
             for (int j = 0; j < currentVector.size(); j++) {
                 glm::mat4 model = glm::mat4(1.0f);
@@ -91,7 +98,7 @@ namespace ObjectRenderer {
                 model = glm::scale(model, currentVector[j].scale);
                 m_shader.setMat4("model", model);
 
-                glDrawArrays(GL_TRIANGLES, startIndex, endIndex - startIndex);
+                glDrawArrays(GL_TRIANGLES, startIndex * 3, length * 3);
             }
         }
     }
@@ -150,7 +157,7 @@ namespace ObjectRenderer {
         // glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         m_shader.use();
 
@@ -166,8 +173,6 @@ namespace ObjectRenderer {
         m_shader.setMat4("view", view);
         m_shader.setMat4("projection", projection);
         m_shader.setVec3("lightingPosition", m_lightingPosition);
-
-        glBindVertexArray(m_VAO);
 
         drawMeshObjects();
 

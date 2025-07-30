@@ -27,6 +27,13 @@ namespace ObjectRenderer {
         std::vector<float> getVerticies();
         TriangleObjectPoints getMeshIndexStartEnd(std::string name);
 
+        void createAndRegisterMeshVAO(const std::string& meshName);
+        void bindMeshVAO(const std::string& meshName);
+
+        std::vector<std::string> getVAONames();
+
+        TriangleObjectPoints getDrawArrayStartEndPoints(std::string meshName);
+
     private:
         std::vector<std::shared_ptr<Vertex>> m_verticies;
         std::vector<std::shared_ptr<Texture>> m_textures;
@@ -34,10 +41,15 @@ namespace ObjectRenderer {
         std::vector<std::shared_ptr<Mesh>> m_meshObjects;
 
         std::map<std::string, TriangleObjectPoints> m_triangleObjectPoints;
+        std::map<std::string, TriangleObjectPoints> m_drawArraysStartEndPoints;
 
         std::vector<float> m_completeVerticies;
 
+        int m_previousVerticiesSize;
+
         ObjectLoader m_objectLoader;
+
+        std::map<std::string, GLuint> m_vaos;
 
         void addVertices(std::vector<float> positions);
         void addTextures(std::vector<float> textures);

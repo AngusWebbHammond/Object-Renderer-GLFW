@@ -24,7 +24,7 @@ namespace ObjectRenderer {
         void renderCycle();
 
     private:
-        void createVertexArrayObject();
+        // void createVertexArrayObject();
         void createVertexBufferObject();
         void drawMeshObjects();
         void processInput(GLFWwindow* window, float deltaTime);
@@ -38,8 +38,6 @@ namespace ObjectRenderer {
         ObjectLoader m_objectLoader;
         EntityManager m_entityManager;
         Camera m_camera;
-
-        int m_trianglesNumber;
 
         float m_lastX = 400.0f;
         float m_lastY = 300.0f;

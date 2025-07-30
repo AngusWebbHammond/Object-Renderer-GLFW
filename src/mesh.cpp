@@ -110,9 +110,10 @@ namespace ObjectRenderer {
 
     Mesh::Mesh() {}
 
-    Mesh::Mesh(const std::vector<std::shared_ptr<Triangle>>& triangles)
+    Mesh::Mesh(const std::vector<std::shared_ptr<Triangle>>& triangles, std::string& meshName)
     {
         m_triangles = triangles;
+        m_meshName = meshName;
         m_verticies.reserve(static_cast<int>(m_triangles.size()) * 33);
         generateVertices();
     }
@@ -120,6 +121,16 @@ namespace ObjectRenderer {
     std::vector<float>* Mesh::getVerticies()
     {
         return &m_verticies;
+    }
+
+    std::string Mesh::getMeshName()
+    {
+        return m_meshName;
+    }
+
+    int Mesh::getMeshTrianglesLength()
+    {
+        return static_cast<int>(m_triangles.size());
     }
 
     void Mesh::generateVertices()
