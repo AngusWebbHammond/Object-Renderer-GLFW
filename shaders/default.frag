@@ -6,14 +6,14 @@ in vec3 vertexColour;
 in vec3 glFragCoord;
 in vec3 normal;
 in vec3 lightingPos;
+in vec3 fragPos;
 
 void main()
 {
     float ambientStrength = 0.2;
-    vec3 modelPosition = {0.0f, 0.0f, 0.0f};
     vec3 lightColour = {1.0f, 1.0f, 1.0f};
     vec3 normalizedNormal = normalize(normal);
-    vec3 lightingDirection = normalize(lightingPos - modelPosition);
+    vec3 lightingDirection = normalize(lightingPos - fragPos);
     float diff = max(dot(normalizedNormal, lightingDirection), 0.0);
     vec3 diffuse = diff * lightColour;
     vec3 ambient = ambientStrength * lightColour;

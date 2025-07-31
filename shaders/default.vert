@@ -8,6 +8,7 @@ layout (location = 3) in vec2 aTexture;
 out vec3 vertexColour;
 out vec3 normal;
 out vec3 lightingPos;
+out vec3 fragPos;
 
 uniform vec3 lightingPosition;
 uniform mat4 model;
@@ -17,6 +18,7 @@ uniform mat4 projection;
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0f);
+    fragPos = vec3(model * vec4(aPos, 1.0f));
     vertexColour = aColour;
     normal = aNormal;
     lightingPos = lightingPosition;
