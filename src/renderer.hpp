@@ -39,8 +39,8 @@ namespace ObjectRenderer {
         EntityManager m_entityManager;
         Camera m_camera;
 
-        float m_lastX = 400.0f;
-        float m_lastY = 300.0f;
+        float m_lastX = 0;
+        float m_lastY = 0;
         bool m_firstMouse = true;
 
         bool m_canHandleMouse = false;

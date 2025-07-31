@@ -118,13 +118,14 @@ namespace ObjectRenderer {
             m_camera.onKeyboardPress(RIGHT, deltaTime);
 
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             m_canHandleMouse = true;
         }
 
         if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             m_canHandleMouse = false;
+            m_firstMouse = true;
         }
 
         if (m_canHandleMouse)
@@ -157,7 +158,7 @@ namespace ObjectRenderer {
         // glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         m_shader.use();
 
