@@ -18,4 +18,10 @@ namespace ObjectRenderer {
     const float g_sensitivity = 0.2f;
 
     void g_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
+
+    void g_initImGui(GLFWwindow* window);
+    void g_cleanupImGui();
+    void g_createImGuiFrame();
+    void g_renderImGui();
+    void g_buildImGuiUI();
 }

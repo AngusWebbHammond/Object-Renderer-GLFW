@@ -7,8 +7,20 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(AddGLFW)
 include(AddGLM)
 
-include_directories(${CMAKE_SOURCE_DIR}/deps/glad/include)
+include_directories(deps/glad/include
+    deps/imgui
+    deps/imgui/backends)
+
 set(GLAD_GL "deps/glad/src/gl.c")
+
+set(IMGUI_SOURCES
+    deps/imgui/imgui.cpp
+    deps/imgui/imgui_draw.cpp
+    deps/imgui/imgui_tables.cpp
+    deps/imgui/imgui_widgets.cpp
+    deps/imgui/backends/imgui_impl_glfw.cpp
+    deps/imgui/backends/imgui_impl_opengl3.cpp
+)
 
 if( MSVC )
     SET( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /ENTRY:mainCRTStartup" )
@@ -16,7 +28,8 @@ endif()
 
 include_directories(shaders)
 
-add_executable(main src/main.cpp ${GLAD_GL} 
+add_executable(main src/main.cpp ${GLAD_GL}
+    ${IMGUI_SOURCES}
     src/renderer.hpp 
     src/renderer.cpp 
     src/globals.hpp 

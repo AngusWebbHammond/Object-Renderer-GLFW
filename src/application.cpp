@@ -8,11 +8,13 @@ namespace ObjectRenderer {
     {
         createWindow(width, height);
         m_renderer.init(m_window);
+        g_initImGui(m_window);
     }
 
     Application::~Application()
     {
         glfwTerminate();
+        g_cleanupImGui();
     }
 
     void Application::run() {
