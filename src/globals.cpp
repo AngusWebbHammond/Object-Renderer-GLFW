@@ -19,6 +19,10 @@ namespace ObjectRenderer {
 
         ImGuiIO& io = ImGui::GetIO(); (void)io;
 
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
         ImGui::StyleColorsDark();
 
         ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -43,10 +47,40 @@ namespace ObjectRenderer {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void g_buildImGuiUI()
+    void g_buildImGuiUI(const char* windowName)
     {
-        ImGui::Begin("Hello Window");
+        ImGui::Begin(windowName);
         ImGui::Text("This is some useful text.");
         ImGui::End();
     }
+
+    void g_showDockspace() {
+        static bool isFullScreen = true;
+        static ImGuiDockNodeFlags dockSpaceFlags = ImGuiDockNodeFlags_None;
+
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+
+        if (isFullScreen)
+        {
+            const ImGuiViewport* viewport = ImGui::GetMainViewport();
+            ImGui::SetNextWindowPos(viewport->WorkPos);
+            ImGui::SetNextWindowSize(viewport->WorkSize);
+            ImGui::SetNextWindowViewport(viewport->ID);
+            windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+            windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        }
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+        ImGui::Begin("DockSpace Demo", nullptr, windowFlags);
+        ImGui::PopStyleVar(2);
+
+        // DockSpace
+        ImGuiID dockSpaceID = ImGui::GetID("MyDockSpace");
+        ImGui::DockSpace(dockSpaceID, ImVec2(0.0f, 0.0f), dockSpaceFlags);
+
+        ImGui::End();
+    }
+
 }

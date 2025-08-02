@@ -23,5 +23,6 @@ namespace ObjectRenderer {
     void g_cleanupImGui();
     void g_createImGuiFrame();
     void g_renderImGui();
-    void g_buildImGuiUI();
+    void g_buildImGuiUI(const char* windowName);
+    void g_showDockspace();
 }

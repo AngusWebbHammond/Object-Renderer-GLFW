@@ -29,6 +29,7 @@ namespace ObjectRenderer {
         void drawMeshObjects();
         void processInput(GLFWwindow* window, float deltaTime);
         void handleMouse();
+        void createFrameBufferWithTextureAttachment();
 
     private:
         GLFWwindow* m_window;
@@ -38,6 +39,8 @@ namespace ObjectRenderer {
         ObjectLoader m_objectLoader;
         EntityManager m_entityManager;
         Camera m_camera;
+
+        GLuint m_FBO, m_colorTexture, m_depthBuffer;
 
         float m_lastX = 0;
         float m_lastY = 0;

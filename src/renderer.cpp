@@ -7,6 +7,9 @@
 #include "globals.hpp"
 #include "mesh.hpp"
 #include "entityManagementSystem.hpp"
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 // Public
 namespace ObjectRenderer {
@@ -22,6 +25,7 @@ namespace ObjectRenderer {
         m_shader.init("../../shaders/default.vert", "../../shaders/default.frag");
         createVertexBufferObject();
         glEnable(GL_DEPTH_TEST);
+        createFrameBufferWithTextureAttachment();
     };
 }
 
@@ -152,21 +156,56 @@ namespace ObjectRenderer {
         m_lastY = yPos;
     }
 
+    void Renderer::createFrameBufferWithTextureAttachment()
+    {
+        glGenTextures(1, &m_colorTexture);
+        glBindTexture(GL_TEXTURE_2D, m_colorTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, g_width, g_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // Create depth buffer
+        glGenRenderbuffers(1, &m_depthBuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, g_width, g_height);
+
+        // Create framebuffer
+        glGenFramebuffers(1, &m_FBO);
+        glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTexture, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
+
+        // Check
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cout << "Framebuffer not complete!" << std::endl;
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
     void Renderer::renderCycle() {
         glfwPollEvents();
 
         g_createImGuiFrame();
-        g_buildImGuiUI();
 
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        g_showDockspace();
+
+        g_buildImGuiUI("Hi Window");
+
+        g_buildImGuiUI("hI wINDOW 2");
+
         // glClear(GL_COLOR_BUFFER_BIT);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        glViewport(0, 0, g_width, g_height);
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         m_shader.use();
 
-        processInput(m_window, 0.05f);
+        // processInput(m_window, 0.05f);
 
         glm::mat4 view = m_camera.getViewMatrix();
         glm::mat4 projection = glm::mat4(1.0f);
@@ -180,6 +219,15 @@ namespace ObjectRenderer {
         m_shader.setVec3("lightingPosition", m_lightingPosition);
 
         drawMeshObjects();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        ImGui::Begin("Viewport");
+
+        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+        ImGui::Image((void*)(intptr_t)m_colorTexture, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
+
+        ImGui::End();
 
         g_renderImGui();
 
