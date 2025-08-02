@@ -93,18 +93,30 @@ namespace ObjectRenderer {
 
     void g_buildImGuiUIProperties(EntityTransformation* properties)
     {
+        float transform[] = { properties->translation.x, properties->translation.y, properties->translation.z };
+        float scale[] = { properties->scale.x, properties->scale.y, properties->scale.z };
+        float rotationDirection[] = { properties->rotationDirection.x, properties->rotationDirection.y, properties->rotationDirection.z };
+
         ImGui::Begin("Properties");
 
-        ImGui::Text("Transformation");
-
-        float transform[] = { properties->translation.x, properties->translation.y, properties->translation.z };
-        ImGui::InputFloat3("Transformation", transform);
+        ImGui::DragFloat3("Transformation", transform, 0.1f, -20.0f, 20.0f);
+        ImGui::DragFloat("Angle", &properties->radianAngle, 1.0f, 0.0f, 360.0f);
+        ImGui::DragFloat3("Rotation Direction", rotationDirection, 0.01f, 0.0f, 1.0f);
+        ImGui::DragFloat3("Scale", scale, 0.1f, 0.0f, 20.0f);
 
         ImGui::End();
 
         properties->translation.x = transform[0];
         properties->translation.y = transform[1];
         properties->translation.z = transform[2];
+
+        properties->scale.x = scale[0];
+        properties->scale.y = scale[1];
+        properties->scale.z = scale[2];
+
+        properties->rotationDirection.x = rotationDirection[0];
+        properties->rotationDirection.y = rotationDirection[1];
+        properties->rotationDirection.z = rotationDirection[2];
     }
 
     void g_showDockspace() {
