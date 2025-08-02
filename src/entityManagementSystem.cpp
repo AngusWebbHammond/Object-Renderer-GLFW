@@ -40,9 +40,9 @@ namespace ObjectRenderer {
         }
     }
 
-    std::map<std::string, std::vector<EntityTransformation>> EntityManager::getModels()
+    std::map<std::string, std::vector<EntityTransformation>>* EntityManager::getModels()
     {
-        return m_models;
+        return &m_models;
     }
 
     EntityTransformation::EntityTransformation()

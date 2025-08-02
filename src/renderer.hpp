@@ -41,6 +41,7 @@ namespace ObjectRenderer {
         Camera m_camera;
 
         GLuint m_FBO, m_colorTexture, m_depthBuffer;
+        std::vector<std::string> m_keys;
 
         float m_lastX = 0;
         float m_lastY = 0;

@@ -6,7 +6,9 @@
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-
+#include <vector>
+#include <string>
+#include "entityManagementSystem.hpp"
 
 namespace ObjectRenderer {
     const GLuint g_width = 800;
@@ -23,6 +25,7 @@ namespace ObjectRenderer {
     void g_cleanupImGui();
     void g_createImGuiFrame();
     void g_renderImGui();
-    void g_buildImGuiUI(const char* windowName);
+    std::string g_buildImGuiUIContent(std::vector<std::string>* entities);
+    void g_buildImGuiUIProperties(EntityTransformation* properties);
     void g_showDockspace();
 }

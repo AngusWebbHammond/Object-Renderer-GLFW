@@ -4,6 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <cstdlib>
+#include <map>
+#include <vector>
 #include "globals.hpp"
 #include "mesh.hpp"
 #include "entityManagementSystem.hpp"
@@ -82,7 +84,7 @@ namespace ObjectRenderer {
 
     void Renderer::drawMeshObjects()
     {
-        std::map<std::string, std::vector<EntityTransformation>> models = m_entityManager.getModels();
+        std::map<std::string, std::vector<EntityTransformation>> models = *m_entityManager.getModels();
 
 
         for (auto i = models.begin(); i != models.end(); ++i) {
@@ -184,13 +186,24 @@ namespace ObjectRenderer {
     void Renderer::renderCycle() {
         glfwPollEvents();
 
+        auto models = m_entityManager.getModels();
+        m_keys.clear();
+
+        for (const auto& pair : *models) {
+            for (int i = 0; i < pair.second.size(); i++) {
+                m_keys.push_back(pair.first + std::to_string(i));
+            }
+        }
+
         g_createImGuiFrame();
 
         g_showDockspace();
 
-        g_buildImGuiUI("Hi Window");
+        std::string selectedModel = g_buildImGuiUIContent(&m_keys);
 
-        g_buildImGuiUI("hI wINDOW 2");
+        EntityTransformation* properties = &(*models)[selectedModel.substr(0, selectedModel.size() - 1)][selectedModel[selectedModel.size() - 1] - '0'];
+
+        g_buildImGuiUIProperties(properties);
 
         // glClear(GL_COLOR_BUFFER_BIT);
 

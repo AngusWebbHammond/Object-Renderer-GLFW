@@ -1,8 +1,12 @@
 #pragma once
 #include "globals.hpp"
+#include <string>
+#include <vector>
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "entityManagementSystem.hpp"
+#include <iostream>
 
 namespace ObjectRenderer {
 
@@ -47,11 +51,60 @@ namespace ObjectRenderer {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    void g_buildImGuiUI(const char* windowName)
+    std::string g_buildImGuiUIContent(std::vector< std::string>* entities)
     {
-        ImGui::Begin(windowName);
-        ImGui::Text("This is some useful text.");
+        ImGui::Begin("Scene Content");
+
+        static int selectedIndex = 0;
+
+        if (!entities || entities->empty())
+        {
+            ImGui::Text("No entities available.");
+            ImGui::End();
+            return "";
+        }
+
+        if (selectedIndex >= entities->size())
+            selectedIndex = 0;
+
+        const std::string& selectedItem = (*entities)[selectedIndex];
+
+        if (ImGui::BeginListBox("Entities"))
+        {
+            for (int i = 0; i < entities->size(); i++)
+            {
+                bool isSelected = (selectedIndex == i);
+                if (ImGui::Selectable((*entities)[i].c_str(), isSelected)) {
+                    selectedIndex = i;
+                    std::cout << (*entities)[i].c_str() << std::endl;
+                }
+                if (isSelected) {
+                    ImGui::SetItemDefaultFocus();
+                }
+
+            }
+        }
+        ImGui::EndListBox();
+
         ImGui::End();
+        return (*entities)[selectedIndex];
+
+    }
+
+    void g_buildImGuiUIProperties(EntityTransformation* properties)
+    {
+        ImGui::Begin("Properties");
+
+        ImGui::Text("Transformation");
+
+        float transform[] = { properties->translation.x, properties->translation.y, properties->translation.z };
+        ImGui::InputFloat3("Transformation", transform);
+
+        ImGui::End();
+
+        properties->translation.x = transform[0];
+        properties->translation.y = transform[1];
+        properties->translation.z = transform[2];
     }
 
     void g_showDockspace() {
