@@ -7,12 +7,13 @@ in vec3 glFragCoord;
 in vec3 normal;
 in vec3 lightingPos;
 in vec3 fragPos;
+in mat3 outModel;
 
 void main()
 {
     float ambientStrength = 0.2;
     vec3 lightColour = {1.0f, 1.0f, 1.0f};
-    vec3 normalizedNormal = normalize(normal);
+    vec3 normalizedNormal = normalize(outModel * normal);
     vec3 lightingDirection = normalize(lightingPos - fragPos);
     float diff = max(dot(normalizedNormal, lightingDirection), 0.0);
     vec3 diffuse = diff * lightColour;

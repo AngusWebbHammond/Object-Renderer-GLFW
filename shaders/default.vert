@@ -15,6 +15,8 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+out mat3 outModel;
+
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0f);
@@ -22,4 +24,6 @@ void main()
     vertexColour = aColour;
     normal = aNormal;
     lightingPos = lightingPosition;
+
+    outModel = mat3(model);
 }
