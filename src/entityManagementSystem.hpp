@@ -24,7 +24,7 @@ namespace ObjectRenderer
         EntityManager();
         void addModel(std::string name);
         void addModel(std::string name, glm::vec3 location);
-        void EntityManager::addModel(std::string name, glm::vec3 locationVector, glm::vec3 rotationVector, glm::vec3 scaleVector);
+        void addModel(std::string name, glm::vec3 locationVector, glm::vec3 rotationVector, glm::vec3 scaleVector);
 
         std::map<std::string, std::vector<EntityTransformation>>* getModels();
 

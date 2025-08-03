@@ -20,6 +20,7 @@ namespace ObjectRenderer {
     }
 
     Renderer::~Renderer() {
+
     }
 
     void Renderer::init(GLFWwindow* window) {
@@ -185,8 +186,31 @@ namespace ObjectRenderer {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    void Renderer::resizeFramebuffer(int width, int height)
+    {
+        if (m_colorTexture) glDeleteTextures(1, &m_colorTexture);
+        if (m_FBO) glDeleteFramebuffers(1, &m_FBO);
+        createFrameBufferWithTextureAttachment();
+    }
+
     void Renderer::renderCycle() {
         glfwPollEvents();
+
+        int fbWidth, fbHeight;
+        glfwGetFramebufferSize(m_window, &fbWidth, &fbHeight);
+
+        if (fbWidth == 0 || fbHeight == 0)
+            return;
+
+        if (fbWidth != m_lastFbWidth || fbHeight != m_lastFbHeight) {
+            m_lastFbWidth = fbWidth;
+            m_lastFbHeight = fbHeight;
+            resizeFramebuffer(fbWidth, fbHeight);
+        }
+
+        g_width = fbWidth;
+        g_height = fbHeight;
+
 
         auto models = m_entityManager.getModels();
         m_keys.clear();
@@ -203,11 +227,26 @@ namespace ObjectRenderer {
 
         std::string selectedModel = g_buildImGuiUIContent(&m_keys);
 
-        EntityTransformation* properties = &(*models)[selectedModel.substr(0, selectedModel.size() - 1)][selectedModel[selectedModel.size() - 1] - '0'];
+        if (!selectedModel.empty()) {
 
-        g_buildImGuiUIProperties(properties);
+            EntityTransformation* properties = &(*models)[selectedModel.substr(0, selectedModel.size() - 1)][selectedModel[selectedModel.size() - 1] - '0'];
+
+            g_buildImGuiUIProperties(properties);
+        }
 
         // glClear(GL_COLOR_BUFFER_BIT);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+            std::cerr << "Framebuffer incomplete!" << std::endl;
+
+            ImGui::EndFrame();
+            g_renderImGui();
+            glfwSwapBuffers(m_window);
+
+            std::cout << "FRAMEBUFFER" << std::endl;
+
+            return;
+        }
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -227,7 +266,13 @@ namespace ObjectRenderer {
 
         m_lightingPosition = glm::vec3(glm::rotate(glm::mat4(1.0f), glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0)) * glm::vec4(m_lightingPosition, 1.0f));
 
-        projection = glm::perspective(glm::radians(45.0f), (float)g_width / (float)g_height, 0.1f, 100.0f);
+        if (g_height > 0 && g_width > 0) {
+            projection = glm::perspective(glm::radians(45.0f), (float)g_width / (float)g_height, 0.1f, 100.0f);
+            std::cout << "Perspective Used!!!" << std::endl;
+        }
+        else {
+            std::cout << "Perspective Issue!!!!!!" << std::endl;
+        }
 
         m_shader.setMat4("view", view);
         m_shader.setMat4("projection", projection);
@@ -237,12 +282,17 @@ namespace ObjectRenderer {
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        ImGui::Begin("Viewport");
+        if (fbWidth > 0 && fbHeight > 0) {
+            ImGui::Begin("Viewport");
 
-        ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-        ImGui::Image((void*)(intptr_t)m_colorTexture, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
+            ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 
-        ImGui::End();
+            if (m_colorTexture && viewportPanelSize.x > 0 && viewportPanelSize.y > 0) {
+                ImGui::Image((void*)(intptr_t)m_colorTexture, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
+            }
+
+            ImGui::End();
+        }
 
         g_renderImGui();
 

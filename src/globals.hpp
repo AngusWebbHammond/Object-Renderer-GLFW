@@ -11,8 +11,8 @@
 #include "entityManagementSystem.hpp"
 
 namespace ObjectRenderer {
-    const GLuint g_width = 800;
-    const GLuint g_height = 800;
+    inline GLuint g_width = 800;
+    inline GLuint g_height = 800;
 
     const float g_yaw = -90.0f;
     const float g_pitch = 0.0f;

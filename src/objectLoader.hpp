@@ -14,7 +14,7 @@ namespace ObjectRenderer
         ObjectLoader();
         ~ObjectLoader();
 
-        void loadObjectFromFile(char* filePath);
+        void loadObjectFromFile(const char* filePath);
 
         std::vector<float> getVertices();
         std::vector<float> getTextures();

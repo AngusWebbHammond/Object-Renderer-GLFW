@@ -22,7 +22,7 @@ namespace ObjectRenderer {
             std::vector<int> triangleVerticies, float* colour,
             std::vector<float> surfaceNormals, std::vector<int> normalVerticies,
             std::vector<int> textureVerticies, std::string meshName);
-        void addObjectFromFile(char* filePath);
+        void addObjectFromFile(const char* filePath);
 
         std::vector<float> getVerticies();
         TriangleObjectPoints getMeshIndexStartEnd(std::string name);

@@ -39,7 +39,7 @@ namespace ObjectRenderer {
         generateVerticies();
     }
 
-    void MeshHandler::addObjectFromFile(char* filePath)
+    void MeshHandler::addObjectFromFile(const char* filePath)
     {
         m_objectLoader.loadObjectFromFile(filePath);
 

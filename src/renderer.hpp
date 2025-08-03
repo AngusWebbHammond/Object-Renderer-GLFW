@@ -30,6 +30,7 @@ namespace ObjectRenderer {
         void processInput(GLFWwindow* window, float deltaTime);
         void handleMouse();
         void createFrameBufferWithTextureAttachment();
+        void resizeFramebuffer(int width, int height);
 
     private:
         GLFWwindow* m_window;
@@ -46,6 +47,9 @@ namespace ObjectRenderer {
         float m_lastX = 0;
         float m_lastY = 0;
         bool m_firstMouse = true;
+
+        int m_lastFbWidth = -1;
+        int m_lastFbHeight = -1;
 
         bool m_canHandleMouse = false;
 

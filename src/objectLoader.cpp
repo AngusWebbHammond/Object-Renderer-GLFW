@@ -45,7 +45,7 @@ namespace ObjectRenderer {
         return m_name;
     }
 
-    void ObjectLoader::loadObjectFromFile(char* filePath) {
+    void ObjectLoader::loadObjectFromFile(const char* filePath) {
         m_vertices.clear();
         m_textures.clear();
         m_vertexNormals.clear();

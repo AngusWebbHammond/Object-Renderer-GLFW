@@ -83,8 +83,9 @@ namespace ObjectRenderer {
                 }
 
             }
+
+            ImGui::EndListBox();
         }
-        ImGui::EndListBox();
 
         ImGui::End();
         return (*entities)[selectedIndex];
