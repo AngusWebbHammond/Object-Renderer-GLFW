@@ -93,30 +93,26 @@ namespace ObjectRenderer {
 
     void g_buildImGuiUIProperties(EntityTransformation* properties)
     {
-        float transform[] = { properties->translation.x, properties->translation.y, properties->translation.z };
-        float scale[] = { properties->scale.x, properties->scale.y, properties->scale.z };
-        float rotationDirection[] = { properties->rotationDirection.x, properties->rotationDirection.y, properties->rotationDirection.z };
-
         ImGui::Begin("Properties");
 
-        ImGui::DragFloat3("Transformation", transform, 0.1f, -20.0f, 20.0f);
-        ImGui::DragFloat("Angle", &properties->radianAngle, 1.0f, 0.0f, 360.0f);
-        ImGui::DragFloat3("Rotation Direction", rotationDirection, 0.01f, 0.0f, 1.0f);
-        ImGui::DragFloat3("Scale", scale, 0.1f, 0.0f, 20.0f);
+        if (ImGui::CollapsingHeader("Transformations")) {
+            ImGui::Text("Translation");
+            ImGui::DragFloat("X", &properties->translation.x, 0.01f, -20.0f, 20.0f);
+            ImGui::DragFloat("Y", &properties->translation.y, 0.01f, -20.0f, 20.0f);
+            ImGui::DragFloat("Z", &properties->translation.z, 0.01f, -20.0f, 20.0f);
+
+            ImGui::Text("Rotation");
+            ImGui::DragFloat("Angle X", &properties->rotationAngles.x, 0.1f, -180.0f, 180.0f);
+            ImGui::DragFloat("Angle Y", &properties->rotationAngles.y, 0.1f, -180.0f, 180.0f);
+            ImGui::DragFloat("Angle Z", &properties->rotationAngles.z, 0.1f, -180.0f, 180.0f);
+
+            ImGui::Text("Scale");
+            ImGui::DragFloat("Scale X", &properties->scale.x, 0.01f, 0.0f, 20.0f);
+            ImGui::DragFloat("Scale Y", &properties->scale.y, 0.01f, 0.0f, 20.0f);
+            ImGui::DragFloat("Scale Z", &properties->scale.z, 0.01f, 0.0f, 20.0f);
+        }
 
         ImGui::End();
-
-        properties->translation.x = transform[0];
-        properties->translation.y = transform[1];
-        properties->translation.z = transform[2];
-
-        properties->scale.x = scale[0];
-        properties->scale.y = scale[1];
-        properties->scale.z = scale[2];
-
-        properties->rotationDirection.x = rotationDirection[0];
-        properties->rotationDirection.y = rotationDirection[1];
-        properties->rotationDirection.z = rotationDirection[2];
     }
 
     void g_showDockspace() {

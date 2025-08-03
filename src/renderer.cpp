@@ -43,11 +43,11 @@ namespace ObjectRenderer {
         std::vector<float> coords = m_meshHandler.getVerticies();
 
         m_entityManager.addModel("Cube");
-        m_entityManager.addModel("Cube", glm::vec3(0.0f, 4.0f, 2.0f), 45.0f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
-        m_entityManager.addModel("Torus", glm::vec3(0.0f, -8.0f, 3.0f), 30.0f, glm::vec3(1.0f, 0.0f, 1.0f), glm::vec3(2.0f, 1.0f, 1.5f));
-        m_entityManager.addModel("Torus", glm::vec3(0.0f, -2.0f, -4.0f), -60.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
-        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 0.0f, -3.0f), 50.0f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 5.0f, 0.0f), -75.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        m_entityManager.addModel("Cube", glm::vec3(0.0f, 4.0f, 2.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+        m_entityManager.addModel("Torus", glm::vec3(0.0f, -8.0f, 3.0f), glm::vec3(45.0f, 0.0f, 45.0f), glm::vec3(2.0f, 1.0f, 1.5f));
+        m_entityManager.addModel("Torus", glm::vec3(0.0f, -2.0f, -4.0f), glm::vec3(45.0f, 0.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(45.0f, 45.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(45.0f, 45.0f, 45.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
         // OpenGL Code
 
@@ -100,7 +100,9 @@ namespace ObjectRenderer {
             for (int j = 0; j < currentVector.size(); j++) {
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, currentVector[j].translation);
-                model = glm::rotate(model, glm::radians(currentVector[j].radianAngle), currentVector[j].rotationDirection);
+                model = glm::rotate(model, glm::radians(currentVector[j].rotationAngles.x), { 1.0f, 0.0f, 0.0f });
+                model = glm::rotate(model, glm::radians(currentVector[j].rotationAngles.y), { 0.0f, 1.0f, 0.0f });
+                model = glm::rotate(model, glm::radians(currentVector[j].rotationAngles.z), { 0.0f, 0.0f, 1.0f });
                 model = glm::scale(model, currentVector[j].scale);
                 m_shader.setMat4("model", model);
 
