@@ -1,5 +1,7 @@
 #pragma once
+
 #include "camera.hpp"
+
 #include <iostream>
 
 namespace ObjectRenderer {

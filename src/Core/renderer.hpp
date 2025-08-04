@@ -6,11 +6,12 @@
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include "shader.hpp"
+
 #include "objectLoader.hpp"
-#include "meshHandler.hpp"
-#include "camera.hpp"
-#include "entityManagementSystem.hpp"
+#include "../Shader/shader.hpp"
+#include "../Entity/meshHandler.hpp"
+#include "../Camera/camera.hpp"
+#include "../Entity/entityManagementSystem.hpp"
 
 namespace ObjectRenderer {
     class Renderer {

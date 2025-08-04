@@ -1,5 +1,8 @@
 #pragma once
+
 #include "application.hpp"
+
+#include "../UI/ui.hpp"
 
 // Public
 namespace ObjectRenderer {
@@ -8,13 +11,13 @@ namespace ObjectRenderer {
     {
         createWindow(width, height);
         m_renderer.init(m_window);
-        g_initImGui(m_window);
+        UI::initImGui(m_window);
     }
 
     Application::~Application()
     {
         glfwTerminate();
-        g_cleanupImGui();
+        UI::cleanupImGui();
     }
 
     void Application::run() {

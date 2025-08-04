@@ -1,8 +1,11 @@
 #pragma once
-#include "globals.hpp"
+
+#include "../Core/globals.hpp"
+
 #include <memory>
 #include <vector>
 #include <array>
+#include <string>
 
 namespace ObjectRenderer {
     struct Vertex {

@@ -1,6 +1,7 @@
 #pragma once
+
 #include "meshHandler.hpp"
-#include "objectLoader.hpp"
+
 #include <list>
 
 namespace ObjectRenderer {

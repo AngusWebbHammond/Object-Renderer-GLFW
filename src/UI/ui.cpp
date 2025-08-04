@@ -1,22 +1,13 @@
 #pragma once
-#include "globals.hpp"
-#include <string>
-#include <vector>
+
+#include "ui.hpp"
+
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
-#include "entityManagementSystem.hpp"
-#include <iostream>
 
-namespace ObjectRenderer {
-
-    void g_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
-    {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-
-    void g_initImGui(GLFWwindow* window)
+namespace UI {
+    void initImGui(GLFWwindow* window)
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -33,25 +24,25 @@ namespace ObjectRenderer {
         ImGui_ImplOpenGL3_Init("#version 450");
     }
 
-    void g_cleanupImGui() {
+    void cleanupImGui() {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
 
-    void g_createImGuiFrame()
+    void createImGuiFrame()
     {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
 
-    void g_renderImGui() {
+    void renderImGui() {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    std::string g_buildImGuiUIContent(std::vector< std::string>* entities)
+    std::string buildImGuiUIContent(std::vector< std::string>* entities)
     {
         ImGui::Begin("Scene Content");
 
@@ -76,7 +67,6 @@ namespace ObjectRenderer {
                 bool isSelected = (selectedIndex == i);
                 if (ImGui::Selectable((*entities)[i].c_str(), isSelected)) {
                     selectedIndex = i;
-                    std::cout << (*entities)[i].c_str() << std::endl;
                 }
                 if (isSelected) {
                     ImGui::SetItemDefaultFocus();
@@ -92,7 +82,7 @@ namespace ObjectRenderer {
 
     }
 
-    void g_buildImGuiUIProperties(EntityTransformation* properties)
+    void buildImGuiUIProperties(ObjectRenderer::EntityTransformation* properties)
     {
         ImGui::Begin("Properties");
 
@@ -116,7 +106,7 @@ namespace ObjectRenderer {
         ImGui::End();
     }
 
-    void g_showDockspace() {
+    void showDockspace() {
         static bool isFullScreen = true;
         static ImGuiDockNodeFlags dockSpaceFlags = ImGuiDockNodeFlags_None;
 
@@ -144,5 +134,4 @@ namespace ObjectRenderer {
 
         ImGui::End();
     }
-
 }

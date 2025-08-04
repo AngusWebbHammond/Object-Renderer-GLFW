@@ -6,9 +6,6 @@
 
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <vector>
-#include <string>
-#include "entityManagementSystem.hpp"
 
 namespace ObjectRenderer {
     inline GLuint g_width = 800;
@@ -20,12 +17,4 @@ namespace ObjectRenderer {
     const float g_sensitivity = 0.2f;
 
     void g_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
-
-    void g_initImGui(GLFWwindow* window);
-    void g_cleanupImGui();
-    void g_createImGuiFrame();
-    void g_renderImGui();
-    std::string g_buildImGuiUIContent(std::vector<std::string>* entities);
-    void g_buildImGuiUIProperties(EntityTransformation* properties);
-    void g_showDockspace();
 }

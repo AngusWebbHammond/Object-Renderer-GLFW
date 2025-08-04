@@ -34,24 +34,26 @@ include_directories(shaders)
 
 add_executable(main src/main.cpp ${GLAD_GL}
     ${IMGUI_SOURCES}
-    src/renderer.hpp 
-    src/renderer.cpp 
-    src/globals.hpp 
-    src/globals.cpp 
-    src/application.hpp 
-    src/application.cpp 
-    src/shader.hpp 
-    src/shader.cpp 
-    src/objectLoader.hpp 
-    src/objectLoader.cpp
-    src/mesh.hpp
-    src/mesh.cpp
-    src/meshHandler.hpp
-    src/meshHandler.cpp
-    src/entityManagementSystem.hpp
-    src/entityManagementSystem.cpp
-    src/camera.hpp
-    src/camera.cpp)
+    src/Core/renderer.hpp 
+    src/Core/renderer.cpp 
+    src/Core/globals.hpp 
+    src/Core/globals.cpp 
+    src/Core/application.hpp 
+    src/Core/application.cpp 
+    src/Core/objectLoader.hpp 
+    src/Core/objectLoader.cpp
+    src/Shader/shader.hpp 
+    src/Shader/shader.cpp 
+    src/Entity/mesh.hpp
+    src/Entity/mesh.cpp
+    src/Entity/meshHandler.hpp
+    src/Entity/meshHandler.cpp
+    src/Entity/entityManagementSystem.hpp
+    src/Entity/entityManagementSystem.cpp
+    src/Camera/camera.hpp
+    src/Camera/camera.cpp
+    src/UI/ui.hpp
+    src/UI/ui.cpp)
 
 target_link_libraries(main PRIVATE glfw glm)
 

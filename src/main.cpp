@@ -1,13 +1,9 @@
 #pragma once
 
 #include <iostream>
-#include "application.hpp"
-#include "globals.hpp"
-#include "ObjectLoader.hpp"
 
-# include <windows.h>
-
-
+#include "Core/application.hpp"
+#include "Core/globals.hpp"
 
 int main(void)
 {

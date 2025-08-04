@@ -1,8 +1,11 @@
 #pragma once
+
 #include "mesh.hpp"
-#include "objectLoader.hpp"
+
 #include <map>
 #include <string>
+
+#include "../Core/objectLoader.hpp"
 
 namespace ObjectRenderer {
     struct TriangleObjectPoints {

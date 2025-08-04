@@ -1,8 +1,6 @@
 #pragma once
+
 #include "mesh.hpp"
-#include <vector>
-#include <memory>
-#include <array>
 
 // Vertex Class
 namespace ObjectRenderer {
