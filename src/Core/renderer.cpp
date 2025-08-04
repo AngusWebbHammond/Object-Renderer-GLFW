@@ -31,7 +31,7 @@ namespace ObjectRenderer {
         m_shader.init("../../shaders/default.vert", "../../shaders/default.frag");
         createVertexBufferObject();
         glEnable(GL_DEPTH_TEST);
-        createFrameBufferWithTextureAttachment();
+        initFrameBuffer();
     };
 }
 
@@ -167,7 +167,7 @@ namespace ObjectRenderer {
         m_lastY = yPos;
     }
 
-    void Renderer::createFrameBufferWithTextureAttachment()
+    void Renderer::initFrameBuffer()
     {
         glGenTextures(1, &m_colorTexture);
         glBindTexture(GL_TEXTURE_2D, m_colorTexture);
@@ -219,18 +219,6 @@ namespace ObjectRenderer {
     void Renderer::renderCycle() {
         glfwPollEvents();
 
-        int fbWidth, fbHeight;
-        glfwGetFramebufferSize(m_window, &fbWidth, &fbHeight);
-
-        if (fbWidth == 0 || fbHeight == 0)
-            return;
-
-        if (fbWidth != m_lastFbWidth || fbHeight != m_lastFbHeight) {
-            m_lastFbWidth = fbWidth;
-            m_lastFbHeight = fbHeight;
-            resizeFramebuffer(fbWidth, fbHeight);
-        }
-
         auto models = m_entityManager.getModels();
         m_keys.clear();
 
@@ -244,7 +232,36 @@ namespace ObjectRenderer {
 
         UI::showDockspace();
 
+        ImVec2 viewportPanelSize = ImVec2(0, 0);
+
         std::string selectedModel = UI::buildImGuiUIContent(&m_keys);
+
+        if (ImGui::Begin("Viewport")) {
+
+            viewportPanelSize = ImGui::GetContentRegionAvail();
+
+            if (m_colorTexture && viewportPanelSize.x > 0 && viewportPanelSize.y > 0) {
+                ImGui::Image((void*)(intptr_t)m_colorTexture, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
+            }
+
+            if (ImGui::IsItemHovered()) {
+                processMouse();
+            }
+
+            ImGui::End();
+        }
+
+        int fbWidth = static_cast<int>(viewportPanelSize.x);
+        int fbHeight = static_cast<int>(viewportPanelSize.y);
+
+        if (fbWidth == 0 || fbHeight == 0)
+            return;
+
+        if (fbWidth != m_lastFbWidth || fbHeight != m_lastFbHeight) {
+            m_lastFbWidth = fbWidth;
+            m_lastFbHeight = fbHeight;
+            resizeFramebuffer(fbWidth, fbHeight);
+        }
 
         if (!selectedModel.empty()) {
 
@@ -268,7 +285,7 @@ namespace ObjectRenderer {
         glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        glViewport(0, 0, fbWidth, fbWidth);
+        glViewport(0, 0, fbWidth, fbHeight);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -283,24 +300,8 @@ namespace ObjectRenderer {
 
         m_lightingPosition = glm::vec3(glm::rotate(glm::mat4(1.0f), glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0)) * glm::vec4(m_lightingPosition, 1.0f));
 
-        if (fbWidth > 0 && fbHeight > 0) {
-            ImGui::Begin("Viewport");
-
-            ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-
-            if (m_colorTexture && viewportPanelSize.x > 0 && viewportPanelSize.y > 0) {
-                ImGui::Image((void*)(intptr_t)m_colorTexture, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
-            }
-
-            if (fbHeight > 0 && fbWidth > 0) {
-                projection = glm::perspective(glm::radians(45.0f), (float)viewportPanelSize.x / (float)viewportPanelSize.y, 0.1f, 100.0f);
-            }
-
-            if (ImGui::IsItemHovered()) {
-                processMouse();
-            }
-
-            ImGui::End();
+        if (fbHeight > 0 && fbWidth > 0) {
+            projection = glm::perspective(glm::radians(45.0f), (float)fbWidth / (float)fbHeight, 0.1f, 100.0f);
         }
 
         m_shader.setMat4("view", view);

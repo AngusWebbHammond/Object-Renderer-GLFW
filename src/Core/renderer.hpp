@@ -31,7 +31,7 @@ namespace ObjectRenderer {
         void processInput(GLFWwindow* window, float deltaTime);
         void processMouse();
         void handleMouse();
-        void createFrameBufferWithTextureAttachment();
+        void initFrameBuffer();
         void resizeFramebuffer(int width, int height);
 
     private:
