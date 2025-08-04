@@ -194,9 +194,26 @@ namespace ObjectRenderer {
 
     void Renderer::resizeFramebuffer(int width, int height)
     {
-        if (m_colorTexture) glDeleteTextures(1, &m_colorTexture);
-        if (m_FBO) glDeleteFramebuffers(1, &m_FBO);
-        createFrameBufferWithTextureAttachment();
+        if (width <= 0 || height <= 0)
+            return;
+
+        glBindTexture(GL_TEXTURE_2D, m_colorTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glBindRenderbuffer(GL_RENDERBUFFER, m_depthBuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_colorTexture, 0);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthBuffer);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            std::cerr << "Framebuffer incomplete after resize!" << std::endl;
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
     void Renderer::renderCycle() {
@@ -249,9 +266,9 @@ namespace ObjectRenderer {
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        glViewport(0, 0, g_width, g_height);
+        glViewport(0, 0, fbWidth, fbWidth);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
