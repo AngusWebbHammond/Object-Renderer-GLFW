@@ -29,6 +29,7 @@ namespace ObjectRenderer {
         void createVertexBufferObject();
         void drawMeshObjects();
         void processInput(GLFWwindow* window, float deltaTime);
+        void processMouse();
         void handleMouse();
         void createFrameBufferWithTextureAttachment();
         void resizeFramebuffer(int width, int height);

@@ -128,14 +128,17 @@ namespace ObjectRenderer {
 
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             m_camera.onKeyboardPress(RIGHT, deltaTime);
+    }
 
-        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    void Renderer::processMouse()
+    {
+        if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             m_canHandleMouse = true;
         }
 
-        if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
+            glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             m_canHandleMouse = false;
             m_firstMouse = true;
         }
@@ -242,8 +245,6 @@ namespace ObjectRenderer {
             UI::renderImGui();
             glfwSwapBuffers(m_window);
 
-            std::cout << "FRAMEBUFFER" << std::endl;
-
             return;
         }
 
@@ -258,7 +259,7 @@ namespace ObjectRenderer {
 
         m_shader.use();
 
-        // processInput(m_window, 0.05f);
+        processInput(m_window, 0.05f);
 
         glm::mat4 view = m_camera.getViewMatrix();
         glm::mat4 projection = glm::mat4(1.0f);
@@ -276,7 +277,10 @@ namespace ObjectRenderer {
 
             if (fbHeight > 0 && fbWidth > 0) {
                 projection = glm::perspective(glm::radians(45.0f), (float)viewportPanelSize.x / (float)viewportPanelSize.y, 0.1f, 100.0f);
-                // std::cout << "Perspective Used!!!" << std::endl;
+            }
+
+            if (ImGui::IsItemHovered()) {
+                processMouse();
             }
 
             ImGui::End();
