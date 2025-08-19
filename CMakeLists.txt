@@ -10,10 +10,13 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(AddGLFW)
 include(AddGLM)
+include(AddENTT)
 
-include_directories(deps/glad/include
+include_directories(
+    deps/glad/include
     deps/imgui
-    deps/imgui/backends)
+    deps/imgui/backends
+)
 
 set(GLAD_GL "deps/glad/src/gl.c")
 
@@ -55,7 +58,7 @@ add_executable(main src/main.cpp ${GLAD_GL}
     src/UI/ui.hpp
     src/UI/ui.cpp)
 
-target_link_libraries(main PRIVATE glfw glm)
+target_link_libraries(main PRIVATE glfw glm EnTT::EnTT)
 
 if( MSVC )
     if(${CMAKE_VERSION} VERSION_LESS "3.6.0")
