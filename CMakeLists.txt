@@ -51,12 +51,17 @@ add_executable(main src/main.cpp ${GLAD_GL}
     src/Entity/mesh.cpp
     src/Entity/meshHandler.hpp
     src/Entity/meshHandler.cpp
-    src/Entity/entityManagementSystem.hpp
-    src/Entity/entityManagementSystem.cpp
     src/Camera/camera.hpp
     src/Camera/camera.cpp
     src/UI/ui.hpp
-    src/UI/ui.cpp)
+    src/UI/ui.cpp
+    src/Entity/components.cpp
+    src/Entity/components.hpp
+    src/Entity/entity.cpp
+    src/Entity/entity.hpp
+    src/Scene/scene.cpp
+    src/Scene/scene.hpp
+)
 
 target_link_libraries(main PRIVATE glfw glm EnTT::EnTT)
 

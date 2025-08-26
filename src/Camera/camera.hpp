@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "../Core/globals.hpp"
+#include "../Entity/components.hpp"
 
 namespace ObjectRenderer {
 
@@ -40,4 +41,9 @@ namespace ObjectRenderer {
         float m_movementSpeed;
         float m_mouseSensitivity;
     };
+}
+
+namespace ObjectRenderer::Cameras {
+    glm::mat4 getViewMatrix(const EntityComponentSystem::TransformComponent& transformComponent, const EntityComponentSystem::CameraComponent& cameraComponent);
+    void onMouseMoveUpdateCamera(EntityComponentSystem::CameraComponent& cameraComponent, float xOffset, float yOffset, bool constrainPitch = true);
 }

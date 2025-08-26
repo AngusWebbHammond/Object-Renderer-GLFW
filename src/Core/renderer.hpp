@@ -11,7 +11,7 @@
 #include "../Shader/shader.hpp"
 #include "../Entity/meshHandler.hpp"
 #include "../Camera/camera.hpp"
-#include "../Entity/entityManagementSystem.hpp"
+#include "../Scene/scene.hpp"
 
 namespace ObjectRenderer {
     class Renderer {
@@ -27,7 +27,6 @@ namespace ObjectRenderer {
     private:
         // void createVertexArrayObject();
         void createVertexBufferObject();
-        void drawMeshObjects();
         void processInput(GLFWwindow* window, float deltaTime);
         void processMouse();
         void handleMouse();
@@ -40,8 +39,8 @@ namespace ObjectRenderer {
         Shader m_shader;
         MeshHandler m_meshHandler;
         ObjectLoader m_objectLoader;
-        EntityManager m_entityManager;
         Camera m_camera;
+        Scene m_scene;
 
         GLuint m_FBO, m_colorTexture, m_depthBuffer;
         std::vector<std::string> m_keys;

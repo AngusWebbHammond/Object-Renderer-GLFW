@@ -9,14 +9,14 @@
 #include <vector>
 #include <string>
 
-#include "../Entity/entityManagementSystem.hpp"
+#include "../Scene/scene.hpp"
 
 namespace UI {
     void initImGui(GLFWwindow* window);
     void cleanupImGui();
     void createImGuiFrame();
     void renderImGui();
-    std::string buildImGuiUIContent(std::vector<std::string>* entities);
-    void buildImGuiUIProperties(ObjectRenderer::EntityTransformation* properties);
+    entt::entity buildImGuiUIContent(ObjectRenderer::Scene& scene);
+    void buildImGuiUIProperties(ObjectRenderer::Scene& scene, entt::entity& entity);
     void showDockspace();
 }

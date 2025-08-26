@@ -5,6 +5,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include "../Scene/scene.hpp"
 
 namespace UI {
     void initImGui(GLFWwindow* window)
@@ -42,69 +43,101 @@ namespace UI {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }
 
-    std::string buildImGuiUIContent(std::vector< std::string>* entities)
+    entt::entity buildImGuiUIContent(ObjectRenderer::Scene& scene)
     {
         ImGui::Begin("Scene Content");
 
-        static int selectedIndex = 0;
+        auto entities = scene.viewEntitysWithComponents<EntityComponentSystem::NameComponent>();
 
-        if (!entities || entities->empty())
+        static int selectedIndex = 0;
+        static entt::entity selectedEntity;
+
+        if (entities.empty())
         {
             ImGui::Text("No entities available.");
             ImGui::End();
-            return "";
+            return selectedEntity;
         }
 
         if (selectedIndex >= entities->size())
             selectedIndex = 0;
 
-        const std::string& selectedItem = (*entities)[selectedIndex];
-
         if (ImGui::BeginListBox("Entities"))
         {
-            for (int i = 0; i < entities->size(); i++)
+            int i = 0;
+            for (auto [entity, name] : entities.each())
             {
                 bool isSelected = (selectedIndex == i);
-                if (ImGui::Selectable((*entities)[i].c_str(), isSelected)) {
+
+                if (ImGui::Selectable(name.name.c_str(), isSelected)) {
                     selectedIndex = i;
+                    selectedEntity = entity;
                 }
+
                 if (isSelected) {
                     ImGui::SetItemDefaultFocus();
                 }
 
+                i++;
             }
 
             ImGui::EndListBox();
         }
-
         ImGui::End();
-        return (*entities)[selectedIndex];
-
+        return selectedEntity;
     }
 
-    void buildImGuiUIProperties(ObjectRenderer::EntityTransformation* properties)
+    void buildImGuiUIProperties(ObjectRenderer::Scene& scene, entt::entity& entity)
     {
         ImGui::Begin("Properties");
 
-        if (ImGui::CollapsingHeader("Transformations")) {
-            ImGui::Text("Translation");
-            ImGui::DragFloat("X", &properties->translation.x, 0.01f, -20.0f, 20.0f);
-            ImGui::DragFloat("Y", &properties->translation.y, 0.01f, -20.0f, 20.0f);
-            ImGui::DragFloat("Z", &properties->translation.z, 0.01f, -20.0f, 20.0f);
+        if (scene.isComponentInEntity<EntityComponentSystem::TransformComponent>(entity))
+        {
+            EntityComponentSystem::TransformComponent* transformComponent = scene.getComponentFromEntity<EntityComponentSystem::TransformComponent>(entity);
+            if (ImGui::CollapsingHeader("Transformations")) {
+                ImGui::Text("Translation");
+                ImGui::DragFloat("X", &transformComponent->translation.x, 0.01f, -20.0f, 20.0f);
+                ImGui::DragFloat("Y", &transformComponent->translation.y, 0.01f, -20.0f, 20.0f);
+                ImGui::DragFloat("Z", &transformComponent->translation.z, 0.01f, -20.0f, 20.0f);
 
-            ImGui::Text("Rotation");
-            ImGui::DragFloat("Angle X", &properties->rotationAngles.x, 0.1f, -180.0f, 180.0f);
-            ImGui::DragFloat("Angle Y", &properties->rotationAngles.y, 0.1f, -180.0f, 180.0f);
-            ImGui::DragFloat("Angle Z", &properties->rotationAngles.z, 0.1f, -180.0f, 180.0f);
+                ImGui::Text("Rotation");
+                ImGui::DragFloat("Angle X", &transformComponent->rotationAngles.x, 0.1f, -180.0f, 180.0f);
+                ImGui::DragFloat("Angle Y", &transformComponent->rotationAngles.y, 0.1f, -180.0f, 180.0f);
+                ImGui::DragFloat("Angle Z", &transformComponent->rotationAngles.z, 0.1f, -180.0f, 180.0f);
 
-            ImGui::Text("Scale");
-            ImGui::DragFloat("Scale X", &properties->scale.x, 0.01f, 0.0f, 20.0f);
-            ImGui::DragFloat("Scale Y", &properties->scale.y, 0.01f, 0.0f, 20.0f);
-            ImGui::DragFloat("Scale Z", &properties->scale.z, 0.01f, 0.0f, 20.0f);
+                ImGui::Text("Scale");
+                ImGui::DragFloat("Scale X", &transformComponent->scale.x, 0.01f, 0.0f, 20.0f);
+                ImGui::DragFloat("Scale Y", &transformComponent->scale.y, 0.01f, 0.0f, 20.0f);
+                ImGui::DragFloat("Scale Z", &transformComponent->scale.z, 0.01f, 0.0f, 20.0f);
+            }
         }
 
         ImGui::End();
     }
+
+    // void buildImGuiUIProperties(entt:entity & entity)
+    // {
+    //     // ImGui::Begin("Properties");
+
+    //     // if (ImGui::CollapsingHeader("Transformations")) {
+    //     //     ImGui::Text("Translation");
+    //     //     ImGui::DragFloat("X", &properties->translation.x, 0.01f, -20.0f, 20.0f);
+    //     //     ImGui::DragFloat("Y", &properties->translation.y, 0.01f, -20.0f, 20.0f);
+    //     //     ImGui::DragFloat("Z", &properties->translation.z, 0.01f, -20.0f, 20.0f);
+
+    //     //     ImGui::Text("Rotation");
+    //     //     ImGui::DragFloat("Angle X", &properties->rotationAngles.x, 0.1f, -180.0f, 180.0f);
+    //     //     ImGui::DragFloat("Angle Y", &properties->rotationAngles.y, 0.1f, -180.0f, 180.0f);
+    //     //     ImGui::DragFloat("Angle Z", &properties->rotationAngles.z, 0.1f, -180.0f, 180.0f);
+
+    //     //     ImGui::Text("Scale");
+    //     //     ImGui::DragFloat("Scale X", &properties->scale.x, 0.01f, 0.0f, 20.0f);
+    //     //     ImGui::DragFloat("Scale Y", &properties->scale.y, 0.01f, 0.0f, 20.0f);
+    //     //     ImGui::DragFloat("Scale Z", &properties->scale.z, 0.01f, 0.0f, 20.0f);
+    //     // }
+
+    //     // ImGui::End();
+    // }
 
     void showDockspace() {
         static bool isFullScreen = true;

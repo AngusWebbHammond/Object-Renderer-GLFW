@@ -46,12 +46,14 @@ namespace ObjectRenderer {
 
         std::vector<float> coords = m_meshHandler.getVerticies();
 
-        m_entityManager.addModel("Cube");
-        m_entityManager.addModel("Cube", glm::vec3(0.0f, 4.0f, 2.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
-        m_entityManager.addModel("Torus", glm::vec3(0.0f, -8.0f, 3.0f), glm::vec3(45.0f, 0.0f, 45.0f), glm::vec3(2.0f, 1.0f, 1.5f));
-        m_entityManager.addModel("Torus", glm::vec3(0.0f, -2.0f, -4.0f), glm::vec3(45.0f, 0.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f));
-        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 0.0f, -3.0f), glm::vec3(45.0f, 45.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-        m_entityManager.addModel("Suzanne", glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(45.0f, 45.0f, 45.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        auto entity = m_scene.createEntity();
+        m_scene.addComponentToEnity<EntityComponentSystem::MeshComponent>(entity, "Cube");
+
+        m_scene.createEntity();
+
+        m_scene.createEntityWithComponents<EntityComponentSystem::MeshComponent>("Torus");
+
+        m_scene.createEntityWithComponents<EntityComponentSystem::MeshComponent>("Suzanne");
 
         // OpenGL Code
 
@@ -63,6 +65,7 @@ namespace ObjectRenderer {
         for (auto name : m_meshHandler.getVAONames()) {
             m_meshHandler.bindMeshVAO(name);
 
+            // Position Data
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11 * sizeof(GLfloat), (void*)0);
             glEnableVertexAttribArray(0);
 
@@ -81,38 +84,8 @@ namespace ObjectRenderer {
             glBindVertexArray(0);
         }
 
-        // Position Data
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
-
-    void Renderer::drawMeshObjects()
-    {
-        std::map<std::string, std::vector<EntityTransformation>> models = *m_entityManager.getModels();
-
-
-        for (auto i = models.begin(); i != models.end(); ++i) {
-
-            std::vector<EntityTransformation> currentVector = i->second;
-            TriangleObjectPoints meshPoints = m_meshHandler.getMeshIndexStartEnd(i->first);
-            int startIndex = meshPoints.startIndex;
-            int endIndex = meshPoints.endIndex;
-            int length = endIndex - startIndex;
-
-            m_meshHandler.bindMeshVAO(i->first);
-
-            for (int j = 0; j < currentVector.size(); j++) {
-                glm::mat4 model = glm::mat4(1.0f);
-                model = glm::translate(model, currentVector[j].translation);
-                model = glm::rotate(model, glm::radians(currentVector[j].rotationAngles.x), { 1.0f, 0.0f, 0.0f });
-                model = glm::rotate(model, glm::radians(currentVector[j].rotationAngles.y), { 0.0f, 1.0f, 0.0f });
-                model = glm::rotate(model, glm::radians(currentVector[j].rotationAngles.z), { 0.0f, 0.0f, 1.0f });
-                model = glm::scale(model, currentVector[j].scale);
-                m_shader.setMat4("model", model);
-
-                glDrawArrays(GL_TRIANGLES, startIndex * 3, length * 3);
-            }
-        }
     }
 
     void Renderer::processInput(GLFWwindow* window, float deltaTime)
@@ -219,22 +192,13 @@ namespace ObjectRenderer {
     void Renderer::renderCycle() {
         glfwPollEvents();
 
-        auto models = m_entityManager.getModels();
-        m_keys.clear();
-
-        for (const auto& pair : *models) {
-            for (int i = 0; i < pair.second.size(); i++) {
-                m_keys.push_back(pair.first + std::to_string(i));
-            }
-        }
-
         UI::createImGuiFrame();
 
         UI::showDockspace();
 
         ImVec2 viewportPanelSize = ImVec2(0, 0);
 
-        std::string selectedModel = UI::buildImGuiUIContent(&m_keys);
+        entt::entity selectedModel = UI::buildImGuiUIContent(m_scene);
 
         if (ImGui::Begin("Viewport")) {
 
@@ -254,8 +218,12 @@ namespace ObjectRenderer {
         int fbWidth = static_cast<int>(viewportPanelSize.x);
         int fbHeight = static_cast<int>(viewportPanelSize.y);
 
-        if (fbWidth == 0 || fbHeight == 0)
+        if (fbWidth == 0 || fbHeight == 0) {
+            UI::renderImGui();
+            glfwSwapBuffers(m_window);
             return;
+        }
+
 
         if (fbWidth != m_lastFbWidth || fbHeight != m_lastFbHeight) {
             m_lastFbWidth = fbWidth;
@@ -263,30 +231,20 @@ namespace ObjectRenderer {
             resizeFramebuffer(fbWidth, fbHeight);
         }
 
-        if (!selectedModel.empty()) {
-
-            EntityTransformation* properties = &(*models)[selectedModel.substr(0, selectedModel.size() - 1)][selectedModel[selectedModel.size() - 1] - '0'];
-
-            UI::buildImGuiUIProperties(properties);
-        }
+        UI::buildImGuiUIProperties(m_scene, selectedModel);
 
         // glClear(GL_COLOR_BUFFER_BIT);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             std::cerr << "Framebuffer incomplete!" << std::endl;
-
-            ImGui::EndFrame();
             UI::renderImGui();
             glfwSwapBuffers(m_window);
-
             return;
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
         glViewport(0, 0, fbWidth, fbHeight);
-
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -308,12 +266,11 @@ namespace ObjectRenderer {
         m_shader.setMat4("projection", projection);
         m_shader.setVec3("lightingPosition", m_lightingPosition);
 
-        drawMeshObjects();
+        m_scene.render(m_shader, m_meshHandler);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         UI::renderImGui();
-
         glfwSwapBuffers(m_window);
 
     }
