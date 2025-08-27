@@ -288,6 +288,8 @@ namespace ObjectRenderer {
 
             view = Camera::getViewMatrix(transformComponent, cameraComponent);
 
+            m_shader.setVec3("viewPos", transformComponent.translation);
+
         }
 
         glm::mat4 projection = glm::mat4(1.0f);

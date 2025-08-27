@@ -11,11 +11,13 @@ out vec3 lightingPos;
 out vec3 lightingCol;
 out float lightingInt;
 out vec3 fragPos;
+out vec3 viewPosition;
 
 uniform vec3 lightingPosition;
 uniform vec3 lightingColour;
 uniform float lightingIntensity;
 uniform vec3 meshColour;
+uniform vec3 viewPos;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -32,6 +34,7 @@ void main()
     lightingPos = lightingPosition;
     lightingCol = lightingColour;
     lightingInt = lightingIntensity;
+    viewPosition = viewPos;
 
     outModel = mat3(model);
 }
