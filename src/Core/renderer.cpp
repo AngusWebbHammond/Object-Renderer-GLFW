@@ -260,7 +260,6 @@ namespace ObjectRenderer {
             return;
         }
 
-
         if (fbWidth != m_lastFbWidth || fbHeight != m_lastFbHeight) {
             m_lastFbWidth = fbWidth;
             m_lastFbHeight = fbHeight;
