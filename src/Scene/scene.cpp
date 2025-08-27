@@ -13,16 +13,11 @@ namespace ObjectRenderer {
 
     void Scene::update()
     {
-        // auto entities = EntityComponentSystem::getEntities<>(m_registry);
-        // for (auto entity : entities) {
-        //     if (EntityComponentSystem::isComponentInEntity<EntityComponentSystem::TransformComponent>(m_registry, entity)) {
-
-        //     }
-        // }
     }
 
     void Scene::render(Shader& shader, MeshHandler& meshHandler)
     {
+        renderLightingObjects(shader, meshHandler);
         renderMeshObjects(shader, meshHandler);
     }
 
@@ -56,9 +51,22 @@ namespace ObjectRenderer {
             model = glm::scale(model, transformComponent.scale);
             shader.setMat4("model", model);
 
+            shader.setVec3("meshColour", meshComponent.colour);
+
             glDrawArrays(GL_TRIANGLES, startIndex * 3, length * 3);
 
             glBindVertexArray(0);
+        }
+    }
+
+    void Scene::renderLightingObjects(Shader& shader, MeshHandler& meshHandler)
+    {
+        auto entities = EntityComponentSystem::getEntities<EntityComponentSystem::LightingComponent, EntityComponentSystem::TransformComponent>(m_registry);
+
+        for (auto [entity, lightingComponent, transformComponent] : entities.each()) {
+            shader.setVec3("lightingPosition", transformComponent.translation);
+            shader.setVec3("lightingColour", lightingComponent.colour);
+            shader.setFloat("lightingIntensity", lightingComponent.intensity);
         }
     }
 }

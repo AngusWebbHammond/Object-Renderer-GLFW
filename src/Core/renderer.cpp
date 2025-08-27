@@ -46,14 +46,25 @@ namespace ObjectRenderer {
 
         std::vector<float> coords = m_meshHandler.getVerticies();
 
-        auto entity = m_scene.createEntity();
-        m_scene.addComponentToEnity<EntityComponentSystem::MeshComponent>(entity, "Cube");
+        auto entity1 = m_scene.createEntityWithComponents<EntityComponentSystem::MeshComponent>("Cube");
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(entity1, glm::vec3{ 0.0f, 0.0f, -3.0f });
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity1, "Cube");
 
-        m_scene.createEntity();
+        auto entity2 = m_scene.createEntityWithComponents<EntityComponentSystem::CameraComponent>(true);
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(entity2, glm::vec3{ 0.0f, 0.0f, 4.0f });
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity2, "Camera");
 
-        m_scene.createEntityWithComponents<EntityComponentSystem::MeshComponent>("Torus");
+        auto entity3 = m_scene.createEntityWithComponents<EntityComponentSystem::MeshComponent>("Torus");
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(entity3, glm::vec3{ 0.0f, 1.0f, 0.0f });
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity3, "Torus");
 
-        m_scene.createEntityWithComponents<EntityComponentSystem::MeshComponent>("Suzanne");
+        auto entity4 = m_scene.createEntityWithComponents<EntityComponentSystem::MeshComponent>("Suzanne");
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity4, "Suzanne");
+
+        auto entity5 = m_scene.createEntityWithComponents<EntityComponentSystem::LightingComponent>(1.0f, glm::vec3{ 1.0f, 1.0f, 1.0f });
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(entity5, glm::vec3{ 0.0f, 4.0f, 0.0f });
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity5, "Light");
+
 
         // OpenGL Code
 
@@ -90,17 +101,25 @@ namespace ObjectRenderer {
 
     void Renderer::processInput(GLFWwindow* window, float deltaTime)
     {
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            m_camera.onKeyboardPress(FORWARD, deltaTime);
+        auto entities = m_scene.viewEntitysWithComponents<EntityComponentSystem::CameraComponent, EntityComponentSystem::TransformComponent>();
 
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            m_camera.onKeyboardPress(BACKWARD, deltaTime);
+        for (auto [entity, cameraComponent, transformComponent] : entities.each()) {
+            if (!cameraComponent.isPrimaryCamera)
+                continue;
 
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            m_camera.onKeyboardPress(LEFT, deltaTime);
+            if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+                Camera::onKeyboardPress(transformComponent, cameraComponent, Camera::FORWARD, deltaTime);
 
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            m_camera.onKeyboardPress(RIGHT, deltaTime);
+            if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+                Camera::onKeyboardPress(transformComponent, cameraComponent, Camera::BACKWARD, deltaTime);
+
+            if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+                Camera::onKeyboardPress(transformComponent, cameraComponent, Camera::LEFT, deltaTime);
+
+            if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+                Camera::onKeyboardPress(transformComponent, cameraComponent, Camera::RIGHT, deltaTime);
+        }
+
     }
 
     void Renderer::processMouse()
@@ -134,7 +153,14 @@ namespace ObjectRenderer {
         float xoffset = xPos - m_lastX;
         float yoffset = m_lastY - yPos;
 
-        m_camera.onMouseMove(xPos - m_lastX, m_lastY - yPos);
+        auto entities = m_scene.viewEntitysWithComponents<EntityComponentSystem::CameraComponent>();
+
+        for (auto [entity, cameraComponent] : entities.each()) {
+            if (!cameraComponent.isPrimaryCamera)
+                continue;
+
+            Camera::onMouseMoveUpdateCamera(cameraComponent, xPos - m_lastX, m_lastY - yPos);
+        }
 
         m_lastX = xPos;
         m_lastY = yPos;
@@ -253,10 +279,19 @@ namespace ObjectRenderer {
 
         processInput(m_window, 0.05f);
 
-        glm::mat4 view = m_camera.getViewMatrix();
-        glm::mat4 projection = glm::mat4(1.0f);
+        glm::mat4 view{ 1.0f };
 
-        m_lightingPosition = glm::vec3(glm::rotate(glm::mat4(1.0f), glm::radians(0.2f), glm::vec3(1.0, 1.0, 0.0)) * glm::vec4(m_lightingPosition, 1.0f));
+        auto entities = m_scene.viewEntitysWithComponents<EntityComponentSystem::CameraComponent, EntityComponentSystem::TransformComponent>();
+
+        for (auto [entity, cameraComponent, transformComponent] : entities.each()) {
+            if (!cameraComponent.isPrimaryCamera)
+                continue;
+
+            view = Camera::getViewMatrix(transformComponent, cameraComponent);
+
+        }
+
+        glm::mat4 projection = glm::mat4(1.0f);
 
         if (fbHeight > 0 && fbWidth > 0) {
             projection = glm::perspective(glm::radians(45.0f), (float)fbWidth / (float)fbHeight, 0.1f, 100.0f);
@@ -264,7 +299,6 @@ namespace ObjectRenderer {
 
         m_shader.setMat4("view", view);
         m_shader.setMat4("projection", projection);
-        m_shader.setVec3("lightingPosition", m_lightingPosition);
 
         m_scene.render(m_shader, m_meshHandler);
 
@@ -272,7 +306,5 @@ namespace ObjectRenderer {
 
         UI::renderImGui();
         glfwSwapBuffers(m_window);
-
     }
 }
-

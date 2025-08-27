@@ -9,7 +9,7 @@ namespace EntityComponentSystem {
     void removeEntity(entt::registry& registry, entt::entity entity);
 
     template <typename T, typename... Args>
-    void addComponentToEntity(entt::registry& registry, entt::entity entity, Args&&... args)
+    void emplaceOrReplaceComponentInEntity(entt::registry& registry, entt::entity entity, Args&&... args)
     {
         registry.emplace_or_replace<T>(entity, std::forward<Args>(args)...);
     }

@@ -39,7 +39,6 @@ namespace ObjectRenderer {
         Shader m_shader;
         MeshHandler m_meshHandler;
         ObjectLoader m_objectLoader;
-        Camera m_camera;
         Scene m_scene;
 
         GLuint m_FBO, m_colorTexture, m_depthBuffer;

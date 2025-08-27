@@ -7,7 +7,7 @@
 #include "../Core/globals.hpp"
 #include "../Entity/components.hpp"
 
-namespace ObjectRenderer {
+namespace ObjectRenderer::Camera {
 
     enum CameraMovement {
         FORWARD,
@@ -16,34 +16,7 @@ namespace ObjectRenderer {
         RIGHT
     };
 
-    class Camera {
-    public:
-        Camera();
-        ~Camera();
-
-        glm::mat4 getViewMatrix();
-        void onKeyboardPress(CameraMovement direction, float delatTime);
-        void onMouseMove(float xOffset, float yOffset, bool constrainPitch = true);
-
-    private:
-        void updateCamera();
-
-    private:
-        float m_yaw;
-        float m_pitch;
-
-        glm::vec3 m_position;
-        glm::vec3 m_front;
-        glm::vec3 m_up;
-        glm::vec3 m_right;
-        glm::vec3 m_worldUp;
-
-        float m_movementSpeed;
-        float m_mouseSensitivity;
-    };
-}
-
-namespace ObjectRenderer::Cameras {
-    glm::mat4 getViewMatrix(const EntityComponentSystem::TransformComponent& transformComponent, const EntityComponentSystem::CameraComponent& cameraComponent);
+    void onKeyboardPress(EntityComponentSystem::TransformComponent& transformComponent, EntityComponentSystem::CameraComponent& cameraComponent, CameraMovement direction, float deltaTime);
+    glm::mat4 getViewMatrix(EntityComponentSystem::TransformComponent& transformComponent, EntityComponentSystem::CameraComponent& cameraComponent);
     void onMouseMoveUpdateCamera(EntityComponentSystem::CameraComponent& cameraComponent, float xOffset, float yOffset, bool constrainPitch = true);
 }

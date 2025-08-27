@@ -43,6 +43,11 @@ namespace ObjectRenderer {
     {
         glUniform3fv(glGetUniformLocation(m_shaderProgram, name.c_str()), 1, glm::value_ptr(value));
     }
+
+    void Shader::setFloat(const std::string& name, glm::float32 value) const
+    {
+        glUniform1f(glGetUniformLocation(m_shaderProgram, name.c_str()), value);
+    }
 }
 
 // Private

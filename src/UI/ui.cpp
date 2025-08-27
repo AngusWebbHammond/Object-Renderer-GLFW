@@ -95,49 +95,70 @@ namespace UI {
         {
             EntityComponentSystem::TransformComponent* transformComponent = scene.getComponentFromEntity<EntityComponentSystem::TransformComponent>(entity);
             if (ImGui::CollapsingHeader("Transformations")) {
+
                 ImGui::Text("Translation");
                 ImGui::DragFloat("X", &transformComponent->translation.x, 0.01f, -20.0f, 20.0f);
                 ImGui::DragFloat("Y", &transformComponent->translation.y, 0.01f, -20.0f, 20.0f);
                 ImGui::DragFloat("Z", &transformComponent->translation.z, 0.01f, -20.0f, 20.0f);
 
-                ImGui::Text("Rotation");
-                ImGui::DragFloat("Angle X", &transformComponent->rotationAngles.x, 0.1f, -180.0f, 180.0f);
-                ImGui::DragFloat("Angle Y", &transformComponent->rotationAngles.y, 0.1f, -180.0f, 180.0f);
-                ImGui::DragFloat("Angle Z", &transformComponent->rotationAngles.z, 0.1f, -180.0f, 180.0f);
+                if (!scene.isComponentInEntity<EntityComponentSystem::CameraComponent>(entity)) {
 
-                ImGui::Text("Scale");
-                ImGui::DragFloat("Scale X", &transformComponent->scale.x, 0.01f, 0.0f, 20.0f);
-                ImGui::DragFloat("Scale Y", &transformComponent->scale.y, 0.01f, 0.0f, 20.0f);
-                ImGui::DragFloat("Scale Z", &transformComponent->scale.z, 0.01f, 0.0f, 20.0f);
+                    ImGui::Text("Rotation");
+                    ImGui::DragFloat("Angle X", &transformComponent->rotationAngles.x, 0.1f, -180.0f, 180.0f);
+                    ImGui::DragFloat("Angle Y", &transformComponent->rotationAngles.y, 0.1f, -180.0f, 180.0f);
+                    ImGui::DragFloat("Angle Z", &transformComponent->rotationAngles.z, 0.1f, -180.0f, 180.0f);
+
+                    ImGui::Text("Scale");
+                    ImGui::DragFloat("Scale X", &transformComponent->scale.x, 0.01f, 0.0f, 20.0f);
+                    ImGui::DragFloat("Scale Y", &transformComponent->scale.y, 0.01f, 0.0f, 20.0f);
+                    ImGui::DragFloat("Scale Z", &transformComponent->scale.z, 0.01f, 0.0f, 20.0f);
+                }
+            }
+        }
+
+        if (scene.isComponentInEntity<EntityComponentSystem::MeshComponent>(entity))
+        {
+            EntityComponentSystem::MeshComponent* meshComponent = scene.getComponentFromEntity<EntityComponentSystem::MeshComponent>(entity);
+
+            if (ImGui::CollapsingHeader("Mesh")) {
+
+                ImGui::Text("Mesh");
+                ImGui::Text(meshComponent->meshName.c_str());
+                ImGui::ColorPicker3("Colour", &meshComponent->colour[0]);
+            }
+        }
+
+        if (scene.isComponentInEntity<EntityComponentSystem::NameComponent>(entity))
+        {
+            EntityComponentSystem::NameComponent* nameComponent = scene.getComponentFromEntity<EntityComponentSystem::NameComponent>(entity);
+            if (ImGui::CollapsingHeader("Name")) {
+
+                ImGui::Text("Name");
+                ImGui::Text(nameComponent->name.c_str());
+            }
+        }
+
+        if (scene.isComponentInEntity<EntityComponentSystem::CameraComponent>(entity))
+        {
+            EntityComponentSystem::CameraComponent* cameraComponent = scene.getComponentFromEntity<EntityComponentSystem::CameraComponent>(entity);
+            if (ImGui::CollapsingHeader("Camera")) {
+
+                ImGui::Checkbox("Primary", &cameraComponent->isPrimaryCamera);
+            }
+        }
+
+        if (scene.isComponentInEntity<EntityComponentSystem::LightingComponent>(entity))
+        {
+            EntityComponentSystem::LightingComponent* lightingComponent = scene.getComponentFromEntity<EntityComponentSystem::LightingComponent>(entity);
+            if (ImGui::CollapsingHeader("Lighting")) {
+
+                ImGui::ColorPicker3("Primary", &lightingComponent->colour[0]);
+                ImGui::DragFloat("Intensity", &lightingComponent->intensity, 0.01f, 0.0f, 1.0f);
             }
         }
 
         ImGui::End();
     }
-
-    // void buildImGuiUIProperties(entt:entity & entity)
-    // {
-    //     // ImGui::Begin("Properties");
-
-    //     // if (ImGui::CollapsingHeader("Transformations")) {
-    //     //     ImGui::Text("Translation");
-    //     //     ImGui::DragFloat("X", &properties->translation.x, 0.01f, -20.0f, 20.0f);
-    //     //     ImGui::DragFloat("Y", &properties->translation.y, 0.01f, -20.0f, 20.0f);
-    //     //     ImGui::DragFloat("Z", &properties->translation.z, 0.01f, -20.0f, 20.0f);
-
-    //     //     ImGui::Text("Rotation");
-    //     //     ImGui::DragFloat("Angle X", &properties->rotationAngles.x, 0.1f, -180.0f, 180.0f);
-    //     //     ImGui::DragFloat("Angle Y", &properties->rotationAngles.y, 0.1f, -180.0f, 180.0f);
-    //     //     ImGui::DragFloat("Angle Z", &properties->rotationAngles.z, 0.1f, -180.0f, 180.0f);
-
-    //     //     ImGui::Text("Scale");
-    //     //     ImGui::DragFloat("Scale X", &properties->scale.x, 0.01f, 0.0f, 20.0f);
-    //     //     ImGui::DragFloat("Scale Y", &properties->scale.y, 0.01f, 0.0f, 20.0f);
-    //     //     ImGui::DragFloat("Scale Z", &properties->scale.z, 0.01f, 0.0f, 20.0f);
-    //     // }
-
-    //     // ImGui::End();
-    // }
 
     void showDockspace() {
         static bool isFullScreen = true;

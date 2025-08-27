@@ -12,13 +12,16 @@ namespace EntityComponentSystem {
         glm::vec3 scale;
 
         TransformComponent();
+        TransformComponent(glm::vec3 _position);
     };
 
     struct MeshComponent {
         std::string meshName;
+        glm::vec3 colour;
 
         MeshComponent();
         MeshComponent(std::string _meshName);
+        MeshComponent(std::string _meshName, glm::vec3 _colour);
     };
 
     struct LightingComponent {
@@ -35,6 +38,7 @@ namespace EntityComponentSystem {
 
         NameComponent();
         NameComponent(entt::entity entity);
+        NameComponent(std::string _name);
     };
 
     struct CameraComponent {
@@ -46,7 +50,10 @@ namespace EntityComponentSystem {
         glm::vec3 right;
         glm::vec3 worldUp;
 
+        bool isPrimaryCamera;
+
         CameraComponent();
+        CameraComponent(bool _isPrimaryCamera);
         ~CameraComponent();
     };
 }

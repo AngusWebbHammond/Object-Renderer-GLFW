@@ -18,13 +18,13 @@ namespace ObjectRenderer {
         template <typename... Components, typename... Args>
         entt::entity createEntityWithComponents(Args&&... args) {
             entt::entity entity = EntityComponentSystem::create(m_registry);
-            EntityComponentSystem::addComponentToEntity<Components...>(m_registry, entity, std::forward<Args>(args)...);
+            EntityComponentSystem::emplaceOrReplaceComponentInEntity<Components...>(m_registry, entity, std::forward<Args>(args)...);
             return entity;
         }
 
         template <typename... Components, typename... Args>
-        void addComponentToEnity(entt::entity entity, Args&&... args) {
-            EntityComponentSystem::addComponentToEntity<Components...>(m_registry, entity, std::forward<Args>(args)...);
+        void emplaceOrReplaceComponentInEntity(entt::entity entity, Args&&... args) {
+            EntityComponentSystem::emplaceOrReplaceComponentInEntity<Components...>(m_registry, entity, std::forward<Args>(args)...);
         }
 
         template <typename... Components>
@@ -47,8 +47,14 @@ namespace ObjectRenderer {
             return EntityComponentSystem::isComponentInEntity<Component>(m_registry, entity);
         }
 
+        template <typename Component>
+        void updateComponentInEntity(entt::entity entity) {
+            EntityComponentSystem::updateComponentInEntity<Component>(m_registry, entity);
+        }
+
     private:
         void renderMeshObjects(Shader& shader, MeshHandler& meshHandler);
+        void renderLightingObjects(Shader& shader, MeshHandler& meshHandler);
 
         entt::registry m_registry;
     };
