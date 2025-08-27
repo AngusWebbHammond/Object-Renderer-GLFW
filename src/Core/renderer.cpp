@@ -254,8 +254,12 @@ namespace ObjectRenderer {
         int fbWidth = static_cast<int>(viewportPanelSize.x);
         int fbHeight = static_cast<int>(viewportPanelSize.y);
 
-        if (fbWidth == 0 || fbHeight == 0)
+        if (fbWidth == 0 || fbHeight == 0) {
+            UI::renderImGui();
+            glfwSwapBuffers(m_window);
             return;
+        }
+
 
         if (fbWidth != m_lastFbWidth || fbHeight != m_lastFbHeight) {
             m_lastFbWidth = fbWidth;
