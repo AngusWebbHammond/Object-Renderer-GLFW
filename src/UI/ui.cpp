@@ -49,7 +49,7 @@ namespace UI {
 
         auto entities = scene.viewEntitysWithComponents<EntityComponentSystem::NameComponent>();
 
-        static int selectedIndex = 0;
+        static int selectedIndex = entities->size() - 1;
         static entt::entity selectedEntity;
 
         if (entities.empty())
@@ -60,25 +60,22 @@ namespace UI {
         }
 
         if (selectedIndex >= entities->size())
-            selectedIndex = 0;
+            selectedEntity = entt::entity();
 
         if (ImGui::BeginListBox("Entities"))
         {
-            int i = 0;
             for (auto [entity, name] : entities.each())
             {
-                bool isSelected = (selectedIndex == i);
+                bool isSelected = (selectedIndex == static_cast<int>(entity));
 
                 if (ImGui::Selectable(name.name.c_str(), isSelected)) {
-                    selectedIndex = i;
-                    selectedEntity = entity;
+                    selectedIndex = static_cast<int>(entity);
                 }
 
                 if (isSelected) {
+                    selectedEntity = entity;
                     ImGui::SetItemDefaultFocus();
                 }
-
-                i++;
             }
 
             ImGui::EndListBox();
