@@ -141,7 +141,7 @@ namespace ObjectRenderer {
 
     void Renderer::processMouse()
     {
-        if (glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+        if (ImGui::IsItemHovered() && glfwGetMouseButton(m_window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
             glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             m_canHandleMouse = true;
         }
@@ -251,9 +251,7 @@ namespace ObjectRenderer {
                 ImGui::Image((void*)(intptr_t)m_colorTexture, viewportPanelSize, ImVec2(0, 1), ImVec2(1, 0));
             }
 
-            if (ImGui::IsItemHovered()) {
-                processMouse();
-            }
+            processMouse();
 
             ImGui::End();
         }
