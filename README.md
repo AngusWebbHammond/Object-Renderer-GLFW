@@ -1,22 +1,65 @@
-# Object Renderer
+# 3D Object Renderer
 
-The aim of this project is to build a renderer with glfw, meant to learn how to use OpenGL and other tools for this.
+A lightweight rendering application built in C++ using modern graphics libraries and an **Entity Component System (ECS)** architecture. Currently designed to run on **Windows** systems.
 
-## How to use
+This project is licensed under the MIT License, see [LICENSE](/LICENSE).
 
-Currently this only works with the Windows WSVC compiler, to run this project clone it from this repo, then setup your run/debug for c++ to be using the correct compiler. Then build with cmake, and run.
+---
 
-## Current Features
+## Features
 
-- Rendering of 3D objects from file.
-- Utilistion of GLSL Shaders.
-- Basic motion from the GLM library.
-- Movement of the light sources to show the mesh best off.
-- Supports thousands of triangles.
-- Camera control.
+- **Entity Component System (ECS)** using [EnTT](https://github.com/skypjack/entt)
+- **Real-time rendering** with OpenGL via GLFW
+- **GUI integration** using [ImGui](https://github.com/ocornut/imgui)
+- Interactive viewport for rendering scenes with multiple objects
+- Camera control through standard movement
+- Loading of objects from .obj files to mesh classes that are usable at runtime
 
-## Planned Features
+## Dependencies
 
-- Other Shaders.
+- [GLFW](https://www.glfw.org/) – Window and input management
+- [Glad](https://github.com/Dav1dde/glad) – OpenGL loader
+- [GLM](https://github.com/g-truc/glm) – Mathematics library
+- [EnTT](https://github.com/skypjack/entt) – Entity Component System
+- [ImGui](https://github.com/ocornut/imgui) – GUI library
 
-I would like to eventually integrate vulkan into this renderer.
+> All dependencies are included either in the CMake project or the deps folder. No manual linking is required.
+
+---
+
+## Building the Project
+
+The project uses **CMake** for an easy build process:
+
+1. **Clone the repository**:
+
+```bash
+git clone https://github.com/AngusWebbHammond/Object-Renderer-GLFW.git
+cd Object-Renderer-GLFW
+```
+
+2. **Create a build directory**:
+
+```bash
+mkdir build
+cd build
+```
+
+3. **Run CMake** to configure the project:
+
+```bash
+cmake ..
+```
+
+4. **Build the project**:
+
+```bash
+cmake --build .
+```
+
+5. **Run the executable**:
+
+```bash
+cd Debug
+.\main.exe
+```
