@@ -12,6 +12,7 @@ namespace ObjectRenderer {
 
         void update();
         void render(Shader& shader, MeshHandler& meshHandler);
+        void renderLighting(Shader& shader, MeshHandler& meshHandler);
         void removeEntity(entt::entity entity);
         entt::entity createEntity();
 

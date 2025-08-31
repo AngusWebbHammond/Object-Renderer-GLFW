@@ -29,6 +29,7 @@ namespace ObjectRenderer {
     void Renderer::init(GLFWwindow* window) {
         m_window = window;
         m_shader.init("../../shaders/default.vert", "../../shaders/default.frag");
+        m_lightingShader.init("../../shaders/lighting.vert", "../../shaders/lighting.frag");
         createVertexBufferObject();
         glEnable(GL_DEPTH_TEST);
         initFrameBuffer();
@@ -64,6 +65,7 @@ namespace ObjectRenderer {
         auto entity5 = m_scene.createEntityWithComponents<EntityComponentSystem::LightingComponent>(1.0f, glm::vec3{ 1.0f, 1.0f, 1.0f });
         m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(entity5, glm::vec3{ 0.0f, 4.0f, 0.0f });
         m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity5, "Light");
+        m_scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::MeshComponent>(entity5, "Cube");
 
 
         // OpenGL Code
@@ -302,6 +304,13 @@ namespace ObjectRenderer {
         m_shader.setMat4("projection", projection);
 
         m_scene.render(m_shader, m_meshHandler);
+
+        m_lightingShader.use();
+
+        m_lightingShader.setMat4("view", view);
+        m_lightingShader.setMat4("projection", projection);
+
+        m_scene.renderLighting(m_lightingShader, m_meshHandler);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
