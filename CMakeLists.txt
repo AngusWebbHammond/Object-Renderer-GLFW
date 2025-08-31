@@ -65,6 +65,8 @@ add_executable(main src/main.cpp ${GLAD_GL}
 
 target_link_libraries(main PRIVATE glfw glm EnTT::EnTT)
 
+add_compile_definitions(PROJECT_DIR="${CMAKE_SOURCE_DIR}")
+
 if( MSVC )
     if(${CMAKE_VERSION} VERSION_LESS "3.6.0")
         message( "\n\t[ WARNING ]\n\n\tCMake version lower than 3.6.\n\n\t - Please update CMake and rerun; OR\n\t - Manually set '3D-RENDERER' as StartUp Project in Visual Studio.\n" )

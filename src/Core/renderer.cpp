@@ -11,6 +11,7 @@
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+#include <filesystem>
 
 #include "globals.hpp"
 #include "../Entity/mesh.hpp"
@@ -28,8 +29,16 @@ namespace ObjectRenderer {
 
     void Renderer::init(GLFWwindow* window) {
         m_window = window;
-        m_shader.init("../../shaders/default.vert", "../../shaders/default.frag");
-        m_lightingShader.init("../../shaders/lighting.vert", "../../shaders/lighting.frag");
+
+        std::string shaders[] = {
+            (std::filesystem::path(g_projectDir) / "shaders" / "default.vert").string(),
+            (std::filesystem::path(g_projectDir) / "shaders" / "default.frag").string(),
+            (std::filesystem::path(g_projectDir) / "shaders" / "lighting.vert").string(),
+            (std::filesystem::path(g_projectDir) / "shaders" / "lighting.frag").string()
+        };
+        m_shader.init(shaders[0].c_str(), shaders[1].c_str());
+        m_lightingShader.init(shaders[2].c_str(), shaders[3].c_str());
+
         createVertexBufferObject();
         glEnable(GL_DEPTH_TEST);
         initFrameBuffer();
@@ -41,9 +50,15 @@ namespace ObjectRenderer {
 
     void Renderer::createVertexBufferObject() {
         // Loading the objects and getting the verticies for the input to the gl buffer
-        m_meshHandler.addObjectFromFile("../../objects/torus.obj");
-        m_meshHandler.addObjectFromFile("../../objects/cube.obj");
-        m_meshHandler.addObjectFromFile("../../objects/monkey.obj");
+
+        std::string objects[] = {
+            (std::filesystem::path(g_projectDir) / "assets" / "objects" / "torus.obj").string(),
+            (std::filesystem::path(g_projectDir) / "assets" / "objects" / "cube.obj").string(),
+            (std::filesystem::path(g_projectDir) / "assets" / "objects" / "monkey.obj").string()
+        };
+        m_meshHandler.addObjectFromFile(objects[0].c_str());
+        m_meshHandler.addObjectFromFile(objects[1].c_str());
+        m_meshHandler.addObjectFromFile(objects[2].c_str());
 
         std::vector<float> coords = m_meshHandler.getVerticies();
 

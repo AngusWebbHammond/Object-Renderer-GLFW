@@ -38,7 +38,7 @@ namespace ObjectRenderer {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        m_window = glfwCreateWindow(width, height, "[glad] GL with GLFW", NULL, NULL);
+        m_window = glfwCreateWindow(width, height, "Object Renderer", NULL, NULL);
         glfwMakeContextCurrent(m_window);
 
         gladLoadGL(glfwGetProcAddress);
