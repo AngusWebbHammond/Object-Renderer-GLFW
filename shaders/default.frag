@@ -2,34 +2,40 @@
 
 out vec4 FragColour;
 
-in vec3 vertexColour;
 in vec3 normal;
-in vec3 lightingPos;
-in vec3 lightingCol;
-in float lightingInt;
 in vec3 fragPos;
-in mat3 outModel;
 
-in vec3 viewPosition;
+uniform float lightingIntensity;
+
+uniform vec3 lightingPosition;
+uniform vec3 lightingColour;
+uniform vec3 viewPos;
+uniform vec3 meshColour;
+
+uniform mat4 model;
 
 void main()
 {
+    // Ambient Lighting
     float ambientStrength = 0.2;
-    vec3 ambient = ambientStrength * lightingCol;
+    vec3 ambient = ambientStrength * lightingColour;
 
-    vec3 normalizedNormal = normalize(outModel * normal);
-    vec3 lightingDirection = normalize(lightingPos - fragPos);
+    // Diffuse Lighting
+    mat3 normalMatrix = transpose(inverse(mat3(model)));
+    vec3 normalizedNormal = normalize(normalMatrix * normal);
+    vec3 lightingDirection = normalize(lightingPosition - fragPos);
     float diff = max(dot(normalizedNormal, lightingDirection), 0.0);
-    vec3 diffuse = diff * lightingCol;
+    vec3 diffuse = diff * lightingColour;
 
-    float specularStrength = 0.5;
-    vec3 viewDirection = normalize(viewPosition - fragPos);
+    // Specular Lighting
+    float specularStrength = 1.0;
+    vec3 viewDirection = normalize(viewPos - fragPos);
     vec3 reflectDirection = reflect(-lightingDirection, normalizedNormal);
     float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightingCol;  
+    vec3 specular = specularStrength * spec * lightingColour;
 
-    vec3 result = lightingInt * (specular + diffuse + ambient) * vertexColour;
-
+    // Resulting Lighting
+    vec3 result = lightingIntensity * (specular + diffuse + ambient) * meshColour;
     FragColour = vec4(result, 1.0f);
 }
 
