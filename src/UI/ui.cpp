@@ -6,6 +6,7 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "../Scene/scene.hpp"
+#include <filesystem>
 
 namespace UI {
     void initImGui(GLFWwindow* window)
@@ -176,7 +177,7 @@ namespace UI {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 
-        ImGui::Begin("DockSpace Demo", nullptr, windowFlags);
+        ImGui::Begin("DockSpace", nullptr, windowFlags);
         ImGui::PopStyleVar(2);
 
         // DockSpace
@@ -184,5 +185,10 @@ namespace UI {
         ImGui::DockSpace(dockSpaceID, ImVec2(0.0f, 0.0f), dockSpaceFlags);
 
         ImGui::End();
+
+        if (!std::filesystem::exists("imgui.ini"))
+        {
+            ImGui::LoadIniSettingsFromDisk("../../src/UI/DefaultPanelLayout.ini");
+        }
     }
 }
