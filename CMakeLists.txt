@@ -51,8 +51,10 @@ add_executable(main src/main.cpp ${GLAD_GL}
     src/Entity/mesh.cpp
     src/Entity/meshHandler.hpp
     src/Entity/meshHandler.cpp
-    src/Camera/camera.hpp
-    src/Camera/camera.cpp
+    src/Component_Functions/camera.hpp
+    src/Component_Functions/camera.cpp
+    src/Component_Functions/transform.hpp
+    src/Component_Functions/transform.cpp
     src/UI/ui.hpp
     src/UI/ui.cpp
     src/Entity/components.cpp

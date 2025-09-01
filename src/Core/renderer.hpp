@@ -10,7 +10,7 @@
 #include "objectLoader.hpp"
 #include "../Shader/shader.hpp"
 #include "../Entity/meshHandler.hpp"
-#include "../Camera/camera.hpp"
+#include "../Component_Functions/camera.hpp"
 #include "../Scene/scene.hpp"
 
 namespace ObjectRenderer {

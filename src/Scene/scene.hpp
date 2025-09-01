@@ -53,7 +53,7 @@ namespace ObjectRenderer {
 
     private:
         void renderMeshObjects(Shader& shader, MeshHandler& meshHandler);
-        void renderLightingObjects(Shader& shader, MeshHandler& meshHandler);
+        void addLightingToShader(Shader& shader, MeshHandler& meshHandler);
 
         entt::registry m_registry;
     };

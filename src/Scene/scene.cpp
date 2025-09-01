@@ -1,9 +1,10 @@
 #pragma once
 
 #include "scene.hpp"
-#include "../Camera/camera.hpp"
+#include "../Component_Functions/camera.hpp"
 #include <entt/entt.hpp>
 #include <iostream>
+#include "../Component_Functions/transform.hpp"
 
 namespace ObjectRenderer {
 
@@ -17,7 +18,7 @@ namespace ObjectRenderer {
 
     void Scene::render(Shader& shader, MeshHandler& meshHandler)
     {
-        renderLightingObjects(shader, meshHandler);
+        addLightingToShader(shader, meshHandler);
         renderMeshObjects(shader, meshHandler);
     }
 
@@ -36,13 +37,7 @@ namespace ObjectRenderer {
 
             meshHandler.bindMeshVAO(meshComponent.meshName);
 
-            glm::mat4 model{ 1.0f };
-            model = glm::translate(model, transformComponent.translation);
-            model = glm::rotate(model, glm::radians(transformComponent.rotationAngles.x), { 1.0f, 0.0f, 0.0f });
-            model = glm::rotate(model, glm::radians(transformComponent.rotationAngles.y), { 0.0f, 1.0f, 0.0f });
-            model = glm::rotate(model, glm::radians(transformComponent.rotationAngles.z), { 0.0f, 0.0f, 1.0f });
-            model = glm::scale(model, transformComponent.scale);
-            shader.setMat4("model", model);
+            shader.setMat4("model", Transform::getModelMatrix(transformComponent));
 
             glDrawArrays(GL_TRIANGLES, startIndex * 3, length * 3);
 
@@ -63,13 +58,7 @@ namespace ObjectRenderer {
 
         meshHandler.bindMeshVAO(meshComponent->meshName);
 
-        glm::mat4 model{ 1.0f };
-        model = glm::translate(model, transformComponent->translation);
-        model = glm::rotate(model, glm::radians(transformComponent->rotationAngles.x), { 1.0f, 0.0f, 0.0f });
-        model = glm::rotate(model, glm::radians(transformComponent->rotationAngles.y), { 0.0f, 1.0f, 0.0f });
-        model = glm::rotate(model, glm::radians(transformComponent->rotationAngles.z), { 0.0f, 0.0f, 1.0f });
-        model = glm::scale(model, transformComponent->scale);
-        shader.setMat4("model", model);
+        shader.setMat4("model", Transform::getModelMatrix(*transformComponent));
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
@@ -106,13 +95,7 @@ namespace ObjectRenderer {
 
             meshHandler.bindMeshVAO(meshComponent.meshName);
 
-            glm::mat4 model{ 1.0f };
-            model = glm::translate(model, transformComponent.translation);
-            model = glm::rotate(model, glm::radians(transformComponent.rotationAngles.x), { 1.0f, 0.0f, 0.0f });
-            model = glm::rotate(model, glm::radians(transformComponent.rotationAngles.y), { 0.0f, 1.0f, 0.0f });
-            model = glm::rotate(model, glm::radians(transformComponent.rotationAngles.z), { 0.0f, 0.0f, 1.0f });
-            model = glm::scale(model, transformComponent.scale);
-            shader.setMat4("model", model);
+            shader.setMat4("model", Transform::getModelMatrix(transformComponent));
 
             shader.setVec3("meshColour", meshComponent.colour);
 
@@ -122,7 +105,7 @@ namespace ObjectRenderer {
         }
     }
 
-    void Scene::renderLightingObjects(Shader& shader, MeshHandler& meshHandler)
+    void Scene::addLightingToShader(Shader& shader, MeshHandler& meshHandler)
     {
         auto entities = EntityComponentSystem::getEntities<EntityComponentSystem::LightingComponent, EntityComponentSystem::TransformComponent>(m_registry);
 
