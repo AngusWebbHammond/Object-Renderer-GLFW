@@ -36,8 +36,11 @@ namespace ObjectRenderer {
     private:
         GLFWwindow* m_window;
         GLuint m_VBO, m_VAO;
+
         Shader m_shader;
         Shader m_lightingShader;
+        Shader m_outlineShader;
+
         MeshHandler m_meshHandler;
         ObjectLoader m_objectLoader;
         Scene m_scene;

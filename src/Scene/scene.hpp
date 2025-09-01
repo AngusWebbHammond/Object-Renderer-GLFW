@@ -11,8 +11,11 @@ namespace ObjectRenderer {
         Scene();
 
         void update();
+
         void render(Shader& shader, MeshHandler& meshHandler);
         void renderLighting(Shader& shader, MeshHandler& meshHandler);
+        void renderOutline(Shader& shader, MeshHandler& meshHandler, entt::entity& entity);
+
         void removeEntity(entt::entity entity);
         entt::entity createEntity();
 

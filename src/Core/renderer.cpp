@@ -34,10 +34,13 @@ namespace ObjectRenderer {
             (std::filesystem::path(g_projectDir) / "shaders" / "default.vert").string(),
             (std::filesystem::path(g_projectDir) / "shaders" / "default.frag").string(),
             (std::filesystem::path(g_projectDir) / "shaders" / "lighting.vert").string(),
-            (std::filesystem::path(g_projectDir) / "shaders" / "lighting.frag").string()
+            (std::filesystem::path(g_projectDir) / "shaders" / "lighting.frag").string(),
+            (std::filesystem::path(g_projectDir) / "shaders" / "outline.vert").string(),
+            (std::filesystem::path(g_projectDir) / "shaders" / "outline.frag").string()
         };
         m_shader.init(shaders[0].c_str(), shaders[1].c_str());
         m_lightingShader.init(shaders[2].c_str(), shaders[3].c_str());
+        m_outlineShader.init(shaders[4].c_str(), shaders[5].c_str());
 
         createVertexBufferObject();
         glEnable(GL_DEPTH_TEST);
@@ -243,6 +246,8 @@ namespace ObjectRenderer {
 
         entt::entity selectedModel = UI::buildImGuiUIContent(m_scene);
 
+
+
         if (ImGui::Begin("Viewport")) {
 
             viewportPanelSize = ImGui::GetContentRegionAvail();
@@ -273,8 +278,6 @@ namespace ObjectRenderer {
 
         UI::buildImGuiUIProperties(m_scene, selectedModel);
 
-        // glClear(GL_COLOR_BUFFER_BIT);
-
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             std::cerr << "Framebuffer incomplete!" << std::endl;
             UI::renderImGui();
@@ -286,8 +289,6 @@ namespace ObjectRenderer {
         glViewport(0, 0, fbWidth, fbHeight);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         m_shader.use();
 
@@ -319,11 +320,19 @@ namespace ObjectRenderer {
         m_scene.render(m_shader, m_meshHandler);
 
         m_lightingShader.use();
-
         m_lightingShader.setMat4("view", view);
         m_lightingShader.setMat4("projection", projection);
 
         m_scene.renderLighting(m_lightingShader, m_meshHandler);
+
+        m_outlineShader.use();
+        m_outlineShader.setMat4("view", view);
+        m_outlineShader.setMat4("projection", projection);
+
+        if (selectedModel != entt::null) {
+            if (m_scene.isComponentInEntity<EntityComponentSystem::MeshComponent>(selectedModel))
+                m_scene.renderOutline(m_outlineShader, m_meshHandler, selectedModel);
+        }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
