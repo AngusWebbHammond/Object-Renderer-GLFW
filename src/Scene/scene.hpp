@@ -48,11 +48,6 @@ namespace ObjectRenderer {
             return EntityComponentSystem::isComponentInEntity<Component>(m_registry, entity);
         }
 
-        template <typename Component>
-        void updateComponentInEntity(entt::entity entity) {
-            EntityComponentSystem::updateComponentInEntity<Component>(m_registry, entity);
-        }
-
     private:
         void renderMeshObjects(Shader& shader, MeshHandler& meshHandler);
         void renderLightingObjects(Shader& shader, MeshHandler& meshHandler);
