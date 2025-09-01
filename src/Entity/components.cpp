@@ -55,7 +55,8 @@ namespace EntityComponentSystem {
 
     MeshComponent::MeshComponent()
     {
-        meshName = "";
+
+        meshName = "Cube";
         colour = glm::vec3{ 0.5f, 0.5f, 0.5f };
     }
 

@@ -7,6 +7,7 @@
 #include "backends/imgui_impl_opengl3.h"
 #include "../Scene/scene.hpp"
 #include <filesystem>
+#include <tuple>
 
 namespace UI {
     void initImGui(GLFWwindow* window)
@@ -80,6 +81,11 @@ namespace UI {
             }
 
             ImGui::EndListBox();
+
+            if (ImGui::Button("Add Entity"))
+            {
+                scene.createEntity();
+            }
         }
         ImGui::End();
         return selectedEntity;
@@ -155,8 +161,31 @@ namespace UI {
             }
         }
 
+        static bool addComponentListOpen = false;
+
+        if (ImGui::Button("Add Component")) {
+            if (addComponentListOpen) addComponentListOpen = false;
+            else addComponentListOpen = true;
+        }
+
+        if (addComponentListOpen) {
+            if (ImGui::BeginListBox("Components")) {
+
+                EntityComponentSystem::forEachType(EntityComponentSystem::Components{}, [&scene, entity]<typename T>() {
+                    if (!scene.isComponentInEntity<T>(entity)) {
+                        if (ImGui::Selectable(EntityComponentSystem::componentName<T>())) {
+                            scene.emplaceOrReplaceComponentInEntity<T>(entity);
+                            addComponentListOpen = false;
+                        }
+                    }
+                });
+
+                ImGui::EndListBox();
+            }
+        }
         ImGui::End();
     }
+
 
     void showDockspace() {
         static bool isFullScreen = true;
