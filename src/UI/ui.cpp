@@ -87,7 +87,12 @@ namespace UI {
                 scene.createEntity();
             }
         }
+
+        if (ImGui::Button("Save Scene")) {
+            scene.saveSceneToFile();
+        }
         ImGui::End();
+
         return selectedEntity;
     }
 

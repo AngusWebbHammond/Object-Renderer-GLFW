@@ -1,0 +1,122 @@
+entities:
+  Light:
+    TransformComponent:
+      translation:
+        - 0
+        - 4
+        - 0
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Cube
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5
+    LightingComponent:
+      intensity: 1
+      colour:
+        - 1
+        - 1
+        - 1
+    NameComponent:
+      name: Light
+  Suzanne:
+    TransformComponent:
+      translation:
+        - 0
+        - 0
+        - 0
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Suzanne
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5
+  Torus:
+    TransformComponent:
+      translation:
+        - 0
+        - 1
+        - 0
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Torus
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5
+  Camera:
+    TransformComponent:
+      translation:
+        - 0
+        - 0
+        - 4
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    CameraComponent:
+      yaw: -90
+      pitch: 0
+      front:
+        - 0
+        - 0
+        - -1
+      up:
+        - 0
+        - 1
+        - 0
+      right:
+        - 1
+        - 0
+        - 0
+      worldUp:
+        - 0
+        - 1
+        - 0
+  Cube:
+    TransformComponent:
+      translation:
+        - 0
+        - 0
+        - -3
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Cube
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5

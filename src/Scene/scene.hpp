@@ -5,6 +5,8 @@
 #include "../Shader/shader.hpp"
 #include "../Entity/meshHandler.hpp"
 
+#include "yaml-cpp/yaml.h"
+
 namespace ObjectRenderer {
     class Scene {
     public:
@@ -15,6 +17,8 @@ namespace ObjectRenderer {
         void render(Shader& shader, MeshHandler& meshHandler);
         void renderLighting(Shader& shader, MeshHandler& meshHandler);
         void renderOutline(Shader& shader, MeshHandler& meshHandler, entt::entity& entity);
+
+        void saveSceneToFile();
 
         void removeEntity(entt::entity entity);
         entt::entity createEntity();
@@ -54,6 +58,8 @@ namespace ObjectRenderer {
     private:
         void renderMeshObjects(Shader& shader, MeshHandler& meshHandler);
         void addLightingToShader(Shader& shader, MeshHandler& meshHandler);
+
+        YAML::Node vec3ToYaml(const glm::vec3& v);
 
         entt::registry m_registry;
     };

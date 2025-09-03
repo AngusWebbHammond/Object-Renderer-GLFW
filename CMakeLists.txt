@@ -11,6 +11,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(AddGLFW)
 include(AddGLM)
 include(AddENTT)
+include(AddYAML)
 
 include_directories(
     deps/glad/include
@@ -65,7 +66,7 @@ add_executable(main src/main.cpp ${GLAD_GL}
     src/Scene/scene.hpp
 )
 
-target_link_libraries(main PRIVATE glfw glm EnTT::EnTT)
+target_link_libraries(main PRIVATE glfw glm EnTT::EnTT yaml-cpp::yaml-cpp)
 
 add_compile_definitions(PROJECT_DIR="${CMAKE_SOURCE_DIR}")
 
