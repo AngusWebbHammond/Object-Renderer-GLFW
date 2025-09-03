@@ -17,7 +17,5 @@ namespace ObjectRenderer {
     const float g_speed = 2.5f;
     const float g_sensitivity = 0.2f;
 
-    const std::string g_projectDir = PROJECT_DIR;
-
     void g_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
 }

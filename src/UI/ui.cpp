@@ -217,7 +217,7 @@ namespace UI {
 
         if (!std::filesystem::exists("imgui.ini"))
         {
-            ImGui::LoadIniSettingsFromDisk("../../src/UI/DefaultPanelLayout.ini");
+            ImGui::LoadIniSettingsFromDisk((std::filesystem::path(PROJECT_DIR) / "src" / "UI" / "DefaultPanelLayout.ini").string().c_str());
         }
     }
 }

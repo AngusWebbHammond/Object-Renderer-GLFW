@@ -31,12 +31,12 @@ namespace ObjectRenderer {
         m_window = window;
 
         std::string shaders[] = {
-            (std::filesystem::path(g_projectDir) / "shaders" / "default.vert").string(),
-            (std::filesystem::path(g_projectDir) / "shaders" / "default.frag").string(),
-            (std::filesystem::path(g_projectDir) / "shaders" / "lighting.vert").string(),
-            (std::filesystem::path(g_projectDir) / "shaders" / "lighting.frag").string(),
-            (std::filesystem::path(g_projectDir) / "shaders" / "outline.vert").string(),
-            (std::filesystem::path(g_projectDir) / "shaders" / "outline.frag").string()
+            (std::filesystem::path(PROJECT_DIR) / "shaders" / "default.vert").string(),
+            (std::filesystem::path(PROJECT_DIR) / "shaders" / "default.frag").string(),
+            (std::filesystem::path(PROJECT_DIR) / "shaders" / "lighting.vert").string(),
+            (std::filesystem::path(PROJECT_DIR) / "shaders" / "lighting.frag").string(),
+            (std::filesystem::path(PROJECT_DIR) / "shaders" / "outline.vert").string(),
+            (std::filesystem::path(PROJECT_DIR) / "shaders" / "outline.frag").string()
         };
         m_shader.init(shaders[0].c_str(), shaders[1].c_str());
         m_lightingShader.init(shaders[2].c_str(), shaders[3].c_str());
@@ -55,9 +55,9 @@ namespace ObjectRenderer {
         // Loading the objects and getting the verticies for the input to the gl buffer
 
         std::string objects[] = {
-            (std::filesystem::path(g_projectDir) / "assets" / "objects" / "torus.obj").string(),
-            (std::filesystem::path(g_projectDir) / "assets" / "objects" / "cube.obj").string(),
-            (std::filesystem::path(g_projectDir) / "assets" / "objects" / "monkey.obj").string()
+            (std::filesystem::path(PROJECT_DIR) / "assets" / "objects" / "torus.obj").string(),
+            (std::filesystem::path(PROJECT_DIR) / "assets" / "objects" / "cube.obj").string(),
+            (std::filesystem::path(PROJECT_DIR) / "assets" / "objects" / "monkey.obj").string()
         };
         m_meshHandler.addObjectFromFile(objects[0].c_str());
         m_meshHandler.addObjectFromFile(objects[1].c_str());

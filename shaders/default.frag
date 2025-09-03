@@ -31,7 +31,7 @@ void main()
     float specularStrength = 1.0;
     vec3 viewDirection = normalize(viewPos - fragPos);
     vec3 reflectDirection = reflect(-lightingDirection, normalizedNormal);
-    float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 32);
+    float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 256);
     vec3 specular = specularStrength * spec * lightingColour;
 
     // Resulting Lighting
