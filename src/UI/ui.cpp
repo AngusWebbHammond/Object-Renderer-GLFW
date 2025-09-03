@@ -88,9 +88,6 @@ namespace UI {
             }
         }
 
-        if (ImGui::Button("Save Scene")) {
-            scene.saveSceneToFile();
-        }
         ImGui::End();
 
         return selectedEntity;
@@ -224,5 +221,24 @@ namespace UI {
         {
             ImGui::LoadIniSettingsFromDisk((std::filesystem::path(PROJECT_DIR) / "src" / "UI" / "DefaultPanelLayout.ini").string().c_str());
         }
+    }
+
+    void buildSceneSerialization(ObjectRenderer::Scene& scene)
+    {
+        ImGui::Begin("Scene Serialization");
+
+        if (ImGui::Button("Save Scene")) {
+            scene.saveSceneToFile();
+        }
+
+        if (ImGui::Button("Clear Scene")) {
+            scene.clearScene();
+        }
+
+        if (ImGui::Button("Load Scene")) {
+            scene.loadSceneFromFile((std::filesystem::path(PROJECT_DIR) / "assets" / "scenes" / "scene.yaml").string().c_str());
+        }
+
+        ImGui::End();
     }
 }

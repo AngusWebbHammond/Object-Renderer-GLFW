@@ -86,21 +86,21 @@ namespace ObjectRenderer {
 
             if (isComponentInEntity<EntityComponentSystem::TransformComponent>(entity)) {
                 EntityComponentSystem::TransformComponent* transformComponent = getComponentFromEntity<EntityComponentSystem::TransformComponent>(entity);
-                node["TransformComponent"]["translation"] = vec3ToYaml(transformComponent->translation);
-                node["TransformComponent"]["rotationAngles"] = vec3ToYaml(transformComponent->rotationAngles);
-                node["TransformComponent"]["scale"] = vec3ToYaml(transformComponent->scale);
+                node["TransformComponent"]["translation"] = transformComponent->translation;
+                node["TransformComponent"]["rotationAngles"] = transformComponent->rotationAngles;
+                node["TransformComponent"]["scale"] = transformComponent->scale;
             }
 
             if (isComponentInEntity<EntityComponentSystem::MeshComponent>(entity)) {
                 EntityComponentSystem::MeshComponent* meshComponent = getComponentFromEntity<EntityComponentSystem::MeshComponent>(entity);
                 node["MeshComponent"]["meshName"] = meshComponent->meshName;
-                node["MeshComponent"]["colour"] = vec3ToYaml(meshComponent->colour);
+                node["MeshComponent"]["colour"] = meshComponent->colour;
             }
 
             if (isComponentInEntity<EntityComponentSystem::LightingComponent>(entity)) {
                 EntityComponentSystem::LightingComponent* lightingComponent = getComponentFromEntity<EntityComponentSystem::LightingComponent>(entity);
                 node["LightingComponent"]["intensity"] = lightingComponent->intensity;
-                node["LightingComponent"]["colour"] = vec3ToYaml(lightingComponent->colour);
+                node["LightingComponent"]["colour"] = lightingComponent->colour;
             }
 
             if (isComponentInEntity<EntityComponentSystem::LightingComponent>(entity)) {
@@ -112,10 +112,11 @@ namespace ObjectRenderer {
                 EntityComponentSystem::CameraComponent* cameraComponent = getComponentFromEntity<EntityComponentSystem::CameraComponent>(entity);
                 node["CameraComponent"]["yaw"] = cameraComponent->yaw;
                 node["CameraComponent"]["pitch"] = cameraComponent->pitch;
-                node["CameraComponent"]["front"] = vec3ToYaml(cameraComponent->front);
-                node["CameraComponent"]["up"] = vec3ToYaml(cameraComponent->up);
-                node["CameraComponent"]["right"] = vec3ToYaml(cameraComponent->right);
-                node["CameraComponent"]["worldUp"] = vec3ToYaml(cameraComponent->worldUp);
+                node["CameraComponent"]["front"] = cameraComponent->front;
+                node["CameraComponent"]["up"] = cameraComponent->up;
+                node["CameraComponent"]["right"] = cameraComponent->right;
+                node["CameraComponent"]["worldUp"] = cameraComponent->worldUp;
+                node["CameraComponent"]["isPrimaryCamera"] = cameraComponent->isPrimaryCamera;
             }
 
             root["entities"][nameComponent.name] = node;
@@ -124,6 +125,64 @@ namespace ObjectRenderer {
         std::string fileOut{ (std::filesystem::path(PROJECT_DIR) / "assets" / "scenes" / "scene.yaml").string() };
         std::ofstream fout(fileOut);
         fout << root;
+    }
+
+    void Scene::loadSceneFromFile(const char* fileName)
+    {
+        YAML::Node sceneFileNode = YAML::LoadFile(fileName);
+
+        if (!sceneFileNode) return;
+
+        m_registry.clear();
+
+        for (auto it : sceneFileNode["entities"]) {
+            std::string entityName = it.first.as<std::string>();
+            YAML::Node entityNode = it.second;
+
+            entt::entity entity = EntityComponentSystem::create(m_registry);
+            EntityComponentSystem::emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(m_registry, entity, entityName);
+
+            if (entityNode["TransformComponent"]) {
+                glm::vec3 pos = entityNode["TransformComponent"]["translation"].as<glm::vec3>();
+                glm::vec3 rot = entityNode["TransformComponent"]["rotationAngles"].as<glm::vec3>();
+                glm::vec3 scale = entityNode["TransformComponent"]["scale"].as<glm::vec3>();
+
+                EntityComponentSystem::emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(m_registry, entity, pos, rot, scale);
+            }
+
+            if (entityNode["MeshComponent"]) {
+                std::string meshName = entityNode["MeshComponent"]["meshName"].as<std::string>();
+                glm::vec3 colour = entityNode["MeshComponent"]["colour"].as<glm::vec3>();
+
+                EntityComponentSystem::emplaceOrReplaceComponentInEntity<EntityComponentSystem::MeshComponent>(m_registry, entity, meshName, colour);
+            }
+
+            if (entityNode["LightingComponent"]) {
+                float intensity = entityNode["LightingComponent"]["intensity"].as<float>();
+                glm::vec3 colour = entityNode["LightingComponent"]["colour"].as<glm::vec3>();
+
+                EntityComponentSystem::emplaceOrReplaceComponentInEntity<EntityComponentSystem::LightingComponent>(m_registry, entity, intensity, colour);
+            }
+
+            if (entityNode["CameraComponent"]) {
+                float yaw = entityNode["CameraComponent"]["yaw"].as<float>();
+                float pitch = entityNode["CameraComponent"]["pitch"].as<float>();
+
+                glm::vec3 front = entityNode["CameraComponent"]["front"].as<glm::vec3>();
+                glm::vec3 up = entityNode["CameraComponent"]["up"].as<glm::vec3>();
+                glm::vec3 right = entityNode["CameraComponent"]["right"].as<glm::vec3>();
+                glm::vec3 worldUp = entityNode["CameraComponent"]["worldUp"].as<glm::vec3>();
+
+                bool isPrimaryCamera = entityNode["CameraComponent"]["isPrimaryCamera"].as<bool>();
+
+                EntityComponentSystem::emplaceOrReplaceComponentInEntity<EntityComponentSystem::CameraComponent>(m_registry, entity, yaw, pitch, front, up, right, worldUp, isPrimaryCamera);
+            }
+        }
+    }
+
+    void Scene::clearScene()
+    {
+        m_registry.clear();
     }
 
     void Scene::removeEntity(entt::entity entity)
@@ -177,4 +236,27 @@ namespace ObjectRenderer {
         node.push_back(v.z);
         return node;
     }
+}
+
+namespace YAML {
+    template<>
+    struct convert<glm::vec3> {
+        static Node encode(const glm::vec3& rhs) {
+            Node node;
+            node.push_back(rhs.x);
+            node.push_back(rhs.y);
+            node.push_back(rhs.z);
+            return node;
+        }
+
+        static bool decode(const Node& node, glm::vec3& rhs) {
+            if (!node.IsSequence() || node.size() != 3) {
+                return false;
+            }
+            rhs.x = node[0].as<float>();
+            rhs.y = node[1].as<float>();
+            rhs.z = node[2].as<float>();
+            return true;
+        }
+    };
 }

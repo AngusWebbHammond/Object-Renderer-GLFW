@@ -19,4 +19,5 @@ namespace UI {
     entt::entity buildImGuiUIContent(ObjectRenderer::Scene& scene);
     void buildImGuiUIProperties(ObjectRenderer::Scene& scene, entt::entity& entity);
     void showDockspace();
+    void buildSceneSerialization(ObjectRenderer::Scene& scene);
 }

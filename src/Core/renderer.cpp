@@ -246,7 +246,7 @@ namespace ObjectRenderer {
 
         entt::entity selectedModel = UI::buildImGuiUIContent(m_scene);
 
-
+        UI::buildSceneSerialization(m_scene);
 
         if (ImGui::Begin("Viewport")) {
 

@@ -20,6 +20,13 @@ namespace EntityComponentSystem {
         scale = glm::vec3(1.0f);
     }
 
+    TransformComponent::TransformComponent(glm::vec3 _position, glm::vec3 _rotationAngles, glm::vec3 _scale)
+    {
+        translation = _position;
+        rotationAngles = _rotationAngles;
+        scale = _scale;
+    }
+
     LightingComponent::LightingComponent()
     {
         intensity = 1.0f;
@@ -94,6 +101,19 @@ namespace EntityComponentSystem {
         up = glm::vec3(0.0f, 1.0f, 0.0f);
         right = glm::vec3(1.0f, 0.0f, 0.0f);
         worldUp = up;
+
+        isPrimaryCamera = _isPrimaryCamera;
+    }
+
+    CameraComponent::CameraComponent(float _yaw, float _pitch, glm::vec3 _front, glm::vec3 _up, glm::vec3 _right, glm::vec3 _worldUp, bool _isPrimaryCamera)
+    {
+        yaw = _yaw;
+        pitch = _pitch;
+
+        front = _front;
+        up = _up;
+        right = _right;
+        worldUp = _worldUp;
 
         isPrimaryCamera = _isPrimaryCamera;
     }

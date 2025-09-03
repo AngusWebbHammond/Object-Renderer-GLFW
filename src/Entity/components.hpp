@@ -14,6 +14,7 @@ namespace EntityComponentSystem {
 
         TransformComponent();
         TransformComponent(glm::vec3 _position);
+        TransformComponent(glm::vec3 _position, glm::vec3 _rotationAngles, glm::vec3 _scale);
     };
 
     struct MeshComponent {
@@ -55,6 +56,7 @@ namespace EntityComponentSystem {
 
         CameraComponent();
         CameraComponent(bool _isPrimaryCamera);
+        CameraComponent(float _yaw, float _pitch, glm::vec3 _front, glm::vec3 _up, glm::vec3 _right, glm::vec3 _worldUp, bool _isPrimaryCamera);
         ~CameraComponent();
     };
 

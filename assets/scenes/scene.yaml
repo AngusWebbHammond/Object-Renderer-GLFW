@@ -100,6 +100,7 @@ entities:
         - 0
         - 1
         - 0
+      isPrimaryCamera: true
   Cube:
     TransformComponent:
       translation:

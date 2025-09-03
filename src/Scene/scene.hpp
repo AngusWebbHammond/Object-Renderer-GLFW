@@ -19,6 +19,8 @@ namespace ObjectRenderer {
         void renderOutline(Shader& shader, MeshHandler& meshHandler, entt::entity& entity);
 
         void saveSceneToFile();
+        void loadSceneFromFile(const char* fileName);
+        void clearScene();
 
         void removeEntity(entt::entity entity);
         entt::entity createEntity();
