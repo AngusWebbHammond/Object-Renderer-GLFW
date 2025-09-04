@@ -206,6 +206,30 @@ namespace UI {
 
                 ImGui::ColorPicker3("Primary", &lightingComponent->colour[0]);
                 ImGui::DragFloat("Intensity", &lightingComponent->intensity, 0.01f, 0.0f, 1.0f);
+
+                const char* lightTypes[] = { "Point", "Directional", "Spot" };
+                int currentLight = static_cast<int>(lightingComponent->lightingType);
+
+                if (ImGui::BeginCombo("Light Type", lightTypes[lightingComponent->lightingType])) {
+                    for (int i = 0; i < IM_ARRAYSIZE(lightTypes); i++) {
+                        bool isSelected = (currentLight == i);
+                        if (ImGui::Selectable(lightTypes[i], isSelected)) {
+                            currentLight = i;
+                            lightingComponent->lightingType = static_cast<EntityComponentSystem::LightingComponent::LightType>(i);
+                        }
+                        if (isSelected) {
+                            ImGui::SetItemDefaultFocus();
+                        }
+                    }
+                    ImGui::EndCombo();
+                }
+
+                if (lightingComponent->lightingType == EntityComponentSystem::LightingComponent::DIRECTIONAL_LIGHT || lightingComponent->lightingType == EntityComponentSystem::LightingComponent::SPOT_LIGHT) {
+                    ImGui::Text("Direction");
+                    ImGui::DragFloat("X", &lightingComponent->direction.x, 0.01f, -1.0f, 1.0f);
+                    ImGui::DragFloat("Y", &lightingComponent->direction.y, 0.01f, -1.0f, 1.0f);
+                    ImGui::DragFloat("Z", &lightingComponent->direction.z, 0.01f, -1.0f, 1.0f);
+                }
             }
         }
 

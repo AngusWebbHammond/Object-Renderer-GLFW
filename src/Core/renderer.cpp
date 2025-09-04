@@ -327,10 +327,7 @@ namespace ObjectRenderer {
         m_outlineShader.setMat4("modelViewProjection.view", view);
         m_outlineShader.setMat4("modelViewProjection.projection", projection);
 
-        if (selectedModel != entt::null) {
-            if (m_scene.isComponentInEntity<EntityComponentSystem::MeshComponent>(selectedModel))
-                m_scene.renderOutline(m_outlineShader, m_meshHandler, selectedModel);
-        }
+        m_scene.renderOutline(m_outlineShader, m_meshHandler, selectedModel);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

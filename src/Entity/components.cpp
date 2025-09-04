@@ -31,18 +31,32 @@ namespace EntityComponentSystem {
     {
         intensity = 1.0f;
         colour = glm::vec3(1.0f);
+        lightingType = POINT_LIGHT;
+        direction = glm::vec3(0.0f, 0.0f, -1.0f);
     }
 
     LightingComponent::LightingComponent(float _intensity)
     {
         intensity = _intensity;
         colour = glm::vec3(1.0f);
+        lightingType = POINT_LIGHT;
+        direction = glm::vec3(0.0f, 0.0f, -1.0f);
     }
 
     LightingComponent::LightingComponent(float _intensity, glm::vec3 _colour)
     {
         intensity = _intensity;
         colour = _colour;
+        lightingType = POINT_LIGHT;
+        direction = glm::vec3(0.0f, 0.0f, -1.0f);
+    }
+
+    LightingComponent::LightingComponent(float _intensity, glm::vec3 _colour, LightType lightType)
+    {
+        intensity = _intensity;
+        colour = _colour;
+        lightingType = lightType;
+        direction = glm::vec3(0.0f, 0.0f, -1.0f);
     }
 
     NameComponent::NameComponent()

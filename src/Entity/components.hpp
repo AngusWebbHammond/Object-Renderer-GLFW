@@ -27,12 +27,23 @@ namespace EntityComponentSystem {
     };
 
     struct LightingComponent {
+
+        enum LightType {
+            POINT_LIGHT,
+            DIRECTIONAL_LIGHT,
+            SPOT_LIGHT
+        };
+
         glm::float32 intensity;
         glm::vec3 colour;
+        glm::vec3 direction;
+
+        LightType lightingType;
 
         LightingComponent();
         LightingComponent(float _intensity);
         LightingComponent(float _intensity, glm::vec3 _colour);
+        LightingComponent(float _intensity, glm::vec3 _colour, LightType lightType);
     };
 
     struct NameComponent {

@@ -29,6 +29,9 @@ namespace ObjectRenderer {
         auto entities = EntityComponentSystem::getEntities<EntityComponentSystem::LightingComponent, EntityComponentSystem::TransformComponent, EntityComponentSystem::MeshComponent>(m_registry);
 
         for (auto [entity, lightingComponent, transformComponent, meshComponent] : entities.each()) {
+
+            if (lightingComponent.lightingType == EntityComponentSystem::LightingComponent::DIRECTIONAL_LIGHT) continue;
+
             shader.setVec3("light.colour", lightingComponent.colour);
             shader.setFloat("light.intensity", lightingComponent.intensity);
 
@@ -50,6 +53,16 @@ namespace ObjectRenderer {
 
     void Scene::renderOutline(Shader& shader, MeshHandler& meshHandler, entt::entity& entity)
     {
+        if (entity == entt::null) return;
+
+        if (!(isComponentInEntity<EntityComponentSystem::MeshComponent>(entity))) return;
+
+        if (isComponentInEntity<EntityComponentSystem::LightingComponent>(entity)) {
+            if (getComponentFromEntity<EntityComponentSystem::LightingComponent>(entity)->lightingType
+                == EntityComponentSystem::LightingComponent::DIRECTIONAL_LIGHT)
+                return;
+        }
+
         auto meshComponent = getComponentFromEntity<EntityComponentSystem::MeshComponent>(entity);
         auto transformComponent = getComponentFromEntity<EntityComponentSystem::TransformComponent>(entity);
 
@@ -220,19 +233,39 @@ namespace ObjectRenderer {
     void Scene::addLightingToShader(Shader& shader, MeshHandler& meshHandler)
     {
         auto entities = EntityComponentSystem::getEntities<EntityComponentSystem::LightingComponent, EntityComponentSystem::TransformComponent>(m_registry);
-        int i = 0;
-        for (auto [entity, lightingComponent, transformComponent] : entities.each()) {
-            std::string prefix = "pointLights[" + std::to_string(i) + "]";
-            shader.setVec3(prefix + ".position", transformComponent.translation);
-            shader.setVec3(prefix + ".colour", lightingComponent.colour);
-            shader.setFloat(prefix + ".intensity", lightingComponent.intensity);
 
-            shader.setFloat(prefix + ".ambient", 0.2f);
-            shader.setFloat(prefix + ".specular", 1.0f);
-            shader.setFloat(prefix + ".diffuse", 1.0f);
-            i++;
+        // Point Lights
+        int numPointLights = 0;
+        int numDirectionalLights = 0;
+
+        for (auto [entity, lightingComponent, transformComponent] : entities.each()) {
+            if (lightingComponent.lightingType == EntityComponentSystem::LightingComponent::POINT_LIGHT) {
+                std::string prefix = "pointLights[" + std::to_string(numPointLights) + "]";
+                shader.setVec3(prefix + ".position", transformComponent.translation);
+                shader.setVec3(prefix + ".colour", lightingComponent.colour);
+                shader.setFloat(prefix + ".intensity", lightingComponent.intensity);
+
+                shader.setFloat(prefix + ".ambient", 0.2f);
+                shader.setFloat(prefix + ".specular", 1.0f);
+                shader.setFloat(prefix + ".diffuse", 1.0f);
+                numPointLights++;
+            }
+
+            else if (lightingComponent.lightingType == EntityComponentSystem::LightingComponent::DIRECTIONAL_LIGHT) {
+                std::string prefix = "directionalLights[" + std::to_string(numDirectionalLights) + "]";
+                shader.setVec3(prefix + ".direction", lightingComponent.direction);
+                shader.setVec3(prefix + ".colour", lightingComponent.colour);
+                shader.setFloat(prefix + ".intensity", lightingComponent.intensity);
+
+                shader.setFloat(prefix + ".ambient", 0.2f);
+                shader.setFloat(prefix + ".specular", 1.0f);
+                shader.setFloat(prefix + ".diffuse", 1.0f);
+                numDirectionalLights++;
+            }
         }
-        shader.setInt("numPointLights", i);
+
+        shader.setInt("numPointLights", numPointLights);
+        shader.setInt("numDirectionalLights", numDirectionalLights);
     }
 }
 
