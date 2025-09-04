@@ -18,7 +18,7 @@ namespace ObjectRenderer {
         void renderLighting(Shader& shader, MeshHandler& meshHandler);
         void renderOutline(Shader& shader, MeshHandler& meshHandler, entt::entity& entity);
 
-        void saveSceneToFile();
+        void saveSceneToFile(const std::string& fileOut);
         void loadSceneFromFile(const char* fileName);
         void clearScene();
 
@@ -60,8 +60,6 @@ namespace ObjectRenderer {
     private:
         void renderMeshObjects(Shader& shader, MeshHandler& meshHandler);
         void addLightingToShader(Shader& shader, MeshHandler& meshHandler);
-
-        YAML::Node vec3ToYaml(const glm::vec3& v);
 
         entt::registry m_registry;
     };

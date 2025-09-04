@@ -9,7 +9,46 @@
 #include <filesystem>
 #include <tuple>
 
+#include <windows.h>
+#include <commdlg.h>
+#include <string>
+
 namespace UI {
+    namespace {
+        std::string OpenFileDialog(const char* filter = "All Files\0*.*\0Text Files\0*.txt\0") {
+            char fileName[MAX_PATH] = "";
+            OPENFILENAME ofn = {};
+            ofn.lStructSize = sizeof(ofn);
+            ofn.lpstrFile = fileName;
+            ofn.nMaxFile = MAX_PATH;
+            ofn.lpstrFilter = filter;
+            ofn.Flags = OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+
+            if (GetOpenFileName(&ofn)) {
+                return std::string(fileName);
+            }
+            return "";
+        }
+
+        std::string SaveFileDialog(const char* filter = "All Files\0*.*\0Text Files\0*.txt\0") {
+            char fileName[MAX_PATH] = "";
+
+            OPENFILENAME ofn = {};
+            ofn.lStructSize = sizeof(ofn);
+            ofn.lpstrFile = fileName;
+            ofn.nMaxFile = MAX_PATH;
+            ofn.lpstrFilter = filter;
+            ofn.lpstrDefExt = "txt";
+            ofn.Flags = OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST;
+
+            if (GetSaveFileName(&ofn)) {
+                return std::string(fileName);
+            }
+
+            return "";
+        }
+    }
+
     void initImGui(GLFWwindow* window)
     {
         IMGUI_CHECKVERSION();
@@ -52,11 +91,17 @@ namespace UI {
         auto entities = scene.viewEntitysWithComponents<EntityComponentSystem::NameComponent>();
 
         static int selectedIndex = entities->size() - 1;
-        static entt::entity selectedEntity;
+        static entt::entity selectedEntity = entt::null;
+
+        if (ImGui::Button("Add Entity"))
+        {
+            scene.createEntity();
+        }
 
         if (entities.empty())
         {
             ImGui::Text("No entities available.");
+            selectedEntity = entt::null;
             ImGui::End();
             return selectedEntity;
         }
@@ -81,11 +126,6 @@ namespace UI {
             }
 
             ImGui::EndListBox();
-
-            if (ImGui::Button("Add Entity"))
-            {
-                scene.createEntity();
-            }
         }
 
         ImGui::End();
@@ -96,6 +136,12 @@ namespace UI {
     void buildImGuiUIProperties(ObjectRenderer::Scene& scene, entt::entity& entity)
     {
         ImGui::Begin("Properties");
+
+        if (entity == entt::null) {
+            ImGui::Text("No Entity Selected.");
+            ImGui::End();
+            return;
+        }
 
         if (scene.isComponentInEntity<EntityComponentSystem::TransformComponent>(entity))
         {
@@ -189,7 +235,7 @@ namespace UI {
     }
 
 
-    void showDockspace() {
+    void showDockspace(ObjectRenderer::Scene& scene) {
         static bool isFullScreen = true;
         static ImGuiDockNodeFlags dockSpaceFlags = ImGuiDockNodeFlags_None;
 
@@ -215,30 +261,47 @@ namespace UI {
         ImGuiID dockSpaceID = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockSpaceID, ImVec2(0.0f, 0.0f), dockSpaceFlags);
 
+        if (ImGui::BeginMenuBar()) {
+            if (ImGui::BeginMenu("Scene")) {
+                if (ImGui::MenuItem("New")) {
+                    scene.clearScene();
+                    entt::entity entity = scene.createEntity();
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::MeshComponent>(entity, "Cube");
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity, "Cube");
+
+                    entity = scene.createEntity();
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(entity, glm::vec3(-4.5f, 2.5f, 5.0f));
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::CameraComponent>(entity, -48.6f, -17.4f, true);
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity, "Camera");
+
+                    entity = scene.createEntity();
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::TransformComponent>(entity, glm::vec3(0.0f, 4.0f, 4.0f));
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::LightingComponent>(entity);
+                    scene.emplaceOrReplaceComponentInEntity<EntityComponentSystem::NameComponent>(entity, "Light");
+                }
+                if (ImGui::MenuItem("Save")) {
+                    std::string path = SaveFileDialog("YAML Files\0*.yaml\0All Files\0*.*\0");
+                    if (!path.empty()) {
+                        scene.saveSceneToFile(path);
+                    }
+                }
+                if (ImGui::MenuItem("Load")) {
+                    std::string path = OpenFileDialog("YAML Files\0*.yaml\0All Files\0*.*\0");
+                    if (!path.empty()) {
+                        scene.loadSceneFromFile(path.c_str());
+                    }
+                }
+                ImGui::EndMenu();
+            }
+        }
+
+        ImGui::EndMenuBar();
+
         ImGui::End();
 
         if (!std::filesystem::exists("imgui.ini"))
         {
             ImGui::LoadIniSettingsFromDisk((std::filesystem::path(PROJECT_DIR) / "src" / "UI" / "DefaultPanelLayout.ini").string().c_str());
         }
-    }
-
-    void buildSceneSerialization(ObjectRenderer::Scene& scene)
-    {
-        ImGui::Begin("Scene Serialization");
-
-        if (ImGui::Button("Save Scene")) {
-            scene.saveSceneToFile();
-        }
-
-        if (ImGui::Button("Clear Scene")) {
-            scene.clearScene();
-        }
-
-        if (ImGui::Button("Load Scene")) {
-            scene.loadSceneFromFile((std::filesystem::path(PROJECT_DIR) / "assets" / "scenes" / "scene.yaml").string().c_str());
-        }
-
-        ImGui::End();
     }
 }

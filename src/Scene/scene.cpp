@@ -74,7 +74,7 @@ namespace ObjectRenderer {
 
     }
 
-    void Scene::saveSceneToFile()
+    void Scene::saveSceneToFile(const std::string& fileOut)
     {
         YAML::Node root;
 
@@ -122,7 +122,6 @@ namespace ObjectRenderer {
             root["entities"][nameComponent.name] = node;
         }
 
-        std::string fileOut{ (std::filesystem::path(PROJECT_DIR) / "assets" / "scenes" / "scene.yaml").string() };
         std::ofstream fout(fileOut);
         fout << root;
     }
@@ -227,14 +226,6 @@ namespace ObjectRenderer {
             shader.setVec3("lightingColour", lightingComponent.colour);
             shader.setFloat("lightingIntensity", lightingComponent.intensity);
         }
-    }
-
-    YAML::Node Scene::vec3ToYaml(const glm::vec3& v) {
-        YAML::Node node;
-        node.push_back(v.x);
-        node.push_back(v.y);
-        node.push_back(v.z);
-        return node;
     }
 }
 

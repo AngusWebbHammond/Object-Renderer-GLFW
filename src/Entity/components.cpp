@@ -118,6 +118,25 @@ namespace EntityComponentSystem {
         isPrimaryCamera = _isPrimaryCamera;
     }
 
+    CameraComponent::CameraComponent(float _yaw, float _pitch, bool _isPrimaryCamera)
+    {
+        yaw = _yaw;
+        pitch = _pitch;
+
+        worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+        isPrimaryCamera = _isPrimaryCamera;
+
+        glm::vec3 frontTemp;
+        frontTemp.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        frontTemp.y = sin(glm::radians(pitch));
+        frontTemp.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+        front = glm::normalize(frontTemp);
+        right = glm::normalize(glm::cross(front, worldUp));
+        up = glm::normalize(glm::cross(right, front));
+    }
+
     CameraComponent::~CameraComponent()
     {
     }

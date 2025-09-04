@@ -1,0 +1,77 @@
+entities:
+  New Entity 1048578:
+    TransformComponent:
+      translation:
+        - 0
+        - 4
+        - 4
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    LightingComponent:
+      intensity: 1
+      colour:
+        - 1
+        - 1
+        - 1
+    NameComponent:
+      name: New Entity 1048578
+  New Entity 1048577:
+    TransformComponent:
+      translation:
+        - -4.5
+        - 2.5
+        - 5
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    CameraComponent:
+      yaw: -48.59995
+      pitch: -17.400007
+      front:
+        - 0.63105106
+        - -0.29904094
+        - -0.7157856
+      up:
+        - 0.19775955
+        - 0.9542404
+        - -0.22431377
+      right:
+        - 0.75011045
+        - -0
+        - 0.6613125
+      worldUp:
+        - 0
+        - 1
+        - 0
+      isPrimaryCamera: true
+  New Entity 1048576:
+    TransformComponent:
+      translation:
+        - 0
+        - 0
+        - 0
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Cube
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5

@@ -57,6 +57,7 @@ namespace EntityComponentSystem {
         CameraComponent();
         CameraComponent(bool _isPrimaryCamera);
         CameraComponent(float _yaw, float _pitch, glm::vec3 _front, glm::vec3 _up, glm::vec3 _right, glm::vec3 _worldUp, bool _isPrimaryCamera);
+        CameraComponent(float _yaw, float _pitch, bool _isPrimaryCamera);
         ~CameraComponent();
     };
 

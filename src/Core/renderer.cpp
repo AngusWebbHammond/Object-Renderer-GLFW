@@ -240,13 +240,11 @@ namespace ObjectRenderer {
 
         UI::createImGuiFrame();
 
-        UI::showDockspace();
+        UI::showDockspace(m_scene);
 
         ImVec2 viewportPanelSize = ImVec2(0, 0);
 
         entt::entity selectedModel = UI::buildImGuiUIContent(m_scene);
-
-        UI::buildSceneSerialization(m_scene);
 
         if (ImGui::Begin("Viewport")) {
 
