@@ -5,37 +5,40 @@ out vec4 FragColour;
 in vec3 normal;
 in vec3 fragPos;
 
-uniform float lightingIntensity;
+struct PointLight {
+    vec3 position;
+    vec3 colour;
+    float intensity;
 
-uniform vec3 lightingPosition;
-uniform vec3 lightingColour;
+    float ambient;
+    float specular;
+    float diffuse;
+};
+
 uniform vec3 viewPos;
 uniform vec3 meshColour;
 
-uniform mat4 model;
+uniform PointLight light;
 
 void main()
 {
     // Ambient Lighting
-    float ambientStrength = 0.2;
-    vec3 ambient = ambientStrength * lightingColour;
+    vec3 ambient = light.ambient * light.colour;
 
     // Diffuse Lighting
-    mat3 normalMatrix = transpose(inverse(mat3(model)));
-    vec3 normalizedNormal = normalize(normalMatrix * normal);
-    vec3 lightingDirection = normalize(lightingPosition - fragPos);
+    vec3 normalizedNormal = normalize(normal);
+    vec3 lightingDirection = normalize(light.position - fragPos);
     float diff = max(dot(normalizedNormal, lightingDirection), 0.0);
-    vec3 diffuse = diff * lightingColour;
+    vec3 diffuse = light.diffuse * diff * light.colour;
 
     // Specular Lighting
-    float specularStrength = 1.0;
     vec3 viewDirection = normalize(viewPos - fragPos);
     vec3 reflectDirection = reflect(-lightingDirection, normalizedNormal);
     float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 256);
-    vec3 specular = specularStrength * spec * lightingColour;
+    vec3 specular = light.specular * spec * light.colour;
 
     // Resulting Lighting
-    vec3 result = lightingIntensity * (specular + diffuse + ambient) * meshColour;
+    vec3 result = light.intensity * (specular + diffuse + ambient) * meshColour;
     FragColour = vec4(result, 1.0f);
 }
 

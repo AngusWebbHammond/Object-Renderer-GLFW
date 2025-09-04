@@ -29,8 +29,8 @@ namespace ObjectRenderer {
         auto entities = EntityComponentSystem::getEntities<EntityComponentSystem::LightingComponent, EntityComponentSystem::TransformComponent, EntityComponentSystem::MeshComponent>(m_registry);
 
         for (auto [entity, lightingComponent, transformComponent, meshComponent] : entities.each()) {
-            shader.setVec3("lightingColour", lightingComponent.colour);
-            shader.setFloat("lightingIntensity", lightingComponent.intensity);
+            shader.setVec3("light.colour", lightingComponent.colour);
+            shader.setFloat("light.intensity", lightingComponent.intensity);
 
             TriangleObjectPoints meshPoints = meshHandler.getMeshIndexStartEnd(meshComponent.meshName);
             int startIndex = meshPoints.startIndex;
@@ -39,7 +39,7 @@ namespace ObjectRenderer {
 
             meshHandler.bindMeshVAO(meshComponent.meshName);
 
-            shader.setMat4("model", Transform::getModelMatrix(transformComponent));
+            shader.setMat4("modelViewProjection.model", Transform::getModelMatrix(transformComponent));
 
             glDrawArrays(GL_TRIANGLES, startIndex * 3, length * 3);
 
@@ -60,7 +60,7 @@ namespace ObjectRenderer {
 
         meshHandler.bindMeshVAO(meshComponent->meshName);
 
-        shader.setMat4("model", Transform::getModelMatrix(*transformComponent));
+        shader.setMat4("modelViewProjection.model", Transform::getModelMatrix(*transformComponent));
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
@@ -207,7 +207,7 @@ namespace ObjectRenderer {
 
             meshHandler.bindMeshVAO(meshComponent.meshName);
 
-            shader.setMat4("model", Transform::getModelMatrix(transformComponent));
+            shader.setMat4("modelViewProjection.model", Transform::getModelMatrix(transformComponent));
 
             shader.setVec3("meshColour", meshComponent.colour);
 
@@ -222,9 +222,13 @@ namespace ObjectRenderer {
         auto entities = EntityComponentSystem::getEntities<EntityComponentSystem::LightingComponent, EntityComponentSystem::TransformComponent>(m_registry);
 
         for (auto [entity, lightingComponent, transformComponent] : entities.each()) {
-            shader.setVec3("lightingPosition", transformComponent.translation);
-            shader.setVec3("lightingColour", lightingComponent.colour);
-            shader.setFloat("lightingIntensity", lightingComponent.intensity);
+            shader.setVec3("light.position", transformComponent.translation);
+            shader.setVec3("light.colour", lightingComponent.colour);
+            shader.setFloat("light.intensity", lightingComponent.intensity);
+
+            shader.setFloat("light.ambient", 0.2f);
+            shader.setFloat("light.specular", 1.0f);
+            shader.setFloat("light.diffuse", 1.0f);
         }
     }
 }

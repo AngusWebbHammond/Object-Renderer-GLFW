@@ -312,20 +312,20 @@ namespace ObjectRenderer {
             projection = glm::perspective(glm::radians(45.0f), (float)fbWidth / (float)fbHeight, 0.1f, 100.0f);
         }
 
-        m_shader.setMat4("view", view);
-        m_shader.setMat4("projection", projection);
+        m_shader.setMat4("modelViewProjection.view", view);
+        m_shader.setMat4("modelViewProjection.projection", projection);
 
         m_scene.render(m_shader, m_meshHandler);
 
         m_lightingShader.use();
-        m_lightingShader.setMat4("view", view);
-        m_lightingShader.setMat4("projection", projection);
+        m_lightingShader.setMat4("modelViewProjection.view", view);
+        m_lightingShader.setMat4("modelViewProjection.projection", projection);
 
         m_scene.renderLighting(m_lightingShader, m_meshHandler);
 
         m_outlineShader.use();
-        m_outlineShader.setMat4("view", view);
-        m_outlineShader.setMat4("projection", projection);
+        m_outlineShader.setMat4("modelViewProjection.view", view);
+        m_outlineShader.setMat4("modelViewProjection.projection", projection);
 
         if (selectedModel != entt::null) {
             if (m_scene.isComponentInEntity<EntityComponentSystem::MeshComponent>(selectedModel))
