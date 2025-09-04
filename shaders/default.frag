@@ -2,6 +2,7 @@
 
 #define MAX_POINT_LIGHTS 16
 #define MAX_DIRECTIONAL_LIGHTS 4
+#define MAX_SPOT_LIGHTS 4
 
 out vec4 FragColour;
 
@@ -33,6 +34,25 @@ struct DirectionalLight {
     float diffuse;
 };
 
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+    vec3 colour;
+
+    float intensity;
+
+    float cutOff;
+    float outerCutOff;
+
+    float ambient;
+    float specular;
+    float diffuse;
+
+    float constantAttenuationFactor;
+    float linearAttenuationFactor;
+    float quadraticAttenuationFactor;
+};
+
 uniform vec3 viewPos;
 uniform vec3 meshColour;
 
@@ -41,6 +61,9 @@ uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 uniform int numDirectionalLights;
 uniform DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
+
+uniform int numSpotLights;
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 vec3 calculatePointLight(PointLight pointLight) {
     // Ambient Lighting
@@ -87,6 +110,39 @@ vec3 calculateDirectionalLight(DirectionalLight directionalLight) {
     return directionalLight.intensity * (specular + diffuse + ambient);
 }
 
+vec3 calculateSpotLight(SpotLight spotLight) {
+    vec3 lightDir = normalize(spotLight.position - fragPos);
+
+    float theta = dot(lightDir, normalize(-spotLight.direction));
+    
+    if (theta > spotLight.cutOff) {
+        vec3 ambient = spotLight.ambient * spotLight.colour;
+
+        // Diffuse Lighting
+        vec3 normalizedNormal = normalize(normal);
+        vec3 lightingDirection = normalize(spotLight.position - fragPos);
+        float diff = max(dot(normalizedNormal, lightingDirection), 0.0);
+        vec3 diffuse = spotLight.diffuse * diff * spotLight.colour;
+
+        // Specular Lighting
+        vec3 viewDirection = normalize(viewPos - fragPos);
+        vec3 reflectDirection = reflect(-lightingDirection, normalizedNormal);
+        float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 256);
+        vec3 specular = spotLight.specular * spec * spotLight.colour;
+
+        float distanceFromLight = length(spotLight.position - fragPos);
+        float attenuation = 1.0f / (spotLight.constantAttenuationFactor 
+                                    + spotLight.linearAttenuationFactor * distanceFromLight 
+                                    + spotLight.quadraticAttenuationFactor * (distanceFromLight * distanceFromLight));
+
+        // Resultant Contriubution of all Lighting
+        return spotLight.intensity * (ambient + (specular + diffuse) * attenuation);
+    }
+    else {
+        return spotLight.intensity * spotLight.ambient * spotLight.colour;
+    }
+}
+
 void main()
 {
     vec3 result = vec3(0.0f);
@@ -97,6 +153,10 @@ void main()
 
     for (int i = 0; i < numDirectionalLights; i++) {
         result += calculateDirectionalLight(directionalLights[i]);
+    }
+
+    for (int i = 0; i < numSpotLights; i++) {
+        result += calculateSpotLight(spotLights[i]);
     }
 
     FragColour = vec4(result * meshColour, 1.0f);

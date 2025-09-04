@@ -237,6 +237,7 @@ namespace ObjectRenderer {
         // Point Lights
         int numPointLights = 0;
         int numDirectionalLights = 0;
+        int numSpotLights = 0;
 
         for (auto [entity, lightingComponent, transformComponent] : entities.each()) {
             if (lightingComponent.lightingType == EntityComponentSystem::LightingComponent::POINT_LIGHT) {
@@ -266,10 +267,32 @@ namespace ObjectRenderer {
                 shader.setFloat(prefix + ".diffuse", 1.0f);
                 numDirectionalLights++;
             }
+
+            if (lightingComponent.lightingType == EntityComponentSystem::LightingComponent::SPOT_LIGHT) {
+                std::string prefix = "spotLights[" + std::to_string(numSpotLights) + "]";
+                shader.setVec3(prefix + ".position", transformComponent.translation);
+                shader.setVec3(prefix + ".colour", lightingComponent.colour);
+                shader.setVec3(prefix + ".direction", lightingComponent.direction);
+
+                shader.setFloat(prefix + ".intensity", lightingComponent.intensity);
+
+                shader.setFloat(prefix + ".cutOff", glm::cos(glm::radians(12.5f)));
+                shader.setFloat(prefix + ".outerCutOff", glm::cos(glm::radians(12.5f))); // Used for soft edges
+
+                shader.setFloat(prefix + ".ambient", 0.2f);
+                shader.setFloat(prefix + ".specular", 1.0f);
+                shader.setFloat(prefix + ".diffuse", 1.0f);
+
+                shader.setFloat(prefix + ".constantAttenuationFactor", 1.0f);
+                shader.setFloat(prefix + ".linearAttenuationFactor", 0.09f);
+                shader.setFloat(prefix + ".quadraticAttenuationFactor", 0.032f);
+                numSpotLights++;
+            }
         }
 
         shader.setInt("numPointLights", numPointLights);
         shader.setInt("numDirectionalLights", numDirectionalLights);
+        shader.setInt("numSpotLights", numSpotLights);
     }
 }
 

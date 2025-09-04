@@ -226,9 +226,9 @@ namespace UI {
 
                 if (lightingComponent->lightingType == EntityComponentSystem::LightingComponent::DIRECTIONAL_LIGHT || lightingComponent->lightingType == EntityComponentSystem::LightingComponent::SPOT_LIGHT) {
                     ImGui::Text("Direction");
-                    ImGui::DragFloat("X", &lightingComponent->direction.x, 0.01f, -1.0f, 1.0f);
-                    ImGui::DragFloat("Y", &lightingComponent->direction.y, 0.01f, -1.0f, 1.0f);
-                    ImGui::DragFloat("Z", &lightingComponent->direction.z, 0.01f, -1.0f, 1.0f);
+                    ImGui::DragFloat("Direction X", &lightingComponent->direction.x, 0.01f, -1.0f, 1.0f);
+                    ImGui::DragFloat("Direction Y", &lightingComponent->direction.y, 0.01f, -1.0f, 1.0f);
+                    ImGui::DragFloat("Direction Z", &lightingComponent->direction.z, 0.01f, -1.0f, 1.0f);
                 }
             }
         }
