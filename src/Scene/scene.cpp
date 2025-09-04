@@ -114,6 +114,17 @@ namespace ObjectRenderer {
                 EntityComponentSystem::LightingComponent* lightingComponent = getComponentFromEntity<EntityComponentSystem::LightingComponent>(entity);
                 node["LightingComponent"]["intensity"] = lightingComponent->intensity;
                 node["LightingComponent"]["colour"] = lightingComponent->colour;
+                node["LightingComponent"]["direction"] = lightingComponent->direction;
+                node["LightingComponent"]["ambientFactor"] = lightingComponent->ambientFactor;
+                node["LightingComponent"]["specularFactor"] = lightingComponent->specularFactor;
+                node["LightingComponent"]["diffuseFactor"] = lightingComponent->diffuseFactor;
+                node["LightingComponent"]["lightingType"] = static_cast<int>(lightingComponent->lightingType);
+                node["LightingComponent"]["spotLightCutOffAngle"] = lightingComponent->spotLightCutOffAngle;
+                node["LightingComponent"]["spotLightOuterCutOffAngle"] = lightingComponent->spotLightOuterCutOffAngle;
+                node["LightingComponent"]["constantAttenuationFactor"] = lightingComponent->constantAttenuationFactor;
+                node["LightingComponent"]["linearAttenuationFactor"] = lightingComponent->linearAttenuationFactor;
+                node["LightingComponent"]["quadraticAttenuationFactor"] = lightingComponent->quadraticAttenuationFactor;
+                node["LightingComponent"]["isSoftEdges"] = lightingComponent->isSoftEdges;
             }
 
             if (isComponentInEntity<EntityComponentSystem::LightingComponent>(entity)) {
@@ -172,8 +183,26 @@ namespace ObjectRenderer {
             if (entityNode["LightingComponent"]) {
                 float intensity = entityNode["LightingComponent"]["intensity"].as<float>();
                 glm::vec3 colour = entityNode["LightingComponent"]["colour"].as<glm::vec3>();
+                glm::vec3 direction = entityNode["LightingComponent"]["direction"].as<glm::vec3>();
 
-                EntityComponentSystem::emplaceOrReplaceComponentInEntity<EntityComponentSystem::LightingComponent>(m_registry, entity, intensity, colour);
+                float ambientFactor = entityNode["LightingComponent"]["ambientFactor"].as<float>();
+                float specularFactor = entityNode["LightingComponent"]["specularFactor"].as<float>();
+                float diffuseFactor = entityNode["LightingComponent"]["diffuseFactor"].as<float>();
+
+                EntityComponentSystem::LightingComponent::LightType lightingType = static_cast<EntityComponentSystem::LightingComponent::LightType>(entityNode["LightingComponent"]["lightingType"].as<int>());
+
+                float spotLightCutOffAngle = entityNode["LightingComponent"]["spotLightCutOffAngle"].as<float>();
+                float spotLightOuterCutOffAngle = entityNode["LightingComponent"]["spotLightOuterCutOffAngle"].as<float>();
+
+                float constantAttenuationFactor = entityNode["LightingComponent"]["constantAttenuationFactor"].as<float>();
+                float linearAttenuationFactor = entityNode["LightingComponent"]["linearAttenuationFactor"].as<float>();
+                float quadraticAttenuationFactor = entityNode["LightingComponent"]["quadraticAttenuationFactor"].as<float>();
+
+                bool isSoftEdges = entityNode["LightingComponent"]["isSoftEdges"].as<bool>();
+
+                EntityComponentSystem::emplaceOrReplaceComponentInEntity<EntityComponentSystem::LightingComponent>(m_registry, entity, intensity,
+                    colour, lightingType, direction, ambientFactor, diffuseFactor, specularFactor, spotLightCutOffAngle, spotLightOuterCutOffAngle,
+                    constantAttenuationFactor, linearAttenuationFactor, quadraticAttenuationFactor, isSoftEdges);
             }
 
             if (entityNode["CameraComponent"]) {

@@ -25,6 +25,20 @@ entities:
         - 1
         - 1
         - 1
+      direction:
+        - 0
+        - 0
+        - -1
+      ambientFactor: 0.2
+      specularFactor: 1
+      diffuseFactor: 1
+      lightingType: 0
+      spotLightCutOffAngle: 12.5
+      spotLightOuterCutOffAngle: 17.5
+      constantAttenuationFactor: 1
+      linearAttenuationFactor: 0.09
+      quadraticAttenuationFactor: 0.032
+      isSoftEdges: false
     NameComponent:
       name: Light
   Suzanne:

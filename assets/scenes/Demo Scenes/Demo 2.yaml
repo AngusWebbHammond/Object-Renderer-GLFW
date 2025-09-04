@@ -1,10 +1,10 @@
 entities:
-  Cube:
+  New Entity 8:
     TransformComponent:
       translation:
         - 0
-        - 0
-        - -3
+        - 0.15
+        - 1.12
       rotationAngles:
         - 0
         - 0
@@ -13,51 +13,33 @@ entities:
         - 1
         - 1
         - 1
-    MeshComponent:
-      meshName: Cube
+    LightingComponent:
+      intensity: 1
       colour:
-        - 0.5
-        - 0.5
-        - 0.5
-  Camera:
+        - 1
+        - 1
+        - 1
+      direction:
+        - 0
+        - 0
+        - -1
+      ambientFactor: 0
+      specularFactor: 1
+      diffuseFactor: 1
+      lightingType: 2
+      spotLightCutOffAngle: 12.5
+      spotLightOuterCutOffAngle: 17.5
+      constantAttenuationFactor: 1
+      linearAttenuationFactor: 0.09
+      quadraticAttenuationFactor: 0.032
+      isSoftEdges: true
+    NameComponent:
+      name: New Entity 8
+  New Entity 7:
     TransformComponent:
       translation:
-        - -13.689945
-        - -2.662186
-        - 8.090519
-      rotationAngles:
+        - 2.77
         - 0
-        - 0
-        - 0
-      scale:
-        - 1
-        - 1
-        - 1
-    CameraComponent:
-      yaw: 328.5997
-      pitch: 16.000025
-      front:
-        - 0.8204829
-        - 0.27563778
-        - -0.50083095
-      up:
-        - -0.23527007
-        - 0.96126163
-        - 0.1436112
-      right:
-        - 0.5210142
-        - -0
-        - 0.853548
-      worldUp:
-        - 0
-        - 1
-        - 0
-      isPrimaryCamera: true
-  Torus:
-    TransformComponent:
-      translation:
-        - 0
-        - 1
         - 0
       rotationAngles:
         - 0
@@ -67,13 +49,65 @@ entities:
         - 1
         - 1
         - 1
-    MeshComponent:
-      meshName: Torus
+    LightingComponent:
+      intensity: 1
       colour:
-        - 0.5
-        - 0.5
-        - 0.5
-  Suzanne:
+        - 0.14057612
+        - 0.36103523
+        - 0.9037037
+      direction:
+        - 0
+        - 0
+        - -1
+      ambientFactor: 0
+      specularFactor: 1
+      diffuseFactor: 1
+      lightingType: 0
+      spotLightCutOffAngle: 12.5
+      spotLightOuterCutOffAngle: 17.5
+      constantAttenuationFactor: 1
+      linearAttenuationFactor: 0.09
+      quadraticAttenuationFactor: 0.032
+      isSoftEdges: false      
+    NameComponent:
+      name: New Entity 7
+  New Entity 6:
+    TransformComponent:
+      translation:
+        - -1.76
+        - -1.13
+        - -0.64
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    LightingComponent:
+      intensity: 1
+      colour:
+        - 0.28037032
+        - 0.9
+        - 0.10333333
+      direction:
+        - 0
+        - 0
+        - -1
+      ambientFactor: 0
+      specularFactor: 1
+      diffuseFactor: 1
+      lightingType: 0
+      spotLightCutOffAngle: 12.5
+      spotLightOuterCutOffAngle: 17.5
+      constantAttenuationFactor: 1
+      linearAttenuationFactor: 0.09
+      quadraticAttenuationFactor: 0.032
+      isSoftEdges: false
+    NameComponent:
+      name: New Entity 6
+  New Entity 5:
     TransformComponent:
       translation:
         - 0
@@ -87,12 +121,29 @@ entities:
         - 1
         - 1
         - 1
-    MeshComponent:
-      meshName: Suzanne
+    LightingComponent:
+      intensity: 1
       colour:
-        - 0.5
-        - 0.5
-        - 0.5
+        - 1
+        - 0
+        - 0
+      direction:
+        - 0
+        - 0
+        - -1
+      ambientFactor: 0.08
+      specularFactor: 1
+      diffuseFactor: 1
+      lightingType: 0
+      spotLightCutOffAngle: 12.5
+      spotLightOuterCutOffAngle: 17.5
+      constantAttenuationFactor: 1
+      linearAttenuationFactor: 0.09
+      quadraticAttenuationFactor: 0.032
+      isSoftEdges: false
+      
+    NameComponent:
+      name: New Entity 5
   Light:
     TransformComponent:
       translation:
@@ -117,7 +168,115 @@ entities:
       intensity: 1
       colour:
         - 1
+        - 1
+        - 1
+      direction:
         - 0
         - 0
+        - -1
+      ambientFactor: 0.2
+      specularFactor: 1
+      diffuseFactor: 1
+      lightingType: 0
+      spotLightCutOffAngle: 12.5
+      spotLightOuterCutOffAngle: 17.5
+      constantAttenuationFactor: 1
+      linearAttenuationFactor: 0.09
+      quadraticAttenuationFactor: 0.032
+      isSoftEdges: false
     NameComponent:
       name: Light
+  Suzanne:
+    TransformComponent:
+      translation:
+        - 0
+        - 0
+        - 0
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Suzanne
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5
+  Torus:
+    TransformComponent:
+      translation:
+        - 0
+        - 1
+        - 0
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Torus
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5
+  Camera:
+    TransformComponent:
+      translation:
+        - 0
+        - 0
+        - 4
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    CameraComponent:
+      yaw: -89.8
+      pitch: 0
+      front:
+        - 0.0034906357
+        - 0
+        - -0.9999939
+      up:
+        - 0
+        - 1
+        - 0
+      right:
+        - 0.9999939
+        - -0
+        - 0.0034906357
+      worldUp:
+        - 0
+        - 1
+        - 0
+      isPrimaryCamera: true
+  Cube:
+    TransformComponent:
+      translation:
+        - 0
+        - 0
+        - -3
+      rotationAngles:
+        - 0
+        - 0
+        - 0
+      scale:
+        - 1
+        - 1
+        - 1
+    MeshComponent:
+      meshName: Cube
+      colour:
+        - 0.5
+        - 0.5
+        - 0.5

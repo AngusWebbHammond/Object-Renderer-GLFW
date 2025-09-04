@@ -1,5 +1,5 @@
 entities:
-  New Entity 1048578:
+  Light:
     TransformComponent:
       translation:
         - 0
@@ -19,9 +19,23 @@ entities:
         - 1
         - 1
         - 1
+      direction:
+        - 0
+        - 0
+        - -1
+      ambientFactor: 0.2
+      specularFactor: 1
+      diffuseFactor: 1
+      lightingType: 0
+      spotLightCutOffAngle: 12.5
+      spotLightOuterCutOffAngle: 17.5
+      constantAttenuationFactor: 1
+      linearAttenuationFactor: 0.09
+      quadraticAttenuationFactor: 0.032
+      isSoftEdges: false
     NameComponent:
-      name: New Entity 1048578
-  New Entity 1048577:
+      name: Light
+  Camera:
     TransformComponent:
       translation:
         - -4.5
@@ -36,26 +50,26 @@ entities:
         - 1
         - 1
     CameraComponent:
-      yaw: -48.59995
-      pitch: -17.400007
+      yaw: -48.6
+      pitch: -17.4
       front:
-        - 0.63105106
-        - -0.29904094
-        - -0.7157856
+        - 0.63105047
+        - -0.29904076
+        - -0.7157862
       up:
-        - 0.19775955
+        - 0.19775923
         - 0.9542404
-        - -0.22431377
+        - -0.2243138
       right:
-        - 0.75011045
+        - 0.7501111
         - -0
-        - 0.6613125
+        - 0.6613119
       worldUp:
         - 0
         - 1
         - 0
       isPrimaryCamera: true
-  New Entity 1048576:
+  Cube:
     TransformComponent:
       translation:
         - 0

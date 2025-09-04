@@ -90,11 +90,11 @@ namespace EntityComponentSystem {
         isSoftEdges = false;
     }
 
-    LightingComponent::LightingComponent(float _intensity, glm::vec3 _colour, LightType lightType)
+    LightingComponent::LightingComponent(float _intensity, glm::vec3 _colour, LightType _lightingType)
     {
         intensity = _intensity;
         colour = _colour;
-        lightingType = lightType;
+        lightingType = _lightingType;
         direction = glm::vec3(0.0f, 0.0f, -1.0f);
 
         ambientFactor = 0.2f;
@@ -109,6 +109,31 @@ namespace EntityComponentSystem {
         quadraticAttenuationFactor = 0.032f;
 
         isSoftEdges = false;
+    }
+
+    LightingComponent::LightingComponent(float _intensity, glm::vec3 _colour, LightType _lightingType,
+        glm::vec3 _direction, float _ambientFactor, float _diffuseFactor,
+        float _specularFactor, float _spotLightCutOffAngle, float _spotLightOuterCutOffAngle,
+        float _constantAttenuationFactor, float _linearAttenuationFactor, float _quadraticAttenuationFactor,
+        bool _isSoftEdges)
+    {
+        intensity = _intensity;
+        colour = _colour;
+        lightingType = _lightingType;
+        direction = _direction;
+
+        ambientFactor = _ambientFactor;
+        diffuseFactor = _diffuseFactor;
+        specularFactor = _specularFactor;
+
+        spotLightCutOffAngle = _spotLightCutOffAngle;
+        spotLightOuterCutOffAngle = _spotLightOuterCutOffAngle;
+
+        constantAttenuationFactor = _constantAttenuationFactor;
+        linearAttenuationFactor = _linearAttenuationFactor;
+        quadraticAttenuationFactor = _quadraticAttenuationFactor;
+
+        isSoftEdges = _isSoftEdges;
     }
 
     NameComponent::NameComponent()

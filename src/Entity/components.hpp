@@ -56,7 +56,13 @@ namespace EntityComponentSystem {
         LightingComponent();
         LightingComponent(float _intensity);
         LightingComponent(float _intensity, glm::vec3 _colour);
-        LightingComponent(float _intensity, glm::vec3 _colour, LightType lightType);
+        LightingComponent(float _intensity, glm::vec3 _colour, LightType _lightingType);
+        LightingComponent(float _intensity, glm::vec3 _colour, LightType _lightingType,
+            glm::vec3 _direction, float _ambientFactor, float _diffuseFactor,
+            float _specularFactor, float _spotLightCutOffAngle, float _spotLightOuterCutOffAngle,
+            float _constantAttenuationFactor, float _linearAttenuationFactor, float _quadraticAttenuationFactor,
+            bool _isSoftEdges);
+
     };
 
     struct NameComponent {
