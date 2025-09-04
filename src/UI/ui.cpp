@@ -92,6 +92,7 @@ namespace UI {
 
         static int selectedIndex = entities->size() - 1;
         static entt::entity selectedEntity = entt::null;
+        static bool anySelected = false;
 
         if (ImGui::Button("Add Entity"))
         {
@@ -107,7 +108,10 @@ namespace UI {
         }
 
         if (selectedIndex >= entities->size())
-            selectedEntity = entt::entity();
+        {
+            selectedEntity = entt::null;
+            anySelected = false;
+        }
 
         if (ImGui::BeginListBox("Entities"))
         {
@@ -122,6 +126,7 @@ namespace UI {
                 if (isSelected) {
                     selectedEntity = entity;
                     ImGui::SetItemDefaultFocus();
+                    anySelected = true;
                 }
             }
 
@@ -129,6 +134,10 @@ namespace UI {
         }
 
         ImGui::End();
+
+        if (!anySelected) {
+            selectedEntity = entt::null;
+        }
 
         return selectedEntity;
     }
@@ -250,7 +259,6 @@ namespace UI {
                 }
             }
         }
-
         static bool addComponentListOpen = false;
 
         if (ImGui::Button("Add Component")) {
