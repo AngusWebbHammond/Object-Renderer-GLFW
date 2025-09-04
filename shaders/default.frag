@@ -51,6 +51,8 @@ struct SpotLight {
     float constantAttenuationFactor;
     float linearAttenuationFactor;
     float quadraticAttenuationFactor;
+
+    bool isSoftEdges;
 };
 
 uniform vec3 viewPos;
@@ -114,6 +116,36 @@ vec3 calculateSpotLight(SpotLight spotLight) {
     vec3 lightDir = normalize(spotLight.position - fragPos);
 
     float theta = dot(lightDir, normalize(-spotLight.direction));
+    
+
+    if (spotLight.isSoftEdges) {
+        float epsilon = spotLight.cutOff - spotLight.outerCutOff;
+        float intensity = clamp((theta - spotLight.outerCutOff) / epsilon, 0.0f, 1.0f);
+        
+        // Ambient Lighting
+        vec3 ambient = spotLight.ambient * spotLight.colour;
+
+        // Diffuse Lighting
+        vec3 normalizedNormal = normalize(normal);
+        vec3 lightingDirection = normalize(spotLight.position - fragPos);
+        float diff = max(dot(normalizedNormal, lightingDirection), 0.0);
+        vec3 diffuse = spotLight.diffuse * diff * spotLight.colour;
+
+        // Specular Lighting
+        vec3 viewDirection = normalize(viewPos - fragPos);
+        vec3 reflectDirection = reflect(-lightingDirection, normalizedNormal);
+        float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 256);
+        vec3 specular = spotLight.specular * spec * spotLight.colour;
+
+        // Lighting Attenuation
+        float distanceFromLight = length(spotLight.position - fragPos);
+        float attenuation = 1.0f / (spotLight.constantAttenuationFactor 
+                                    + spotLight.linearAttenuationFactor * distanceFromLight 
+                                    + spotLight.quadraticAttenuationFactor * (distanceFromLight * distanceFromLight));
+
+        // Resultant Contriubution of all Lighting
+        return spotLight.intensity * (ambient + (specular + diffuse) * attenuation * intensity);
+    }
     
     if (theta > spotLight.cutOff) {
         vec3 ambient = spotLight.ambient * spotLight.colour;

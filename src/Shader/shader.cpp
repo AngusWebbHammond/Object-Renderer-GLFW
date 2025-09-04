@@ -53,6 +53,11 @@ namespace ObjectRenderer {
     {
         glUniform1i(glGetUniformLocation(m_shaderProgram, name.c_str()), value);
     }
+
+    void Shader::setBool(const std::string& name, bool value) const
+    {
+        glUniform1i(glGetUniformLocation(m_shaderProgram, name.c_str()), value);
+    }
 }
 
 // Private

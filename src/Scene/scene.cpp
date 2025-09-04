@@ -277,7 +277,7 @@ namespace ObjectRenderer {
                 shader.setFloat(prefix + ".intensity", lightingComponent.intensity);
 
                 shader.setFloat(prefix + ".cutOff", glm::cos(glm::radians(12.5f)));
-                shader.setFloat(prefix + ".outerCutOff", glm::cos(glm::radians(12.5f))); // Used for soft edges
+                shader.setFloat(prefix + ".outerCutOff", glm::cos(glm::radians(17.5f))); // Used for soft edges
 
                 shader.setFloat(prefix + ".ambient", 0.2f);
                 shader.setFloat(prefix + ".specular", 1.0f);
@@ -286,6 +286,8 @@ namespace ObjectRenderer {
                 shader.setFloat(prefix + ".constantAttenuationFactor", 1.0f);
                 shader.setFloat(prefix + ".linearAttenuationFactor", 0.09f);
                 shader.setFloat(prefix + ".quadraticAttenuationFactor", 0.032f);
+
+                shader.setBool(prefix + ".isSoftEdges", true);
                 numSpotLights++;
             }
         }
