@@ -220,16 +220,19 @@ namespace ObjectRenderer {
     void Scene::addLightingToShader(Shader& shader, MeshHandler& meshHandler)
     {
         auto entities = EntityComponentSystem::getEntities<EntityComponentSystem::LightingComponent, EntityComponentSystem::TransformComponent>(m_registry);
-
+        int i = 0;
         for (auto [entity, lightingComponent, transformComponent] : entities.each()) {
-            shader.setVec3("light.position", transformComponent.translation);
-            shader.setVec3("light.colour", lightingComponent.colour);
-            shader.setFloat("light.intensity", lightingComponent.intensity);
+            std::string prefix = "pointLights[" + std::to_string(i) + "]";
+            shader.setVec3(prefix + ".position", transformComponent.translation);
+            shader.setVec3(prefix + ".colour", lightingComponent.colour);
+            shader.setFloat(prefix + ".intensity", lightingComponent.intensity);
 
-            shader.setFloat("light.ambient", 0.2f);
-            shader.setFloat("light.specular", 1.0f);
-            shader.setFloat("light.diffuse", 1.0f);
+            shader.setFloat(prefix + ".ambient", 0.2f);
+            shader.setFloat(prefix + ".specular", 1.0f);
+            shader.setFloat(prefix + ".diffuse", 1.0f);
+            i++;
         }
+        shader.setInt("numPointLights", i);
     }
 }
 

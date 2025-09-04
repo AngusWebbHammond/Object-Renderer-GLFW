@@ -48,6 +48,11 @@ namespace ObjectRenderer {
     {
         glUniform1f(glGetUniformLocation(m_shaderProgram, name.c_str()), value);
     }
+
+    void Shader::setInt(const std::string& name, int value) const
+    {
+        glUniform1i(glGetUniformLocation(m_shaderProgram, name.c_str()), value);
+    }
 }
 
 // Private
