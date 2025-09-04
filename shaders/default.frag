@@ -16,6 +16,10 @@ struct PointLight {
     float ambient;
     float specular;
     float diffuse;
+
+    float constantAttenuationFactor;
+    float linearAttenuationFactor;
+    float quadraticAttenuationFactor;
 };
 
 struct DirectionalLight {
@@ -54,8 +58,13 @@ vec3 calculatePointLight(PointLight pointLight) {
     float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), 256);
     vec3 specular = pointLight.specular * spec * pointLight.colour;
 
+    float distanceFromLight = length(pointLight.position - fragPos);
+    float attenuation = 1.0f / (pointLight.constantAttenuationFactor 
+                                + pointLight.linearAttenuationFactor * distanceFromLight 
+                                + pointLight.quadraticAttenuationFactor * (distanceFromLight * distanceFromLight));
+
     // Resultant Contriubution of all Lighting
-    return pointLight.intensity * (specular + diffuse + ambient);
+    return pointLight.intensity * (specular + diffuse + ambient) * attenuation;
 }
 
 vec3 calculateDirectionalLight(DirectionalLight directionalLight) {

@@ -248,6 +248,10 @@ namespace ObjectRenderer {
                 shader.setFloat(prefix + ".ambient", 0.2f);
                 shader.setFloat(prefix + ".specular", 1.0f);
                 shader.setFloat(prefix + ".diffuse", 1.0f);
+
+                shader.setFloat(prefix + ".constantAttenuationFactor", 1.0f);
+                shader.setFloat(prefix + ".linearAttenuationFactor", 0.09f);
+                shader.setFloat(prefix + ".quadraticAttenuationFactor", 0.032f);
                 numPointLights++;
             }
 
