@@ -207,6 +207,10 @@ namespace UI {
                 ImGui::ColorPicker3("Primary", &lightingComponent->colour[0]);
                 ImGui::DragFloat("Intensity", &lightingComponent->intensity, 0.01f, 0.0f, 1.0f);
 
+                ImGui::DragFloat("Ambient Factor", &lightingComponent->ambientFactor, 0.01f, 0.0f, 1.0f);
+                ImGui::DragFloat("Specular Factor", &lightingComponent->specularFactor, 0.01f, 0.0f, 1.0f);
+                ImGui::DragFloat("Diffuse Factor", &lightingComponent->diffuseFactor, 0.01f, 0.0f, 1.0f);
+
                 const char* lightTypes[] = { "Point", "Directional", "Spot" };
                 int currentLight = static_cast<int>(lightingComponent->lightingType);
 
@@ -229,6 +233,20 @@ namespace UI {
                     ImGui::DragFloat("Direction X", &lightingComponent->direction.x, 0.01f, -1.0f, 1.0f);
                     ImGui::DragFloat("Direction Y", &lightingComponent->direction.y, 0.01f, -1.0f, 1.0f);
                     ImGui::DragFloat("Direction Z", &lightingComponent->direction.z, 0.01f, -1.0f, 1.0f);
+                }
+
+                if (lightingComponent->lightingType == EntityComponentSystem::LightingComponent::SPOT_LIGHT || lightingComponent->lightingType == EntityComponentSystem::LightingComponent::POINT_LIGHT) {
+                    ImGui::Text("Attenuation");
+                    ImGui::DragFloat("Constant Factor", &lightingComponent->constantAttenuationFactor, 0.01f, 0.0f, 1.0f);
+                    ImGui::DragFloat("Linear Factor", &lightingComponent->linearAttenuationFactor, 0.01f, 0.0f, 1.0f);
+                    ImGui::DragFloat("Quadratic Factor", &lightingComponent->quadraticAttenuationFactor, 0.01f, 0.0f, 1.0f);
+                }
+
+                if (lightingComponent->lightingType == EntityComponentSystem::LightingComponent::SPOT_LIGHT) {
+                    ImGui::DragFloat("Cut-off Angle", &lightingComponent->spotLightCutOffAngle, 0.1f, 0.0f, 90.0f);
+                    ImGui::DragFloat("Outer Cut-off Angle", &lightingComponent->spotLightOuterCutOffAngle, 0.1f, 0.0f, 90.0f);
+
+                    ImGui::Checkbox("Soft Edges", &lightingComponent->isSoftEdges);
                 }
             }
         }

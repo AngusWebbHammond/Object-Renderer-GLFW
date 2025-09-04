@@ -38,7 +38,20 @@ namespace EntityComponentSystem {
         glm::vec3 colour;
         glm::vec3 direction;
 
+        float ambientFactor;
+        float diffuseFactor;
+        float specularFactor;
+
         LightType lightingType;
+
+        float spotLightCutOffAngle;
+        float spotLightOuterCutOffAngle;
+
+        float constantAttenuationFactor;
+        float linearAttenuationFactor;
+        float quadraticAttenuationFactor;
+
+        bool isSoftEdges;
 
         LightingComponent();
         LightingComponent(float _intensity);

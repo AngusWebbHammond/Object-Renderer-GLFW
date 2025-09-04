@@ -33,6 +33,19 @@ namespace EntityComponentSystem {
         colour = glm::vec3(1.0f);
         lightingType = POINT_LIGHT;
         direction = glm::vec3(0.0f, 0.0f, -1.0f);
+
+        ambientFactor = 0.2f;
+        diffuseFactor = 1.0f;
+        specularFactor = 1.0f;
+
+        spotLightCutOffAngle = 12.5f;
+        spotLightOuterCutOffAngle = 17.5f;
+
+        constantAttenuationFactor = 1.0f;
+        linearAttenuationFactor = 0.09f;
+        quadraticAttenuationFactor = 0.032f;
+
+        isSoftEdges = false;
     }
 
     LightingComponent::LightingComponent(float _intensity)
@@ -41,6 +54,19 @@ namespace EntityComponentSystem {
         colour = glm::vec3(1.0f);
         lightingType = POINT_LIGHT;
         direction = glm::vec3(0.0f, 0.0f, -1.0f);
+
+        ambientFactor = 0.2f;
+        diffuseFactor = 1.0f;
+        specularFactor = 1.0f;
+
+        spotLightCutOffAngle = 12.5f;
+        spotLightOuterCutOffAngle = 17.5f;
+
+        constantAttenuationFactor = 1.0f;
+        linearAttenuationFactor = 0.09f;
+        quadraticAttenuationFactor = 0.032f;
+
+        isSoftEdges = false;
     }
 
     LightingComponent::LightingComponent(float _intensity, glm::vec3 _colour)
@@ -49,6 +75,19 @@ namespace EntityComponentSystem {
         colour = _colour;
         lightingType = POINT_LIGHT;
         direction = glm::vec3(0.0f, 0.0f, -1.0f);
+
+        ambientFactor = 0.2f;
+        diffuseFactor = 1.0f;
+        specularFactor = 1.0f;
+
+        spotLightCutOffAngle = 12.5f;
+        spotLightOuterCutOffAngle = 17.5f;
+
+        constantAttenuationFactor = 1.0f;
+        linearAttenuationFactor = 0.09f;
+        quadraticAttenuationFactor = 0.032f;
+
+        isSoftEdges = false;
     }
 
     LightingComponent::LightingComponent(float _intensity, glm::vec3 _colour, LightType lightType)
@@ -57,6 +96,19 @@ namespace EntityComponentSystem {
         colour = _colour;
         lightingType = lightType;
         direction = glm::vec3(0.0f, 0.0f, -1.0f);
+
+        ambientFactor = 0.2f;
+        diffuseFactor = 1.0f;
+        specularFactor = 1.0f;
+
+        spotLightCutOffAngle = 12.5f;
+        spotLightOuterCutOffAngle = 17.5f;
+
+        constantAttenuationFactor = 1.0f;
+        linearAttenuationFactor = 0.09f;
+        quadraticAttenuationFactor = 0.032f;
+
+        isSoftEdges = false;
     }
 
     NameComponent::NameComponent()
