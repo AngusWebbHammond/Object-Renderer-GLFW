@@ -1,8 +1,8 @@
 #pragma once
 
-#include "application.hpp"
+#include "application.h"
 
-#include "../UI/ui.hpp"
+#include "../UI/ui.h"
 
 // Public
 namespace ObjectRenderer {
@@ -23,6 +23,7 @@ namespace ObjectRenderer {
     void Application::run() {
         while (!glfwWindowShouldClose(m_window))
         {
+
             m_renderer.renderCycle();
         }
     }

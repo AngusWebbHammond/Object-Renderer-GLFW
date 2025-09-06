@@ -4,8 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "../Core/globals.hpp"
-#include "../Entity/components.hpp"
+#include "../Core/globals.h"
+#include "../Entity/components.h"
 
 namespace ObjectRenderer::Camera {
 

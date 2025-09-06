@@ -1,12 +1,12 @@
 #pragma once
 
-#include "scene.hpp"
-#include "../Component_Functions/camera.hpp"
+#include "scene.h"
+#include "../Component_Functions/camera.h"
 #include <entt/entt.hpp>
 #include <iostream>
 #include <filesystem>
 #include "yaml-cpp/yaml.h"
-#include "../Component_Functions/transform.hpp"
+#include "../Component_Functions/transform.h"
 
 namespace ObjectRenderer {
 

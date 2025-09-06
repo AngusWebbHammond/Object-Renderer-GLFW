@@ -1,6 +1,6 @@
 #pragma once
 
-#include "components.hpp"
+#include "components.h"
 #include "entt/entt.hpp"
 
 namespace EntityComponentSystem {

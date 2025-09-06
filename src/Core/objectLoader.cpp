@@ -1,6 +1,6 @@
 #pragma once
 
-#include "objectLoader.hpp"
+#include "objectLoader.h"
 
 namespace ObjectRenderer {
     ObjectLoader::ObjectLoader()

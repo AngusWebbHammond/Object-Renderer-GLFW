@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 
-#include "../Scene/scene.hpp"
+#include "../Scene/scene.h"
 
 namespace UI {
     void initImGui(GLFWwindow* window);

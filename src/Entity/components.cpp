@@ -1,8 +1,8 @@
 #pragma once
 
-#include "components.hpp"
+#include "components.h"
 #include <iostream>
-#include "../Core/globals.hpp"
+#include "../Core/globals.h"
 
 namespace EntityComponentSystem {
 

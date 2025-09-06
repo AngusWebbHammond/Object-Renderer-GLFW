@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include "globals.hpp"
+#include "globals.h"
 
 namespace ObjectRenderer
 {

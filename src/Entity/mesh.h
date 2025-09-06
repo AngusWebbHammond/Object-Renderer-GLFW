@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/globals.hpp"
+#include "../Core/globals.h"
 
 #include <memory>
 #include <vector>

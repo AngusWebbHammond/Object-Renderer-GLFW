@@ -1,9 +1,9 @@
 #pragma once
 
 #include "entt/entt.hpp"
-#include "../Entity/entity.hpp"
-#include "../Shader/shader.hpp"
-#include "../Entity/meshHandler.hpp"
+#include "../Entity/entity.h"
+#include "../Shader/shader.h"
+#include "../Entity/meshHandler.h"
 
 #include "yaml-cpp/yaml.h"
 

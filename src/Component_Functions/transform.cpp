@@ -1,6 +1,6 @@
 #pragma once
 
-#include "transform.hpp"
+#include "transform.h"
 #include <glm/ext/matrix_transform.hpp>
 
 namespace ObjectRenderer::Transform {

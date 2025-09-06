@@ -1,11 +1,11 @@
 #pragma once
 
-#include "ui.hpp"
+#include "ui.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
-#include "../Scene/scene.hpp"
+#include "../Scene/scene.h"
 #include <filesystem>
 #include <tuple>
 

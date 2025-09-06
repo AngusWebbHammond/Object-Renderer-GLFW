@@ -1,6 +1,6 @@
 #pragma once
 
-#include "mesh.hpp"
+#include "mesh.h"
 
 // Vertex Class
 namespace ObjectRenderer {

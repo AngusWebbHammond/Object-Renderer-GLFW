@@ -1,6 +1,6 @@
 #pragma once
 
-#include "renderer.hpp"
+#include "renderer.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -13,9 +13,9 @@
 #include "backends/imgui_impl_opengl3.h"
 #include <filesystem>
 
-#include "globals.hpp"
-#include "../Entity/mesh.hpp"
-#include "../UI/ui.hpp"
+#include "globals.h"
+#include "../Entity/mesh.h"
+#include "../UI/ui.h"
 
 // Public
 namespace ObjectRenderer {
@@ -236,6 +236,7 @@ namespace ObjectRenderer {
     }
 
     void Renderer::renderCycle() {
+        auto lastTime = std::chrono::high_resolution_clock::now();
         glfwPollEvents();
 
         UI::createImGuiFrame();
@@ -259,6 +260,8 @@ namespace ObjectRenderer {
             ImGui::End();
         }
 
+        UI::buildImGuiUIProperties(m_scene, selectedModel);
+
         int fbWidth = static_cast<int>(viewportPanelSize.x);
         int fbHeight = static_cast<int>(viewportPanelSize.y);
 
@@ -273,8 +276,6 @@ namespace ObjectRenderer {
             m_lastFbHeight = fbHeight;
             resizeFramebuffer(fbWidth, fbHeight);
         }
-
-        UI::buildImGuiUIProperties(m_scene, selectedModel);
 
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
             std::cerr << "Framebuffer incomplete!" << std::endl;
@@ -331,7 +332,16 @@ namespace ObjectRenderer {
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        auto timeNow = std::chrono::high_resolution_clock::now();
+
+        ImGui::Begin("Stats");
+        std::chrono::duration<double> frameTime = timeNow - lastTime;
+        double frame = frameTime.count() * 1000.0f;
+        ImGui::Text("Frame Time: %.3f ms", frame);
+        ImGui::End();
+
         UI::renderImGui();
+
         glfwSwapBuffers(m_window);
     }
 }

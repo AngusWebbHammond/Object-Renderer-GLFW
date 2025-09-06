@@ -13,6 +13,8 @@ include(AddGLM)
 include(AddENTT)
 include(AddYAML)
 
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+
 include_directories(
     deps/glad/include
     deps/imgui
@@ -36,37 +38,40 @@ endif()
 
 include_directories(shaders)
 
-add_executable(main src/main.cpp ${GLAD_GL}
-    ${IMGUI_SOURCES}
-    src/Core/renderer.hpp 
-    src/Core/renderer.cpp 
-    src/Core/globals.hpp 
-    src/Core/globals.cpp 
-    src/Core/application.hpp 
-    src/Core/application.cpp 
-    src/Core/objectLoader.hpp 
+add_executable(main src/main.cpp ${GLAD_GL} ${IMGUI_SOURCES}
+    src/Core/renderer.h
+    src/Core/renderer.cpp
+    src/Core/globals.h
+    src/Core/globals.cpp
+    src/Core/application.h
+    src/Core/application.cpp
+    src/Core/objectLoader.h
     src/Core/objectLoader.cpp
-    src/Shader/shader.hpp 
-    src/Shader/shader.cpp 
-    src/Entity/mesh.hpp
+    src/Shader/shader.h
+    src/Shader/shader.cpp
+    src/Entity/mesh.h
     src/Entity/mesh.cpp
-    src/Entity/meshHandler.hpp
+    src/Entity/meshHandler.h
     src/Entity/meshHandler.cpp
-    src/Component_Functions/camera.hpp
+    src/Component_Functions/camera.h
     src/Component_Functions/camera.cpp
-    src/Component_Functions/transform.hpp
+    src/Component_Functions/transform.h
     src/Component_Functions/transform.cpp
-    src/UI/ui.hpp
+    src/UI/ui.h
     src/UI/ui.cpp
     src/Entity/components.cpp
-    src/Entity/components.hpp
+    src/Entity/components.h
     src/Entity/entity.cpp
-    src/Entity/entity.hpp
+    src/Entity/entity.h
     src/Scene/scene.cpp
-    src/Scene/scene.hpp
+    src/Scene/scene.h
+    src/Scripting/scripting.cpp
+    src/Scripting/scripting.h
 )
 
-target_link_libraries(main PRIVATE glfw glm EnTT::EnTT yaml-cpp::yaml-cpp)
+target_link_libraries(main PRIVATE glfw glm EnTT::EnTT yaml-cpp::yaml-cpp ${Python3_LIBRARIES})
+
+target_include_directories(main PRIVATE ${Python3_INCLUDE_DIRS})
 
 add_compile_definitions(PROJECT_DIR="${CMAKE_SOURCE_DIR}")
 

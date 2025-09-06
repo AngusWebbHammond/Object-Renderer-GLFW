@@ -7,8 +7,8 @@
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
 
-#include "renderer.hpp"
-#include "globals.hpp"
+#include "renderer.h"
+#include "globals.h"
 
 namespace ObjectRenderer {
 
